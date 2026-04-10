@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.BrowseBookController"
+            stylesheets="@style.css"
+            styleClass="root-pane">
+    <children>
+        <ScrollPane fitToWidth="true"
+                    styleClass="main-scroll"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
+            <content>
+                <BorderPane>
+                    <top>
+                        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+                            <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
+                            <VBox spacing="0">
+                                <Label text="Readora" styleClass="logo-title"/>
+                                <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <HBox spacing="10" alignment="CENTER">
+                                <Button text="My Dashboard" styleClass="menu-button" onAction="#handleDashboard"/>
+                                <Button text="Browse Books" styleClass="menu-button-active"/>
+                                <Button text="My History" styleClass="menu-button" onAction="#handleHistoryTab"/>
+                            </HBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <HBox spacing="10" alignment="CENTER_RIGHT">
+                                <VBox alignment="CENTER_RIGHT" spacing="2">
+                                    <Label text="Student User" styleClass="user-label"/>
+                                    <Label text="ID: 2024-0001" styleClass="user-role"/>
+                                </VBox>
+                                <Button fx:id="studentMenuButton"
+                                        text="☰"
+                                        onAction="#handleStudentMenu"
+                                        styleClass="profile-button"/>
+                            </HBox>
+                        </HBox>
+                    </top>
+
+                    <center>
+                        <VBox spacing="24" styleClass="dashboard-wrapper">
+                            <padding><Insets top="26" right="28" bottom="26" left="28"/></padding>
+
+                            <VBox spacing="6">
+                                <Label text="Explore Library" styleClass="welcome-title"/>
+                                <Label text="Search through our collection and find your next favorite read." styleClass="welcome-subtitle"/>
+                            </VBox>
+
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="section-panel">
+                                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                                <TextField fx:id="bookSearchField" promptText="Search by Title, Author, or ISBN..." HBox.hgrow="ALWAYS" />
+                                <ComboBox fx:id="genreFilter" promptText="All Genres" prefWidth="180" />
+                                <Button text="Search" styleClass="primary-action-button" onAction="#applyFilters"/>
+                            </HBox>
+
+                            <VBox spacing="16" styleClass="section-panel" VBox.vgrow="ALWAYS" prefHeight="600">
+                                <Label text="Available Books" styleClass="section-heading"/>
+                                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="book-table">
+                                    <columns>
+                                        <TableColumn fx:id="isbnCol" text="ISBN" prefWidth="130"/>
+                                        <TableColumn fx:id="titleCol" text="Book Title" prefWidth="250"/>
+                                        <TableColumn fx:id="authorCol" text="Author" prefWidth="200"/>
+                                        <TableColumn fx:id="genreCol" text="Genre" prefWidth="150"/>
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </VBox>
+                    </center>
+                </BorderPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

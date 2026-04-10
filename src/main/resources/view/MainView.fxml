@@ -150,7 +150,7 @@
                     <Label text="Recent Activity" styleClass="mini-panel-title"/>
                     <Separator/>
                     <Label text="No recent activity available." styleClass="mini-panel-text"/>
-                    <Label text="Borrowing, returns, and updates will appear here once records are added."
+                    <Label text="Borrowing, returns, and updates will appear here once records will be added."
                            styleClass="mini-panel-subtext"/>
                   </VBox>
 
@@ -158,7 +158,7 @@
                     <Label text="Announcements" styleClass="mini-panel-title"/>
                     <Separator/>
                     <Label text="No announcements posted." styleClass="mini-panel-text"/>
-                    <Label text="Use this area for reminders, notices, or system updates."
+                    <Label text="Use this area for reminders, notices, or the system updates."
                            styleClass="mini-panel-subtext"/>
                   </VBox>
                 </HBox>
