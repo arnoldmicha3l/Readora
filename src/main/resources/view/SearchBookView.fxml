@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #F8FAFC;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LibrarianLandingPage">
+    <content>
+        <VBox spacing="25.0" style="-fx-padding: 40;">
+            <children>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Book Management" textFill="#1F2937">
+                                    <font><Font name="System Bold" size="30.0" /></font>
+                                </Label>
+                                <Label text="Browse, search, and manage the library's book collection." textFill="#6B7280" />
+                            </children>
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button text="+ Add New Book"
+                                style="-fx-background-color: #345887; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: bold; -fx-cursor: hand;" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                    <children>
+                        <TextField promptText="Search by Title, Author, or ISBN..." HBox.hgrow="ALWAYS"
+                                   style="-fx-background-radius: 8; -fx-padding: 10;" />
+                        <Button text="Search"
+                                style="-fx-background-color: #345887; -fx-text-fill: white; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;" />
+                    </children>
+                </HBox>
+
+                <TableView fx:id="bookTable" prefHeight="450.0" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12; -fx-background-color: white;">
+                    <columns>
+                        <TableColumn prefWidth="120.0" text="ISBN" />
+                        <TableColumn prefWidth="250.0" text="Book Title" />
+                        <TableColumn prefWidth="180.0" text="Author" />
+                        <TableColumn prefWidth="150.0" text="Category" />
+                        <TableColumn prefWidth="120.0" text="Quantity" />
+                        <TableColumn prefWidth="120.0" text="Status" />
+                        <TableColumn prefWidth="150.0" text="Actions" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>
