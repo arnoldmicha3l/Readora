@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LibrarianLandingPage">
+    <content>
+        <VBox spacing="25.0" style="-fx-background-color: #F8FAFC; -fx-padding: 40;">
+            <children>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="5.0">
+                            <Label text="Borrowing Records" textFill="#1F2937"><font><Font name="System Bold" size="30.0" /></font></Label>
+                            <Label text="Monitor active library loans and due dates." textFill="#6B7280" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button text="+ New Transaction" style="-fx-background-color: #345887; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: bold;" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                    <children>
+                        <TextField promptText="Search by Member Name or Book ID..." HBox.hgrow="ALWAYS" style="-fx-background-radius: 8; -fx-padding: 10;" />
+                        <Button text="Search" style="-fx-background-color: #345887; -fx-text-fill: white; -fx-padding: 10 25; -fx-background-radius: 8;" />
+                    </children>
+                </HBox>
+
+                <TableView prefHeight="400.0" style="-fx-background-radius: 12;">
+                    <columns>
+                        <TableColumn prefWidth="150.0" text="Transaction ID" />
+                        <TableColumn prefWidth="200.0" text="Member Name" />
+                        <TableColumn prefWidth="250.0" text="Book Title" />
+                        <TableColumn prefWidth="150.0" text="Borrow Date" />
+                        <TableColumn prefWidth="150.0" text="Due Date" />
+                        <TableColumn prefWidth="120.0" text="Status" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

@@ -1,97 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #F8FAFC;"
-            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="mainBorderPane" prefHeight="720.0" prefWidth="1280.0"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.readora.controller.LibrarianLandingPage">
 
-    <left>
-        <VBox prefHeight="600.0" prefWidth="250.0"
-              style="-fx-background-color: #345887; -fx-background-radius: 0 15 15 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 0);">
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="20.0"
+              style="-fx-background-color: white; -fx-padding: 0 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);">
             <children>
-                <Label text="READORA" textFill="WHITE">
-                    <font><Font name="System Bold" size="26.0" /></font>
-                    <VBox.margin><Insets left="25.0" top="35.0" /></VBox.margin>
-                </Label>
-                <Label text="Library Administration" textFill="#D1D5DB">
-                    <VBox.margin><Insets bottom="30.0" left="25.0" /></VBox.margin>
-                    <font><Font size="13.0" /></font>
-                </Label>
+                <VBox alignment="CENTER_LEFT">
+                    <Label text="Readora" textFill="#1E3A8A">
+                        <font><Font name="System Bold" size="26.0" /></font>
+                    </Label>
+                    <Label text="Librarian Workstation" textFill="#6B7280">
+                        <font><Font size="12.0" /></font>
+                    </Label>
+                </VBox>
 
-                <Line endX="190.0" stroke="#FFFFFF" strokeWidth="0.5" opacity="0.3">
-                    <VBox.margin><Insets bottom="20.0" left="25.0" /></VBox.margin>
-                </Line>
+                <Pane HBox.hgrow="ALWAYS" />
 
-                <Button alignment="BASELINE_LEFT" onAction="#searchBook" prefHeight="50.0" prefWidth="250.0"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="SearchBook">
-                    <padding><Insets left="30.0" /></padding>
-                    <font><Font size="14.0" /></font>
-                </Button>
+                <HBox fx:id="navContainer" alignment="CENTER" spacing="15.0">
+                    <Button onAction="#openDashboard" text="Dashboard"
+                            style="-fx-background-color: #E0F2FE; -fx-text-fill: #0369A1; -fx-background-radius: 10; -fx-padding: 10 20; -fx-font-weight: bold;" />
+                    <Button onAction="#openSearchBook" text="Catalog"
+                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
+                    <Button onAction="#openManageMember" text="Members"
+                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
+                    <Button onAction="#openBorrowingRecords" text="Circulation"
+                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
+                </HBox>
 
-                <Button alignment="BASELINE_LEFT" onAction="#manageMember" prefHeight="50.0" prefWidth="250.0"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="ManageMember">
-                    <padding><Insets left="30.0" /></padding>
-                    <font><Font size="14.0" /></font>
-                </Button>
+                <Pane HBox.hgrow="ALWAYS" />
 
-                <Button alignment="BASELINE_LEFT" onAction="#borrowBook" prefHeight="50.0" prefWidth="250.0"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="BorrowedBook">
-                    <padding><Insets left="30.0" /></padding>
-                    <font><Font size="14.0" /></font>
-                </Button>
-
-                <Button alignment="BASELINE_LEFT" onAction="#returnBook" prefHeight="50.0" prefWidth="250.0"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="ReturnBook">
-                    <padding><Insets left="30.0" /></padding>
-                    <font><Font size="14.0" /></font>
-                </Button>
-
-                <Button alignment="BASELINE_LEFT" onAction="#viewBorrowingRecords" prefHeight="50.0" prefWidth="250.0"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="ViewBorrowingRecords">
-                    <padding><Insets left="30.0" /></padding>
-                    <font><Font size="14.0" /></font>
-                </Button>
+                <HBox alignment="CENTER" spacing="12.0">
+                    <VBox alignment="CENTER_RIGHT">
+                        <Label text="Librarian" textFill="#1E3A8A">
+                            <font><Font name="System Bold" size="14.0" /></font>
+                        </Label>
+                        <Label text="Active Session" textFill="#6B7280">
+                            <font><Font size="11.0" /></font>
+                        </Label>
+                    </VBox>
+                    <Button text="☰" style="-fx-background-color: transparent; -fx-padding: 10;" />
+                </HBox>
             </children>
-        </VBox>
-    </left>
+        </HBox>
+    </top>
 
     <center>
-        <AnchorPane BorderPane.alignment="CENTER">
-            <children>
-                <VBox layoutX="50.0" layoutY="50.0" spacing="8.0">
-                    <children>
-                        <Label text="Librarian Hub" textFill="#1F2937">
-                            <font><Font name="System Bold" size="30.0" /></font>
-                        </Label>
-                        <Label text="Manage your library assets with the new color theme." textFill="#6B7280">
-                            <font><Font size="15.0" /></font>
-                        </Label>
-                    </children>
-                </VBox>
-
-                <VBox layoutX="50.0" layoutY="160.0" prefHeight="140.0" prefWidth="560.0"
-                      style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 8);">
-                    <children>
-                        <Label text="System Status: Active" textFill="#355C8A">
-                            <font><Font name="System Bold" size="18.0" /></font>
-                        </Label>
-                        <Label text="Select a method from the left sidebar to proceed with library operations." textFill="#4B5563" wrapText="true">
-                            <VBox.margin><Insets top="12.0" /></VBox.margin>
-                        </Label>
-                    </children>
-                    <padding><Insets bottom="25.0" left="30.0" right="30.0" top="25.0" /></padding>
-                </VBox>
-            </children>
-        </AnchorPane>
+        <StackPane fx:id="contentArea" />
     </center>
+
 </BorderPane>

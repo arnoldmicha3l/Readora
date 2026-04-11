@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LibrarianLandingPage">
+    <content>
+        <VBox spacing="30.0" style="-fx-background-color: #F8FAFC; -fx-padding: 40;">
+            <children>
+                <VBox spacing="5.0">
+                    <Label text="Process Returns" textFill="#1F2937"><font><Font name="System Bold" size="30.0" /></font></Label>
+                    <Label text="Scan or enter details to check back library items." textFill="#6B7280" />
+                </VBox>
+
+                <HBox spacing="30.0">
+                    <children>
+                        <VBox spacing="20.0" prefWidth="450.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 8);">
+                            <children>
+                                <Label text="Book Information" textFill="#1E3A8A"><font><Font name="System Bold" size="18.0" /></font></Label>
+                                <VBox spacing="8.0">
+                                    <Label text="Book ISBN or ID" textFill="#4B5563" />
+                                    <TextField promptText="e.g. 978-3-16-148410-0" style="-fx-padding: 12; -fx-background-radius: 8;" />
+                                </VBox>
+                                <VBox spacing="8.0">
+                                    <Label text="Member ID" textFill="#4B5563" />
+                                    <TextField promptText="e.g. MBR-2024-001" style="-fx-padding: 12; -fx-background-radius: 8;" />
+                                </VBox>
+                                <Separator />
+                                <VBox spacing="8.0">
+                                    <Label text="Return Condition" textFill="#4B5563" />
+                                    <ComboBox prefWidth="400.0" promptText="Select Condition" style="-fx-padding: 5; -fx-background-radius: 8;" />
+                                </VBox>
+                                <Button maxWidth="Infinity" text="Complete Return" style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 15; -fx-background-radius: 10;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="15.0" prefWidth="400.0" style="-fx-background-color: #EFF6FF; -fx-padding: 30; -fx-background-radius: 15; -fx-border-color: #BFDBFE; -fx-border-radius: 15;">
+                            <children>
+                                <Label text="Summary" textFill="#1E40AF"><font><Font name="System Bold" size="18.0" /></font></Label>
+                                <Label text="No book selected for return." textFill="#60A5FA" wrapText="true" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

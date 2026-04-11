@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #F8FAFC;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LibrarianLandingPage">
+    <content>
+        <VBox spacing="35.0" style="-fx-padding: 40;">
+            <children>
+                <VBox spacing="5.0">
+                    <Label text="Librarian Dashboard" textFill="#1F2937"><font><Font name="System Bold" size="32.0" /></font></Label>
+                    <Label text="Manage daily circulation, member check-ins, and library catalog." textFill="#6B7280" />
+                </VBox>
+
+                <HBox spacing="20.0">
+                    <children>
+                        <VBox prefWidth="240.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
+                            <Label text="0" textFill="#1E3A8A"><font><Font name="System Bold" size="36.0" /></font></Label>
+                            <Label text="Books Borrowed Today" textFill="#6B7280" />
+                        </VBox>
+                        <VBox prefWidth="240.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
+                            <Label text="0" textFill="#1E3A8A"><font><Font name="System Bold" size="36.0" /></font></Label>
+                            <Label text="Returns Processed" textFill="#6B7280" />
+                        </VBox>
+                        <VBox prefWidth="240.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
+                            <Label text="0" textFill="#EF4444"><font><Font name="System Bold" size="36.0" /></font></Label>
+                            <Label text="Overdue Alerts" textFill="#6B7280" />
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <VBox spacing="15.0">
+                    <children>
+                        <Label text="Library Operations" textFill="#1F2937"><font><Font name="System Bold" size="20.0" /></font></Label>
+                        <TilePane hgap="25.0" prefColumns="3" vgap="25.0">
+                            <children>
+                                <VBox prefHeight="200.0" prefWidth="280.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 8);">
+                                    <Label text="Circulation" textFill="#1E3A8A"><font><Font name="System Bold" size="22.0" /></font></Label>
+                                    <Label text="Issue new books and track current loans." textFill="#6B7280" wrapText="true" />
+                                    <Pane VBox.vgrow="ALWAYS" />
+                                    <Button onAction="#openBorrowingRecords" text="Open Module" style="-fx-background-color: #345887; -fx-text-fill: white; -fx-background-radius: 8;" />
+                                </VBox>
+                                <VBox prefHeight="200.0" prefWidth="280.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 8);">
+                                    <Label text="Returns" textFill="#1E3A8A"><font><Font name="System Bold" size="22.0" /></font></Label>
+                                    <Label text="Process returned items and update status." textFill="#6B7280" wrapText="true" />
+                                    <Pane VBox.vgrow="ALWAYS" />
+                                    <Button onAction="#openReturnBook" text="Open Module" style="-fx-background-color: #345887; -fx-text-fill: white; -fx-background-radius: 8;" />
+                                </VBox>
+                            </children>
+                        </TilePane>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>
