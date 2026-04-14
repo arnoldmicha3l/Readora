@@ -1,16 +1,15 @@
 package com.readora.controller;
 
+import com.readora.user.UserRole;
+import com.readora.user.AccountService;
+import com.readora.service.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ public class RegisterViewController {
         roleComboBox.setItems(FXCollections.observableArrayList(
                 "Sign up as ADMIN",
                 "Sign up as Librarian",
-                "Sign up as Member"
+                "Sign up as Student"
         ));
     }
 
@@ -59,37 +58,47 @@ public class RegisterViewController {
             return;
         }
 
-        showAlert(
-                Alert.AlertType.INFORMATION,
-                "Registration Successful",
-                "Account created successfully as " + selectedRole + ". You will now return to the login page."
-        );
+        if (AccountService.usernameExists(username)) {
+            showAlert(Alert.AlertType.WARNING, "Registration Error", "Username already exists.");
+            return;
+        }
 
-        switchScene(event, "/view/LoginView.fxml", "Readora - Login");
+        UserRole role = mapRole(selectedRole);
+        boolean created = AccountService.registerAccount(fullName, username, password, role);
+
+        if (!created) {
+            showAlert(Alert.AlertType.ERROR, "Registration Error", "Unable to create account.");
+            return;
+        }
+
+        showAlert(Alert.AlertType.INFORMATION, "Registration Successful",
+                "Your account was created successfully as " + role.name() + ".");
+
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/LoginView.fxml", "Readora - Login");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to return to login.");
+        }
     }
 
     @FXML
     private void handleBackToLogin(ActionEvent event) {
-        switchScene(event, "/view/LoginView.fxml", "Readora - Login");
-    }
-
-    private void switchScene(ActionEvent event, String fxmlPath, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Scene newScene = new Scene(loader.load(), 1400, 850);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle(title);
-            stage.setScene(newScene);
-            stage.setMinWidth(1200);
-            stage.setMinHeight(700);
-            stage.setMaximized(true);
-            stage.show();
-
+            SceneNavigator.switchScene(event, getClass(), "/view/LoginView.fxml", "Readora - Login");
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to return to the login page.");
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to return to login.");
         }
+    }
+
+    private UserRole mapRole(String selectedRole) {
+        return switch (selectedRole) {
+            case "Sign up as ADMIN" -> UserRole.ADMIN;
+            case "Sign up as Librarian" -> UserRole.LIBRARIAN;
+            case "Sign up as Student" -> UserRole.STUDENT;
+            default -> UserRole.STUDENT;
+        };
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

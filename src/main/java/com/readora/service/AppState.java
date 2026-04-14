@@ -2,7 +2,7 @@ package com.readora.service;
 
 import com.readora.model.Book;
 import com.readora.model.BorrowRecord;
-import com.readora.model.Member;
+import com.readora.model.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public final class AppState {
 
     private static final ObservableList<Book> BOOKS = FXCollections.observableArrayList();
-    private static final ObservableList<Member> MEMBERS = FXCollections.observableArrayList();
+    private static final ObservableList<Student> STUDENTS = FXCollections.observableArrayList();
     private static final ObservableList<BorrowRecord> BORROW_RECORDS = FXCollections.observableArrayList();
 
     static {
@@ -23,15 +23,40 @@ public final class AppState {
                 new Book("B005", "The Montessori Method", "Maria Montessori", "Education", "Available")
         );
 
-        MEMBERS.addAll(
-                new Member("M001", "Ariana Cruz", "ariana.cruz@readora.edu", "Active"),
-                new Member("M002", "Miguel Santos", "miguel.santos@readora.edu", "Active"),
-                new Member("M003", "Jessa Lim", "jessa.lim@readora.edu", "Inactive")
+        STUDENTS.addAll(
+                new Student("S001", "Student User", "student@readora.edu", "Active"),
+                new Student("S002", "Ariana Cruz", "ariana.cruz@readora.edu", "Active"),
+                new Student("S003", "Miguel Santos", "miguel.santos@readora.edu", "Active")
         );
 
         BORROW_RECORDS.addAll(
-                new BorrowRecord("R001", "Ariana Cruz", "A Brief History of Time", LocalDate.now().minusDays(3), LocalDate.now().plusDays(4), "Borrowed"),
-                new BorrowRecord("R002", "Miguel Santos", "Sapiens", LocalDate.now().minusDays(10), LocalDate.now().minusDays(2), "Overdue")
+                new BorrowRecord(
+                        "R001",
+                        "Student User",
+                        "The Great Gatsby",
+                        LocalDate.now().minusDays(4),
+                        LocalDate.now().plusDays(3),
+                        null,
+                        "Borrowed"
+                ),
+                new BorrowRecord(
+                        "R002",
+                        "Ariana Cruz",
+                        "A Brief History of Time",
+                        LocalDate.now().minusDays(10),
+                        LocalDate.now().minusDays(2),
+                        null,
+                        "Overdue"
+                ),
+                new BorrowRecord(
+                        "R003",
+                        "Student User",
+                        "Clean Code",
+                        LocalDate.now().minusDays(12),
+                        LocalDate.now().minusDays(5),
+                        LocalDate.now().minusDays(3),
+                        "Returned"
+                )
         );
     }
 
@@ -42,8 +67,8 @@ public final class AppState {
         return BOOKS;
     }
 
-    public static ObservableList<Member> getMembers() {
-        return MEMBERS;
+    public static ObservableList<Student> getStudents() {
+        return STUDENTS;
     }
 
     public static ObservableList<BorrowRecord> getBorrowRecords() {

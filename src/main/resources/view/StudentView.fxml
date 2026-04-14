@@ -46,7 +46,7 @@
                     <HBox spacing="10" alignment="CENTER_RIGHT">
                         <VBox alignment="CENTER_RIGHT" spacing="2">
                             <Label text="Student User" styleClass="user-label"/>
-                            <Label text="ID: 2024-0001" styleClass="user-role"/>
+                            <Label text="Student Portal" styleClass="user-role"/>
                         </VBox>
                         <Button fx:id="studentMenuButton"
                                 text="☰"
@@ -67,8 +67,13 @@
                                       AnchorPane.rightAnchor="28.0"
                                       AnchorPane.bottomAnchor="26.0">
 
-                                    <VBox spacing="6">
-                                        <Label text="Hello Student User" styleClass="welcome-title"/>
+                                    <VBox spacing="4">
+                                        <Label fx:id="welcomeNameLabel"
+                                               text="Hello Student User"
+                                               styleClass="welcome-title"/>
+                                        <Label fx:id="studentIdLabel"
+                                               text="Student ID: Not Available"
+                                               styleClass="welcome-subtitle"/>
                                         <Label text="Track your active borrows and library history here."
                                                styleClass="welcome-subtitle"/>
                                     </VBox>
@@ -116,12 +121,14 @@
                                             </columns>
                                         </TableView>
                                     </VBox>
+
                                 </VBox>
                             </children>
                         </AnchorPane>
                     </content>
                 </ScrollPane>
             </center>
+
         </BorderPane>
     </children>
 </StackPane>

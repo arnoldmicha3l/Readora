@@ -10,18 +10,28 @@ import java.time.LocalDate;
 public class BorrowRecord {
 
     private final StringProperty recordId;
-    private final StringProperty memberName;
+    private final StringProperty studentName;
     private final StringProperty bookTitle;
-    private final ObjectProperty<LocalDate> dateBorrowed;
+    private final ObjectProperty<LocalDate> borrowDate;
     private final ObjectProperty<LocalDate> dueDate;
+    private final ObjectProperty<LocalDate> returnDate;
     private final StringProperty status;
 
-    public BorrowRecord(String recordId, String memberName, String bookTitle, LocalDate dateBorrowed, LocalDate dueDate, String status) {
+    public BorrowRecord(
+            String recordId,
+            String studentName,
+            String bookTitle,
+            LocalDate borrowDate,
+            LocalDate dueDate,
+            LocalDate returnDate,
+            String status
+    ) {
         this.recordId = new SimpleStringProperty(recordId);
-        this.memberName = new SimpleStringProperty(memberName);
+        this.studentName = new SimpleStringProperty(studentName);
         this.bookTitle = new SimpleStringProperty(bookTitle);
-        this.dateBorrowed = new SimpleObjectProperty<>(dateBorrowed);
+        this.borrowDate = new SimpleObjectProperty<>(borrowDate);
         this.dueDate = new SimpleObjectProperty<>(dueDate);
+        this.returnDate = new SimpleObjectProperty<>(returnDate);
         this.status = new SimpleStringProperty(status);
     }
 
@@ -33,36 +43,64 @@ public class BorrowRecord {
         return recordId;
     }
 
-    public String getMemberName() {
-        return memberName.get();
+    public String getStudentName() {
+        return studentName.get();
     }
 
-    public StringProperty memberNameProperty() {
-        return memberName;
+    public void setStudentName(String studentName) {
+        this.studentName.set(studentName);
+    }
+
+    public StringProperty studentNameProperty() {
+        return studentName;
     }
 
     public String getBookTitle() {
         return bookTitle.get();
     }
 
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle.set(bookTitle);
+    }
+
     public StringProperty bookTitleProperty() {
         return bookTitle;
     }
 
-    public LocalDate getDateBorrowed() {
-        return dateBorrowed.get();
+    public LocalDate getBorrowDate() {
+        return borrowDate.get();
     }
 
-    public ObjectProperty<LocalDate> dateBorrowedProperty() {
-        return dateBorrowed;
+    public void setBorrowDate(LocalDate borrowDate) {
+        this.borrowDate.set(borrowDate);
+    }
+
+    public ObjectProperty<LocalDate> borrowDateProperty() {
+        return borrowDate;
     }
 
     public LocalDate getDueDate() {
         return dueDate.get();
     }
 
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate.set(dueDate);
+    }
+
     public ObjectProperty<LocalDate> dueDateProperty() {
         return dueDate;
+    }
+
+    public LocalDate getReturnDate() {
+        return returnDate.get();
+    }
+
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate.set(returnDate);
+    }
+
+    public ObjectProperty<LocalDate> returnDateProperty() {
+        return returnDate;
     }
 
     public String getStatus() {

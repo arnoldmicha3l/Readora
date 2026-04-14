@@ -1,12 +1,14 @@
 package com.readora.controller;
 
-import javafx.application.Platform;
+import com.readora.model.BorrowRecord;
+import com.readora.user.UserAccount;
+import com.readora.service.AppState;
+import com.readora.service.SceneNavigator;
+import com.readora.user.SessionManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -19,7 +21,16 @@ import java.io.IOException;
 public class StudentViewController {
 
     @FXML
+    private Label welcomeNameLabel;
+
+    @FXML
+    private Label studentIdLabel;
+
+    @FXML
     private Label totalBorrowedLabel;
+
+    @FXML
+    private Label totalReturnedLabel;
 
     @FXML
     private Button studentMenuButton;
@@ -29,7 +40,33 @@ public class StudentViewController {
     @FXML
     public void initialize() {
         setupStudentMenu();
-        updateBorrowedCount(0);
+        loadStudentHeader();
+        refreshCounts();
+    }
+
+    private void loadStudentHeader() {
+        UserAccount currentUser = SessionManager.getCurrentUser();
+
+        if (currentUser != null) {
+            if (welcomeNameLabel != null) {
+                welcomeNameLabel.setText("Hello " + currentUser.getFullName());
+            }
+
+            if (studentIdLabel != null) {
+                String idText = currentUser.getStudentId() != null
+                        ? "Student ID: " + currentUser.getStudentId()
+                        : "Student ID: Not Available";
+                studentIdLabel.setText(idText);
+            }
+        } else {
+            if (welcomeNameLabel != null) {
+                welcomeNameLabel.setText("Hello Student User");
+            }
+
+            if (studentIdLabel != null) {
+                studentIdLabel.setText("Student ID: Not Available");
+            }
+        }
     }
 
     private void setupStudentMenu() {
@@ -40,18 +77,48 @@ public class StudentViewController {
         MenuItem helpItem = new MenuItem("Help");
         MenuItem logoutItem = new MenuItem("Logout");
 
-        viewProfileItem.setOnAction(event -> showInfo("Profile", "Student profile details can be added here soon."));
+        viewProfileItem.setOnAction(event -> handleViewProfile());
         settingsItem.setOnAction(event -> showInfo("Settings", "Student settings feature will be added soon."));
         helpItem.setOnAction(event -> showInfo("Help", "Readora Help Center is not yet available."));
-        logoutItem.setOnAction(this::handleLogout);
+        logoutItem.setOnAction(event -> handleLogout());
 
         studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, helpItem, logoutItem);
     }
 
-    public void updateBorrowedCount(int count) {
+    private void refreshCounts() {
+        UserAccount currentUser = SessionManager.getCurrentUser();
+        String fullName = currentUser != null ? currentUser.getFullName() : "";
+
+        ObservableList<BorrowRecord> records = FXCollections.observableArrayList(AppState.getBorrowRecords());
+
+        long borrowedCount = records.stream()
+                .filter(record -> record.getStudentName().equalsIgnoreCase(fullName))
+                .filter(record -> !"Returned".equalsIgnoreCase(record.getStatus()))
+                .count();
+
+        long returnedCount = records.stream()
+                .filter(record -> record.getStudentName().equalsIgnoreCase(fullName))
+                .filter(record -> "Returned".equalsIgnoreCase(record.getStatus()))
+                .count();
+
         if (totalBorrowedLabel != null) {
-            totalBorrowedLabel.setText(String.valueOf(count));
+            totalBorrowedLabel.setText(String.valueOf(borrowedCount));
         }
+
+        if (totalReturnedLabel != null) {
+            totalReturnedLabel.setText(String.valueOf(returnedCount));
+        }
+    }
+
+    private void handleViewProfile() {
+        UserAccount currentUser = SessionManager.getCurrentUser();
+
+        String fullName = currentUser != null ? currentUser.getFullName() : "Student User";
+        String studentId = currentUser != null && currentUser.getStudentId() != null
+                ? currentUser.getStudentId()
+                : "Not Available";
+
+        showInfo("Profile", "Logged in as: " + fullName + "\nStudent ID: " + studentId);
     }
 
     @FXML
@@ -67,65 +134,33 @@ public class StudentViewController {
 
     @FXML
     public void handleBrowseBooks(ActionEvent event) {
-        navigateTo(event, "/view/BrowseBooks.fxml");
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/BrowseBooks.fxml", "Readora - Browse Books");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Unable to open Browse Books.");
+        }
     }
 
     @FXML
     public void handleHistoryTab(ActionEvent event) {
-        navigateTo(event, "/view/MyHistory.fxml");
-    }
-
-    @FXML
-    public void handleLogout(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) studentMenuButton.getScene().getWindow();
-            double currentWidth = stage.getWidth();
-            double currentHeight = stage.getHeight();
-            boolean wasMaximized = stage.isMaximized();
-
-            Scene newScene = new Scene(root, currentWidth, currentHeight);
-
-            stage.setTitle("Readora - Login");
-            stage.setScene(newScene);
-            stage.setMinWidth(1200);
-            stage.setMinHeight(700);
-
-            Platform.runLater(() -> {
-                stage.setMaximized(wasMaximized || true);
-                stage.centerOnScreen();
-                stage.show();
-            });
+            SceneNavigator.switchScene(event, getClass(), "/view/MyHistory.fxml", "Readora - My History");
         } catch (IOException e) {
             e.printStackTrace();
-            showInfo("Error", "Unable to return to the login page.");
+            showInfo("Error", "Unable to open My History.");
         }
     }
 
-    private void navigateTo(ActionEvent event, String fxmlPath) {
+    private void handleLogout() {
+        SessionManager.clearSession();
+
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            double currentWidth = stage.getWidth();
-            double currentHeight = stage.getHeight();
-            boolean wasMaximized = stage.isMaximized();
-
-            Scene newScene = new Scene(root, currentWidth, currentHeight);
-
-            stage.setMinWidth(1200);
-            stage.setMinHeight(700);
-            stage.setScene(newScene);
-
-            Platform.runLater(() -> {
-                stage.setMaximized(wasMaximized);
-                stage.centerOnScreen();
-                stage.show();
-            });
+            Stage stage = (Stage) studentMenuButton.getScene().getWindow();
+            SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
         } catch (IOException e) {
-            System.err.println("Error loading FXML: " + fxmlPath);
             e.printStackTrace();
+            showInfo("Error", "Unable to return to login.");
         }
     }
 

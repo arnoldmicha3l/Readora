@@ -3,30 +3,30 @@ package com.readora.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Member {
+public class Student {
 
-    private final StringProperty memberId;
+    private final StringProperty studentId;
     private final StringProperty fullName;
     private final StringProperty email;
     private final StringProperty status;
 
-    public Member(String memberId, String fullName, String email, String status) {
-        this.memberId = new SimpleStringProperty(memberId);
+    public Student(String studentId, String fullName, String email, String status) {
+        this.studentId = new SimpleStringProperty(studentId);
         this.fullName = new SimpleStringProperty(fullName);
         this.email = new SimpleStringProperty(email);
         this.status = new SimpleStringProperty(status);
     }
 
-    public String getMemberId() {
-        return memberId.get();
+    public String getStudentId() {
+        return studentId.get();
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId.set(memberId);
+    public void setStudentId(String studentId) {
+        this.studentId.set(studentId);
     }
 
-    public StringProperty memberIdProperty() {
-        return memberId;
+    public StringProperty studentIdProperty() {
+        return studentId;
     }
 
     public String getFullName() {
