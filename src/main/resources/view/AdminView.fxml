@@ -14,7 +14,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/20"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.readora.controller.MainViewController"
+            fx:controller="com.readora.controller.AdminViewController"
             stylesheets="@style.css"
             styleClass="root-pane">
 
@@ -34,9 +34,9 @@
       <HBox spacing="10" alignment="CENTER">
         <Button text="Dashboard" styleClass="menu-button-active"/>
         <Button text="Books" styleClass="menu-button" onAction="#handleOpenBooks"/>
-        <Button text="Members" styleClass="menu-button"/>
-        <Button text="Borrow Records" styleClass="menu-button"/>
-        <Button text="Reports" styleClass="menu-button"/>
+        <Button text="Students" styleClass="menu-button" onAction="#handleOpenStudents"/>
+        <Button text="Borrow Records" styleClass="menu-button" onAction="#handleOpenBorrowRecords"/>
+        <Button text="Reports" styleClass="menu-button" onAction="#handleOpenReports"/>
       </HBox>
 
       <Region HBox.hgrow="ALWAYS"/>
@@ -73,7 +73,7 @@
 
               <VBox spacing="6">
                 <Label text="Hello Admin User" styleClass="welcome-title"/>
-                <Label text="Welcome back to Readora. Manage books, members, and borrowing activity from one dashboard."
+                <Label text="Welcome back to Readora. Manage books, students, and borrowing activity from one dashboard."
                        styleClass="welcome-subtitle"/>
               </VBox>
 
@@ -85,7 +85,7 @@
 
                 <VBox spacing="8" styleClass="summary-card" prefWidth="190">
                   <Label text="0" styleClass="summary-number"/>
-                  <Label text="Registered Members" styleClass="summary-label"/>
+                  <Label text="Registered Students" styleClass="summary-label"/>
                 </VBox>
 
                 <VBox spacing="8" styleClass="summary-card" prefWidth="190">
@@ -119,11 +119,11 @@
                     </VBox>
 
                     <VBox alignment="TOP_LEFT" spacing="12" prefWidth="230" prefHeight="180" styleClass="feature-card">
-                      <Label text="Members" styleClass="feature-title"/>
-                      <Label text="Maintain student, faculty, or library member information."
+                      <Label text="Students" styleClass="feature-title"/>
+                      <Label text="Maintain student information inside the system."
                              styleClass="feature-subtitle"/>
                       <Region VBox.vgrow="ALWAYS"/>
-                      <Button text="Open Module" styleClass="open-button"/>
+                      <Button text="Open Module" styleClass="open-button" onAction="#handleOpenStudents"/>
                     </VBox>
 
                     <VBox alignment="TOP_LEFT" spacing="12" prefWidth="230" prefHeight="180" styleClass="feature-card">
@@ -131,7 +131,7 @@
                       <Label text="Monitor borrowings, returns, due dates, and overdue activity."
                              styleClass="feature-subtitle"/>
                       <Region VBox.vgrow="ALWAYS"/>
-                      <Button text="Open Module" styleClass="open-button"/>
+                      <Button text="Open Module" styleClass="open-button" onAction="#handleOpenBorrowRecords"/>
                     </VBox>
 
                     <VBox alignment="TOP_LEFT" spacing="12" prefWidth="230" prefHeight="180" styleClass="feature-card">
@@ -139,7 +139,7 @@
                       <Label text="Generate library summaries and monitor collection activity."
                              styleClass="feature-subtitle"/>
                       <Region VBox.vgrow="ALWAYS"/>
-                      <Button text="Open Module" styleClass="open-button"/>
+                      <Button text="Open Module" styleClass="open-button" onAction="#handleOpenReports"/>
                     </VBox>
 
                   </FlowPane>
@@ -150,7 +150,7 @@
                     <Label text="Recent Activity" styleClass="mini-panel-title"/>
                     <Separator/>
                     <Label text="No recent activity available." styleClass="mini-panel-text"/>
-                    <Label text="Borrowing, returns, and updates will appear here once records will be added."
+                    <Label text="Borrowing, returns, and updates will appear here once records are added."
                            styleClass="mini-panel-subtext"/>
                   </VBox>
 
@@ -158,7 +158,7 @@
                     <Label text="Announcements" styleClass="mini-panel-title"/>
                     <Separator/>
                     <Label text="No announcements posted." styleClass="mini-panel-text"/>
-                    <Label text="Use this area for reminders, notices, or the system updates."
+                    <Label text="Use this area for reminders, notices, or system updates."
                            styleClass="mini-panel-subtext"/>
                   </VBox>
                 </HBox>
