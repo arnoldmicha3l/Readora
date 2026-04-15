@@ -3,8 +3,8 @@ package com.readora.controller;
 import com.readora.user.UserAccount;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
-import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -26,15 +26,15 @@ public class AdminViewController {
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
         MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem helpItem = new MenuItem("Help");
+        MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
         viewProfileItem.setOnAction(event -> handleViewProfile());
         settingsItem.setOnAction(event -> handleSettings());
-        helpItem.setOnAction(event -> handleHelp());
+        aboutUsItem.setOnAction(event -> handleAboutUs());
         logoutItem.setOnAction(event -> handleLogout());
 
-        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, helpItem, logoutItem);
+        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
     }
 
     @FXML
@@ -78,21 +78,21 @@ public class AdminViewController {
         showInfo("Reports", "Reports module can be expanded next. This button is now active.");
     }
 
-    @FXML
     private void handleViewProfile() {
         UserAccount currentUser = SessionManager.getCurrentUser();
         String fullName = currentUser != null ? currentUser.getFullName() : "Admin";
         showInfo("Profile", "Logged in as: " + fullName);
     }
 
-    @FXML
     private void handleSettings() {
         showInfo("Settings", "System settings feature will be added soon.");
     }
 
-    @FXML
-    private void handleHelp() {
-        showInfo("Help", "Readora Help Center is not yet available.");
+    private void handleAboutUs() {
+        showInfo(
+                "About Us",
+                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        );
     }
 
     private void handleLogout() {

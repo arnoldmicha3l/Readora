@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.AboutUsController"
+            stylesheets="@style.css"
+            styleClass="root-pane">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+            <padding>
+                <Insets top="14" right="24" bottom="14" left="24"/>
+            </padding>
+
+            <VBox spacing="2">
+                <Label text="Readora" styleClass="logo-title"/>
+                <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Back"
+                    onAction="#handleBack"
+                    styleClass="secondary-login-button"
+                    prefWidth="110"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="26" styleClass="aboutus-page">
+            <padding>
+                <Insets top="26" right="26" bottom="26" left="26"/>
+            </padding>
+
+            <!-- LEFT SIDE -->
+            <VBox spacing="20" prefWidth="390" minWidth="390" maxWidth="390" styleClass="aboutus-side-panel">
+                <children>
+                    <VBox spacing="8">
+                        <Label text="Development Team" styleClass="aboutus-side-title"/>
+                        <Label text="Click a developer to view their profile and motivational quote."
+                               styleClass="aboutus-side-subtitle"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="main-scroll-pane">
+                        <content>
+                            <VBox spacing="14" style="-fx-padding: 4;">
+                                <children>
+
+                                    <Button text=""
+                                            onAction="#showFrancis"
+                                            styleClass="developer-select-button">
+                                        <graphic>
+                                            <HBox spacing="14" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <StackPane styleClass="developer-avatar-large">
+                                                        <children>
+                                                            <Circle radius="36" styleClass="developer-avatar-circle"/>
+                                                            <Label text="FC" styleClass="developer-avatar-text"/>
+                                                        </children>
+                                                    </StackPane>
+                                                    <VBox spacing="4">
+                                                        <children>
+                                                            <Label text="Francis Andrei L. Cabrera" styleClass="developer-name"/>
+                                                            <Label text="Developer" styleClass="developer-role"/>
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                    </Button>
+
+                                    <Button text=""
+                                            onAction="#showNirhven"
+                                            styleClass="developer-select-button">
+                                        <graphic>
+                                            <HBox spacing="14" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <StackPane styleClass="developer-avatar-large">
+                                                        <children>
+                                                            <Circle radius="36" styleClass="developer-avatar-circle"/>
+                                                            <Label text="ND" styleClass="developer-avatar-text"/>
+                                                        </children>
+                                                    </StackPane>
+                                                    <VBox spacing="4">
+                                                        <children>
+                                                            <Label text="Nirhven Kyle C. Dialimas" styleClass="developer-name"/>
+                                                            <Label text="Developer" styleClass="developer-role"/>
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                    </Button>
+
+                                    <Button text=""
+                                            onAction="#showDave"
+                                            styleClass="developer-select-button">
+                                        <graphic>
+                                            <HBox spacing="14" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <StackPane styleClass="developer-avatar-large">
+                                                        <children>
+                                                            <Circle radius="36" styleClass="developer-avatar-circle"/>
+                                                            <Label text="DR" styleClass="developer-avatar-text"/>
+                                                        </children>
+                                                    </StackPane>
+                                                    <VBox spacing="4">
+                                                        <children>
+                                                            <Label text="Dave Laurence R. Repe" styleClass="developer-name"/>
+                                                            <Label text="Developer" styleClass="developer-role"/>
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                    </Button>
+
+                                    <Button text=""
+                                            onAction="#showRolando"
+                                            styleClass="developer-select-button">
+                                        <graphic>
+                                            <HBox spacing="14" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <StackPane styleClass="developer-avatar-large">
+                                                        <children>
+                                                            <Circle radius="36" styleClass="developer-avatar-circle"/>
+                                                            <Label text="RS" styleClass="developer-avatar-text"/>
+                                                        </children>
+                                                    </StackPane>
+                                                    <VBox spacing="4">
+                                                        <children>
+                                                            <Label text="Rolando Supremo Jr." styleClass="developer-name"/>
+                                                            <Label text="Developer" styleClass="developer-role"/>
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                    </Button>
+
+                                    <Button text=""
+                                            onAction="#showArnold"
+                                            styleClass="developer-select-button">
+                                        <graphic>
+                                            <HBox spacing="14" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <StackPane styleClass="developer-avatar-large">
+                                                        <children>
+                                                            <Circle radius="36" styleClass="developer-avatar-circle"/>
+                                                            <Label text="AT" styleClass="developer-avatar-text"/>
+                                                        </children>
+                                                    </StackPane>
+                                                    <VBox spacing="4">
+                                                        <children>
+                                                            <Label text="Arnold Michael P. Tabada" styleClass="developer-name"/>
+                                                            <Label text="Developer" styleClass="developer-role"/>
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                    </Button>
+
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </children>
+            </VBox>
+
+            <!-- RIGHT SIDE -->
+            <VBox spacing="20" HBox.hgrow="ALWAYS">
+                <children>
+                    <VBox spacing="10" styleClass="aboutus-hero-panel">
+                        <children>
+                            <Label text="About Readora" styleClass="aboutus-main-title"/>
+                            <Label text="Readora is a Smart Library Management System designed to simplify book management, student records, and borrowing transactions through a clean, efficient, and organized digital platform."
+                                   styleClass="aboutus-main-subtitle"
+                                   wrapText="true"/>
+                        </children>
+                    </VBox>
+
+                    <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="aboutus-tabpane" VBox.vgrow="ALWAYS">
+                        <tabs>
+                            <Tab text="Vision">
+                                <content>
+                                    <VBox spacing="18" styleClass="aboutus-tab-content-enhanced">
+                                        <padding>
+                                            <Insets top="28" right="28" bottom="28" left="28"/>
+                                        </padding>
+
+                                        <Label text="Our Vision" styleClass="aboutus-tab-title"/>
+                                        <Label text="To become a reliable, efficient, and user-friendly smart library management system that supports schools and academic institutions in improving the organization of resources, the accuracy of records, and the overall quality of library services through technology."
+                                               wrapText="true"
+                                               styleClass="aboutus-text-large"/>
+                                    </VBox>
+                                </content>
+                            </Tab>
+
+                            <Tab text="Mission">
+                                <content>
+                                    <VBox spacing="18" styleClass="aboutus-tab-content-enhanced">
+                                        <padding>
+                                            <Insets top="28" right="28" bottom="28" left="28"/>
+                                        </padding>
+
+                                        <Label text="Our Mission" styleClass="aboutus-tab-title"/>
+                                        <Label text="Our mission is to provide a smart, organized, and accessible digital system for managing library operations such as book records, student information, and borrowing transactions. Readora aims to reduce manual work, improve efficiency, and deliver a more convenient experience for both administrators and users."
+                                               wrapText="true"
+                                               styleClass="aboutus-text-large"/>
+                                    </VBox>
+                                </content>
+                            </Tab>
+
+                            <Tab text="Developer Profile">
+                                <content>
+                                    <VBox spacing="22" styleClass="aboutus-tab-content-enhanced">
+                                        <padding>
+                                            <Insets top="28" right="28" bottom="28" left="28"/>
+                                        </padding>
+
+                                        <HBox spacing="22" alignment="CENTER_LEFT">
+                                            <children>
+                                                <StackPane styleClass="developer-profile-avatar">
+                                                    <children>
+                                                        <Circle radius="60" styleClass="developer-avatar-circle"/>
+                                                        <Label fx:id="profileInitialsLabel" text="FC" styleClass="developer-profile-initials"/>
+                                                    </children>
+                                                </StackPane>
+
+                                                <VBox spacing="8">
+                                                    <children>
+                                                        <Label fx:id="profileNameLabel"
+                                                               text="Francis Andrei L. Cabrera"
+                                                               styleClass="aboutus-tab-title"/>
+                                                        <Label fx:id="profileRoleLabel"
+                                                               text="Developer"
+                                                               styleClass="developer-role-large"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="10" styleClass="quote-card">
+                                            <children>
+                                                <Label text="Motivational Quote" styleClass="quote-title"/>
+                                                <Label fx:id="profileQuoteLabel"
+                                                       text="Keep building, keep learning, and trust that every small improvement brings you closer to something great."
+                                                       wrapText="true"
+                                                       styleClass="quote-text"/>
+                                            </children>
+                                        </VBox>
+                                    </VBox>
+                                </content>
+                            </Tab>
+                        </tabs>
+                    </TabPane>
+                </children>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

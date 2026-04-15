@@ -36,17 +36,10 @@ public class LibrarianLandingPage {
     private ContextMenu librarianContextMenu;
 
     private final String ACTIVE_STYLE =
-            "-fx-background-color: #E0F2FE; " +
-                    "-fx-text-fill: #0369A1; " +
-                    "-fx-background-radius: 10; " +
-                    "-fx-padding: 10 20; " +
-                    "-fx-font-weight: bold;";
+            "-fx-background-color: #E0F2FE; -fx-text-fill: #0369A1; -fx-background-radius: 10; -fx-padding: 10 20; -fx-font-weight: bold;";
 
     private final String IDLE_STYLE =
-            "-fx-background-color: transparent; " +
-                    "-fx-text-fill: #4B5563; " +
-                    "-fx-padding: 10 20; " +
-                    "-fx-font-weight: normal;";
+            "-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20; -fx-font-weight: normal;";
 
     @FXML
     public void initialize() {
@@ -68,18 +61,18 @@ public class LibrarianLandingPage {
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
         MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem helpItem = new MenuItem("Help");
+        MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
         viewProfileItem.setOnAction(event -> handleViewProfile());
         settingsItem.setOnAction(event -> handleSettings());
-        helpItem.setOnAction(event -> handleHelp());
+        aboutUsItem.setOnAction(event -> handleAboutUs());
         logoutItem.setOnAction(event -> handleLogout());
 
         librarianContextMenu.getItems().addAll(
                 viewProfileItem,
                 settingsItem,
-                helpItem,
+                aboutUsItem,
                 logoutItem
         );
     }
@@ -167,8 +160,11 @@ public class LibrarianLandingPage {
         showInfo("Settings", "Librarian settings feature will be added soon.");
     }
 
-    private void handleHelp() {
-        showInfo("Help", "Readora Help Center is not yet available.");
+    private void handleAboutUs() {
+        showInfo(
+                "About Us",
+                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        );
     }
 
     private void handleLogout() {

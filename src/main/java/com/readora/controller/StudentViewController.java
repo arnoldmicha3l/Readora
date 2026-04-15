@@ -74,15 +74,15 @@ public class StudentViewController {
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
         MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem helpItem = new MenuItem("Help");
+        MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
         viewProfileItem.setOnAction(event -> handleViewProfile());
         settingsItem.setOnAction(event -> showInfo("Settings", "Student settings feature will be added soon."));
-        helpItem.setOnAction(event -> showInfo("Help", "Readora Help Center is not yet available."));
+        aboutUsItem.setOnAction(event -> handleAboutUs());
         logoutItem.setOnAction(event -> handleLogout());
 
-        studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, helpItem, logoutItem);
+        studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
     }
 
     private void refreshCounts() {
@@ -119,6 +119,16 @@ public class StudentViewController {
                 : "Not Available";
 
         showInfo("Profile", "Logged in as: " + fullName + "\nStudent ID: " + studentId);
+    }
+
+    private void handleAboutUs() {
+        try {
+            Stage stage = (Stage) studentMenuButton.getScene().getWindow();
+            SceneNavigator.switchScene(stage, getClass(), "/view/AboutUsView.fxml", "Readora - About Us");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Unable to open About Us page.");
+        }
     }
 
     @FXML
