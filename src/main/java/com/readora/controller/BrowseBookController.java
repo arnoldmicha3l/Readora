@@ -7,8 +7,8 @@ import com.readora.user.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -61,15 +61,22 @@ public class BrowseBookController {
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
         MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem helpItem = new MenuItem("Help");
+        MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
         viewProfileItem.setOnAction(event -> showInfo("Profile", "Student profile details can be added here."));
         settingsItem.setOnAction(event -> showInfo("Settings", "Student settings feature will be added soon."));
-        helpItem.setOnAction(event -> showInfo("Help", "Readora Help Center is not yet available."));
+        aboutUsItem.setOnAction(event -> handleAboutUs());
         logoutItem.setOnAction(event -> handleLogout());
 
-        studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, helpItem, logoutItem);
+        studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
+    }
+
+    private void handleAboutUs() {
+        showInfo(
+                "About Us",
+                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        );
     }
 
     @FXML

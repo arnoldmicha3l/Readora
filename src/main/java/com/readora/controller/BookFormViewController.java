@@ -4,11 +4,15 @@ import com.readora.model.Book;
 import com.readora.service.AppState;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -23,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
 
@@ -65,15 +70,15 @@ public class BookFormViewController {
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
         MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem helpItem = new MenuItem("Help");
+        MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
         viewProfileItem.setOnAction(event -> showAlert(Alert.AlertType.INFORMATION, "Profile", "Admin profile details can be added here."));
         settingsItem.setOnAction(event -> showAlert(Alert.AlertType.INFORMATION, "Settings", "System settings feature will be added soon."));
-        helpItem.setOnAction(event -> showAlert(Alert.AlertType.INFORMATION, "Help", "Readora Help Center is not yet available."));
-        logoutItem.setOnAction(this::handleLogout);
+        aboutUsItem.setOnAction(event -> handleAboutUs());
+        logoutItem.setOnAction(event -> handleLogout(event));
 
-        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, helpItem, logoutItem);
+        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
     }
 
     private void setupComboBoxes() {
@@ -287,6 +292,14 @@ public class BookFormViewController {
         categoryComboBox.setValue(null);
         statusComboBox.setValue(null);
         editingBook = null;
+    }
+
+    private void handleAboutUs() {
+        showAlert(
+                Alert.AlertType.INFORMATION,
+                "About Us",
+                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        );
     }
 
     private void handleLogout(ActionEvent event) {
