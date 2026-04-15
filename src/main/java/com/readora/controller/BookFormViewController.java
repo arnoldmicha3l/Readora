@@ -1,18 +1,14 @@
 package com.readora.controller;
 
 import com.readora.model.Book;
-import javafx.application.Platform;
+import com.readora.service.AppState;
+import com.readora.service.SceneNavigator;
+import com.readora.user.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -32,61 +28,25 @@ import java.io.IOException;
 
 public class BookFormViewController {
 
-    @FXML
-    private Button adminMenuButton;
+    @FXML private Button adminMenuButton;
+    @FXML private TextField bookIdField;
+    @FXML private TextField titleField;
+    @FXML private TextField authorField;
+    @FXML private ComboBox<String> categoryComboBox;
+    @FXML private ComboBox<String> statusComboBox;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> filterCategoryComboBox;
+    @FXML private ComboBox<String> filterStatusComboBox;
+    @FXML private TableView<Book> bookTable;
+    @FXML private TableColumn<Book, String> bookIdColumn;
+    @FXML private TableColumn<Book, String> titleColumn;
+    @FXML private TableColumn<Book, String> authorColumn;
+    @FXML private TableColumn<Book, String> categoryColumn;
+    @FXML private TableColumn<Book, String> statusColumn;
+    @FXML private TableColumn<Book, String> actionColumn;
+    @FXML private HBox popupOverlay;
+    @FXML private Label popupTitleLabel;
 
-    @FXML
-    private TextField bookIdField;
-
-    @FXML
-    private TextField titleField;
-
-    @FXML
-    private TextField authorField;
-
-    @FXML
-    private ComboBox<String> categoryComboBox;
-
-    @FXML
-    private ComboBox<String> statusComboBox;
-
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private ComboBox<String> filterCategoryComboBox;
-
-    @FXML
-    private ComboBox<String> filterStatusComboBox;
-
-    @FXML
-    private TableView<Book> bookTable;
-
-    @FXML
-    private TableColumn<Book, String> bookIdColumn;
-
-    @FXML
-    private TableColumn<Book, String> titleColumn;
-
-    @FXML
-    private TableColumn<Book, String> authorColumn;
-
-    @FXML
-    private TableColumn<Book, String> categoryColumn;
-
-    @FXML
-    private TableColumn<Book, String> statusColumn;
-
-    @FXML
-    private TableColumn<Book, String> actionColumn;
-
-    @FXML
-    private HBox popupOverlay;
-
-    @FXML
-    private Label popupTitleLabel;
-
-    private final ObservableList<Book> masterBookList = FXCollections.observableArrayList();
     private FilteredList<Book> filteredBookList;
     private ContextMenu adminContextMenu;
     private Book editingBook;
@@ -96,8 +56,7 @@ public class BookFormViewController {
         setupAdminMenu();
         setupComboBoxes();
         setupTable();
-        loadDummyBooks();
-        applyFilters();
+        setupData();
         hidePopup();
     }
 
@@ -118,21 +77,11 @@ public class BookFormViewController {
     }
 
     private void setupComboBoxes() {
-        categoryComboBox.setItems(FXCollections.observableArrayList(
-                "Fiction", "Non-Fiction", "Science", "History", "Technology", "Education"
-        ));
+        categoryComboBox.getItems().setAll("Fiction", "Non-Fiction", "Science", "History", "Technology", "Education");
+        statusComboBox.getItems().setAll("Available", "Borrowed", "Reserved");
 
-        statusComboBox.setItems(FXCollections.observableArrayList(
-                "Available", "Borrowed", "Reserved"
-        ));
-
-        filterCategoryComboBox.setItems(FXCollections.observableArrayList(
-                "All", "Fiction", "Non-Fiction", "Science", "History", "Technology", "Education"
-        ));
-
-        filterStatusComboBox.setItems(FXCollections.observableArrayList(
-                "All", "Available", "Borrowed", "Reserved"
-        ));
+        filterCategoryComboBox.getItems().setAll("All", "Fiction", "Non-Fiction", "Science", "History", "Technology", "Education");
+        filterStatusComboBox.getItems().setAll("All", "Available", "Borrowed", "Reserved");
 
         filterCategoryComboBox.setValue("All");
         filterStatusComboBox.setValue("All");
@@ -145,7 +94,7 @@ public class BookFormViewController {
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        filteredBookList = new FilteredList<>(masterBookList, book -> true);
+        filteredBookList = new FilteredList<>(AppState.getBooks(), book -> true);
         bookTable.setItems(filteredBookList);
 
         actionColumn.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
@@ -166,7 +115,7 @@ public class BookFormViewController {
 
                 deleteButton.setOnAction(event -> {
                     Book selectedBook = getTableView().getItems().get(getIndex());
-                    masterBookList.remove(selectedBook);
+                    AppState.getBooks().remove(selectedBook);
                     applyFilters();
                 });
             }
@@ -180,14 +129,8 @@ public class BookFormViewController {
         });
     }
 
-    private void loadDummyBooks() {
-        masterBookList.addAll(
-                new Book("B001", "The Great Gatsby", "F. Scott Fitzgerald", "Fiction", "Available"),
-                new Book("B002", "A Brief History of Time", "Stephen Hawking", "Science", "Borrowed"),
-                new Book("B003", "Clean Code", "Robert C. Martin", "Technology", "Available"),
-                new Book("B004", "Sapiens", "Yuval Noah Harari", "History", "Reserved"),
-                new Book("B005", "The Montessori Method", "Maria Montessori", "Education", "Available")
-        );
+    private void setupData() {
+        applyFilters();
     }
 
     @FXML
@@ -203,7 +146,12 @@ public class BookFormViewController {
 
     @FXML
     private void handleGoDashboard(ActionEvent event) {
-        switchScene(event, "/view/MainView.fxml", "Readora Dashboard");
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/AdminView.fxml", "Readora - Admin Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the dashboard.");
+        }
     }
 
     @FXML
@@ -213,17 +161,22 @@ public class BookFormViewController {
 
     @FXML
     private void handleMembersTab() {
-        showAlert(Alert.AlertType.INFORMATION, "Members", "Members page will be added soon.");
+        showAlert(Alert.AlertType.INFORMATION, "Students", "Student module button is active. You can add the full student page next.");
     }
 
     @FXML
-    private void handleBorrowRecordsTab() {
-        showAlert(Alert.AlertType.INFORMATION, "Borrow Records", "Borrow Records page will be added soon.");
+    private void handleBorrowRecordsTab(ActionEvent event) {
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/BorrowRecordsView.fxml", "Readora - Borrow Records");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open Borrow Records.");
+        }
     }
 
     @FXML
     private void handleReportsTab() {
-        showAlert(Alert.AlertType.INFORMATION, "Reports", "Reports page will be added soon.");
+        showAlert(Alert.AlertType.INFORMATION, "Reports", "Reports button is active. You can build the full reports page next.");
     }
 
     @FXML
@@ -255,14 +208,13 @@ public class BookFormViewController {
         }
 
         if (editingBook == null) {
-            Book newBook = new Book(
+            AppState.getBooks().add(new Book(
                     bookIdField.getText().trim(),
                     titleField.getText().trim(),
                     authorField.getText().trim(),
                     categoryComboBox.getValue(),
                     statusComboBox.getValue()
-            );
-            masterBookList.add(newBook);
+            ));
         } else {
             editingBook.setBookId(bookIdField.getText().trim());
             editingBook.setTitle(titleField.getText().trim());
@@ -338,36 +290,14 @@ public class BookFormViewController {
     }
 
     private void handleLogout(ActionEvent event) {
-        switchScene(event, "/view/LoginView.fxml", "Readora - Login");
-    }
+        SessionManager.clearSession();
 
-    private void switchScene(ActionEvent event, String fxmlPath, String title) {
         try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            boolean wasMaximized = stage.isMaximized();
-            double currentWidth = stage.getWidth();
-            double currentHeight = stage.getHeight();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Scene newScene = new Scene(root, currentWidth, currentHeight);
-
-            stage.setMinWidth(1200);
-            stage.setMinHeight(700);
-            stage.setTitle(title);
-            stage.setScene(newScene);
-
-            Platform.runLater(() -> {
-                stage.setMaximized(wasMaximized || true);
-                stage.centerOnScreen();
-                stage.show();
-            });
-
+            Stage stage = (Stage) adminMenuButton.getScene().getWindow();
+            SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the requested page.");
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to return to login.");
         }
     }
 

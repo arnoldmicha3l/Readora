@@ -1,16 +1,21 @@
 package com.readora.controller;
 
+import com.readora.user.UserAccount;
+import com.readora.user.UserRole;
+import com.readora.user.AccountService;
+import com.readora.service.SceneNavigator;
+import com.readora.user.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LoginViewController {
 
@@ -19,6 +24,35 @@ public class LoginViewController {
 
     @FXML
     private PasswordField passwordField;
+
+    @FXML
+    private ImageView loginLogoView;
+
+    @FXML
+    public void initialize() {
+        loadLogo();
+    }
+
+    private void loadLogo() {
+        try {
+            Image logo = new Image(
+                    Objects.requireNonNull(getClass().getResource("/images/logo.png")).toExternalForm()
+            );
+
+            loginLogoView.setImage(logo);
+
+            double imageWidth = logo.getWidth();
+            double imageHeight = logo.getHeight();
+
+            double cropSize = Math.min(imageWidth, imageHeight) * 0.59;
+            double x = (imageWidth - cropSize) / 2;
+            double y = (imageHeight - cropSize) / 2;
+
+            loginLogoView.setViewport(new Rectangle2D(x, y, cropSize, cropSize));
+        } catch (Exception e) {
+            System.err.println("Logo could not be loaded: " + e.getMessage());
+        }
+    }
 
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -30,30 +64,38 @@ public class LoginViewController {
             return;
         }
 
-        switchScene(event, "/view/MainView.fxml", "Readora Dashboard");
+        UserAccount account = AccountService.loginAccount(username, password);
+
+        if (account == null) {
+            showAlert(Alert.AlertType.ERROR, "Login Error", "Invalid username or password.");
+            return;
+        }
+
+        SessionManager.setCurrentUser(account);
+
+        try {
+            if (account.getRole() == UserRole.ADMIN) {
+                SceneNavigator.switchScene(event, getClass(), "/view/AdminView.fxml", "Readora - Admin Dashboard");
+            } else if (account.getRole() == UserRole.LIBRARIAN) {
+                SceneNavigator.switchScene(event, getClass(), "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
+            } else if (account.getRole() == UserRole.STUDENT) {
+                SceneNavigator.switchScene(event, getClass(), "/view/StudentView.fxml", "Readora - Student Dashboard");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Login Error", "Unknown role detected.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the correct dashboard.");
+        }
     }
 
     @FXML
     private void handleRegister(ActionEvent event) {
-        switchScene(event, "/view/RegisterView.fxml", "Readora - Register");
-    }
-
-    private void switchScene(ActionEvent event, String fxmlPath, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Scene newScene = new Scene(loader.load(), 1400, 850);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle(title);
-            stage.setScene(newScene);
-            stage.setMinWidth(1200);
-            stage.setMinHeight(700);
-            stage.setMaximized(true);
-            stage.show();
-
+            SceneNavigator.switchScene(event, getClass(), "/view/RegisterView.fxml", "Readora - Register");
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the requested page.");
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the registration page.");
         }
     }
 
