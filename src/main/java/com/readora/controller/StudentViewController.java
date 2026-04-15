@@ -111,14 +111,22 @@ public class StudentViewController {
     }
 
     private void handleViewProfile() {
-        UserAccount currentUser = SessionManager.getCurrentUser();
+        try {
 
-        String fullName = currentUser != null ? currentUser.getFullName() : "Student User";
-        String studentId = currentUser != null && currentUser.getStudentId() != null
-                ? currentUser.getStudentId()
-                : "Not Available";
+            Stage stage = (Stage) studentMenuButton.getScene().getWindow();
 
-        showInfo("Profile", "Logged in as: " + fullName + "\nStudent ID: " + studentId);
+
+            SceneNavigator.switchScene(
+                    stage,
+                    getClass(),
+                    "/view/StudentProfile.fxml",
+                    "Readora - My Profile"
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Unable to open Student Profile view.");
+        }
     }
 
     @FXML
