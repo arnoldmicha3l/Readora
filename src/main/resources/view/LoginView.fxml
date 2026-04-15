@@ -81,7 +81,7 @@
                             <VBox spacing="7">
                                 <Label text="Password" styleClass="form-label"/>
                                 <PasswordField fx:id="passwordField"
-                                               promptText="Enter your password"
+                                               promptText="Enter your password "
                                                styleClass="login-input"/>
                             </VBox>
                         </VBox>
