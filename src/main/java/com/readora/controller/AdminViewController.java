@@ -66,7 +66,7 @@ public class AdminViewController {
     @FXML
     private void handleOpenBorrowRecords(ActionEvent event) {
         try {
-            SceneNavigator.switchScene(event, getClass(), "/view/BorrowRecordsView.fxml", "Readora - Borrow Records");
+            SceneNavigator.switchScene(event, getClass(), "/view/BorrowRecords.fxml", "Readora - Borrow Records");
         } catch (IOException e) {
             e.printStackTrace();
             showInfo("Error", "Unable to open Borrow Records.");
