@@ -36,21 +36,26 @@
                 <Pane HBox.hgrow="ALWAYS" />
 
                 <HBox fx:id="navContainer" alignment="CENTER" spacing="15.0">
-                    <Button onAction="#openDashboard"
+                    <Button fx:id="dashboardButton"
+                            onAction="#openDashboard"
                             text="Dashboard"
-                            style="-fx-background-color: #E0F2FE; -fx-text-fill: #0369A1; -fx-background-radius: 10; -fx-padding: 10 20; -fx-font-weight: bold;" />
-                    <Button onAction="#openSearchBook"
+                            styleClass="menu-button-active" />
+                    <Button fx:id="catalogButton"
+                            onAction="#openSearchBook"
                             text="Catalog"
-                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
-                    <Button onAction="#openManageStudent"
+                            styleClass="menu-button" />
+                    <Button fx:id="studentsButton"
+                            onAction="#openManageStudent"
                             text="Students"
-                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
-                    <Button onAction="#openBorrowingRecords"
+                            styleClass="menu-button" />
+                    <Button fx:id="circulationButton"
+                            onAction="#openBorrowingRecords"
                             text="Circulation"
-                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
-                    <Button onAction="#openReturnBook"
+                            styleClass="menu-button" />
+                    <Button fx:id="returnsButton"
+                            onAction="#openReturnBook"
                             text="Returns"
-                            style="-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20;" />
+                            styleClass="menu-button" />
                 </HBox>
 
                 <Pane HBox.hgrow="ALWAYS" />
@@ -78,7 +83,7 @@
     </top>
 
     <center>
-        <StackPane fx:id="contentArea" />
+        <StackPane fx:id="contentArea" alignment="TOP_LEFT" />
     </center>
 
 </BorderPane>

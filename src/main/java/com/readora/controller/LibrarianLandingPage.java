@@ -1,8 +1,5 @@
 package com.readora.controller;
 
-import com.readora.user.UserAccount;
-import com.readora.service.SceneNavigator;
-import com.readora.user.SessionManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,66 +16,75 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.readora.service.SceneNavigator;
+import com.readora.user.SessionManager;
+import com.readora.user.UserAccount;
+
 public class LibrarianLandingPage {
 
-    @FXML
-    private StackPane contentArea;
-
-    @FXML
-    private HBox navContainer;
-
-    @FXML
-    private Label moduleTitle;
-
-    @FXML
-    private Button librarianMenuButton;
+    @FXML private StackPane contentArea;
+    @FXML private Label moduleTitle;
+    @FXML private HBox navContainer;
+    @FXML private Button dashboardButton;
+    @FXML private Button catalogButton;
+    @FXML private Button studentsButton;
+    @FXML private Button circulationButton;
+    @FXML private Button returnsButton;
+    @FXML private Button librarianMenuButton;
 
     private ContextMenu librarianContextMenu;
-
-    private final String ACTIVE_STYLE =
-            "-fx-background-color: #E0F2FE; -fx-text-fill: #0369A1; -fx-background-radius: 10; -fx-padding: 10 20; -fx-font-weight: bold;";
-
-    private final String IDLE_STYLE =
-            "-fx-background-color: transparent; -fx-text-fill: #4B5563; -fx-padding: 10 20; -fx-font-weight: normal;";
 
     @FXML
     public void initialize() {
         setupLibrarianMenu();
-
+        if (librarianMenuButton != null) {
+            librarianMenuButton.setText("\u2630");
+        }
         Platform.runLater(() -> {
+            setActiveNav(dashboardButton);
             loadView("LibrarianDashboardContent.fxml", "Librarian Dashboard");
-
-            if (navContainer != null && !navContainer.getChildren().isEmpty()) {
-                if (navContainer.getChildren().get(0) instanceof Button dashboardButton) {
-                    updateNavStyle(dashboardButton);
-                }
-            }
         });
     }
 
-    private void setupLibrarianMenu() {
-        librarianContextMenu = new ContextMenu();
+    // This handles the programmatic switching of views
+    public void showBorrowingRecords() {
+        setActiveNav(circulationButton);
+        loadView("BorrowedBookView.fxml", "Circulation Desk");
+    }
 
-        MenuItem viewProfileItem = new MenuItem("View Profile");
-        MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem aboutUsItem = new MenuItem("About Us");
-        MenuItem logoutItem = new MenuItem("Logout");
+    public void showReturnBook() {
+        setActiveNav(returnsButton);
+        loadView("ReturnBookView.fxml", "Process Returns");
+    }
 
-        viewProfileItem.setOnAction(event -> handleViewProfile());
-        settingsItem.setOnAction(event -> handleSettings());
-        aboutUsItem.setOnAction(event -> handleAboutUs());
-        logoutItem.setOnAction(event -> handleLogout());
+    @FXML
+    public void openBorrowingRecords(ActionEvent event) {
+        showBorrowingRecords();
+    }
 
-        librarianContextMenu.getItems().addAll(
-                viewProfileItem,
-                settingsItem,
-                aboutUsItem,
-                logoutItem
-        );
+    @FXML
+    public void openReturnBook(ActionEvent event) {
+        showReturnBook();
+    }
+
+    @FXML
+    public void openSearchBook(ActionEvent event) {
+        setActiveNav(catalogButton);
+        loadView("SearchBookView.fxml", "Catalog");
+    }
+
+    @FXML
+    public void openManageStudent(ActionEvent event) {
+        setActiveNav(studentsButton);
+        loadView("ManageMemberView.fxml", "Students");
     }
 
     @FXML
     public void handleLibrarianMenu() {
+        if (librarianContextMenu == null || librarianMenuButton == null) {
+            return;
+        }
+
         if (librarianContextMenu.isShowing()) {
             librarianContextMenu.hide();
         } else {
@@ -88,48 +94,21 @@ public class LibrarianLandingPage {
         }
     }
 
-    @FXML
-    public void openDashboard(ActionEvent event) {
-        updateNavStyle((Button) event.getSource());
-        loadView("LibrarianDashboardContent.fxml", "Librarian Dashboard");
-    }
+    private void setupLibrarianMenu() {
+        librarianContextMenu = new ContextMenu();
 
-    @FXML
-    public void openSearchBook(ActionEvent event) {
-        updateNavStyle((Button) event.getSource());
-        loadView("SearchBookView.fxml", "Catalog Management");
-    }
+        MenuItem viewProfileItem = new MenuItem("View Profile");
+        MenuItem aboutUsItem = new MenuItem("About Us");
+        MenuItem logoutItem = new MenuItem("Logout");
 
-    @FXML
-    public void openManageStudent(ActionEvent event) {
-        updateNavStyle((Button) event.getSource());
-        loadView("ManageMemberView.fxml", "Student Directory");
-    }
+        viewProfileItem.setOnAction(event -> handleViewProfile());
+        aboutUsItem.setOnAction(event -> showInfo(
+                "About Us",
+                "Readora is a Smart Library Management System designed to organize books, members, and circulation tasks."
+        ));
+        logoutItem.setOnAction(event -> handleLogout());
 
-    @FXML
-    public void openBorrowingRecords(ActionEvent event) {
-        updateNavStyle((Button) event.getSource());
-        loadView("BorrowedBookView.fxml", "Circulation Desk");
-    }
-
-    @FXML
-    public void openReturnBook(ActionEvent event) {
-        updateNavStyle((Button) event.getSource());
-        loadView("ReturnBookView.fxml", "Process Returns");
-    }
-
-    private void updateNavStyle(Button clickedButton) {
-        if (navContainer == null) {
-            return;
-        }
-
-        navContainer.getChildren().forEach(node -> {
-            if (node instanceof Button button) {
-                button.setStyle(IDLE_STYLE);
-            }
-        });
-
-        clickedButton.setStyle(ACTIVE_STYLE);
+        librarianContextMenu.getItems().addAll(viewProfileItem, aboutUsItem, logoutItem);
     }
 
     private void loadView(String fxmlFileName, String titleText) {
@@ -137,45 +116,66 @@ public class LibrarianLandingPage {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/" + fxmlFileName));
             Parent view = loader.load();
 
+            // CRITICAL: Link the dashboard controller to this main controller
+            if (fxmlFileName.equals("LibrarianDashboardContent.fxml")) {
+                LibrarianDashboardContentController dashboardCtrl = loader.getController();
+                if (dashboardCtrl != null) {
+                    dashboardCtrl.setMainController(this);
+                }
+            }
+
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);
             }
-
             if (moduleTitle != null) {
                 moduleTitle.setText(titleText);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            showInfo("Error", "Could not load " + fxmlFileName);
+            showInfo("Navigation Error", "Could not load " + fxmlFileName);
+        }
+    }
+
+    @FXML
+    public void openDashboard(ActionEvent event) {
+        setActiveNav(dashboardButton);
+        loadView("LibrarianDashboardContent.fxml", "Librarian Dashboard");
+    }
+
+    private void setActiveNav(Button activeButton) {
+        if (navContainer == null || activeButton == null) {
+            return;
+        }
+
+        navContainer.getChildren().forEach(node -> {
+            if (node instanceof Button button) {
+                button.getStyleClass().remove("menu-button-active");
+                if (!button.getStyleClass().contains("menu-button")) {
+                    button.getStyleClass().add("menu-button");
+                }
+            }
+        });
+
+        activeButton.getStyleClass().remove("menu-button");
+        if (!activeButton.getStyleClass().contains("menu-button-active")) {
+            activeButton.getStyleClass().add("menu-button-active");
         }
     }
 
     private void handleViewProfile() {
         UserAccount currentUser = SessionManager.getCurrentUser();
-        String fullName = currentUser != null ? currentUser.getFullName() : "Librarian User";
+        String fullName = currentUser != null ? currentUser.getFullName() : "Librarian";
         showInfo("Profile", "Logged in as: " + fullName);
-    }
-
-    private void handleSettings() {
-        showInfo("Settings", "Librarian settings feature will be added soon.");
-    }
-
-    private void handleAboutUs() {
-        showInfo(
-                "About Us",
-                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
-        );
     }
 
     private void handleLogout() {
         SessionManager.clearSession();
-
         try {
             Stage stage = (Stage) librarianMenuButton.getScene().getWindow();
             SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
         } catch (IOException e) {
             e.printStackTrace();
-            showInfo("Error", "Unable to return to login.");
+            showInfo("Navigation Error", "Unable to return to login.");
         }
     }
 

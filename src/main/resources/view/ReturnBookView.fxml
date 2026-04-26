@@ -5,8 +5,7 @@
 <?import javafx.scene.text.Font?>
 
 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;"
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.readora.controller.LibrarianLandingPage">
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox spacing="30.0" style="-fx-background-color: #F8FAFC; -fx-padding: 40;">
             <children>
