@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -68,9 +70,20 @@
                                                     <StackPane styleClass="developer-avatar-large">
                                                         <children>
                                                             <Circle radius="36" styleClass="developer-avatar-circle"/>
-                                                            <Label text="FC" styleClass="developer-avatar-text"/>
+                                                            <ImageView fitWidth="60"
+                                                                       fitHeight="60"
+                                                                       preserveRatio="true"
+                                                                       smooth="true">
+                                                                <image>
+                                                                    <Image url="@francis.png"/>
+                                                                </image>
+                                                                <clip>
+                                                                    <Circle centerX="30" centerY="30" radius="30"/>
+                                                                </clip>
+                                                            </ImageView>
                                                         </children>
                                                     </StackPane>
+
                                                     <VBox spacing="4">
                                                         <children>
                                                             <Label text="Francis Andrei L. Cabrera" styleClass="developer-name"/>
@@ -91,9 +104,20 @@
                                                     <StackPane styleClass="developer-avatar-large">
                                                         <children>
                                                             <Circle radius="36" styleClass="developer-avatar-circle"/>
-                                                            <Label text="ND" styleClass="developer-avatar-text"/>
+                                                            <ImageView fitWidth="60"
+                                                                       fitHeight="60"
+                                                                       preserveRatio="true"
+                                                                       smooth="true">
+                                                                <image>
+                                                                    <Image url="@kyle.png"/>
+                                                                </image>
+                                                                <clip>
+                                                                    <Circle centerX="30" centerY="30" radius="30"/>
+                                                                </clip>
+                                                            </ImageView>
                                                         </children>
                                                     </StackPane>
+
                                                     <VBox spacing="4">
                                                         <children>
                                                             <Label text="Nirhven Kyle C. Dialimas" styleClass="developer-name"/>
@@ -114,9 +138,20 @@
                                                     <StackPane styleClass="developer-avatar-large">
                                                         <children>
                                                             <Circle radius="36" styleClass="developer-avatar-circle"/>
-                                                            <Label text="DR" styleClass="developer-avatar-text"/>
+                                                            <ImageView fitWidth="60"
+                                                                       fitHeight="60"
+                                                                       preserveRatio="true"
+                                                                       smooth="true">
+                                                                <image>
+                                                                    <Image url="@dave.png"/>
+                                                                </image>
+                                                                <clip>
+                                                                    <Circle centerX="30" centerY="30" radius="30"/>
+                                                                </clip>
+                                                            </ImageView>
                                                         </children>
                                                     </StackPane>
+
                                                     <VBox spacing="4">
                                                         <children>
                                                             <Label text="Dave Laurence R. Repe" styleClass="developer-name"/>
@@ -137,9 +172,20 @@
                                                     <StackPane styleClass="developer-avatar-large">
                                                         <children>
                                                             <Circle radius="36" styleClass="developer-avatar-circle"/>
-                                                            <Label text="RS" styleClass="developer-avatar-text"/>
+                                                            <ImageView fitWidth="60"
+                                                                       fitHeight="60"
+                                                                       preserveRatio="true"
+                                                                       smooth="true">
+                                                                <image>
+                                                                    <Image url="@rolando.png"/>
+                                                                </image>
+                                                                <clip>
+                                                                    <Circle centerX="30" centerY="30" radius="30"/>
+                                                                </clip>
+                                                            </ImageView>
                                                         </children>
                                                     </StackPane>
+
                                                     <VBox spacing="4">
                                                         <children>
                                                             <Label text="Rolando Supremo Jr." styleClass="developer-name"/>
@@ -160,9 +206,20 @@
                                                     <StackPane styleClass="developer-avatar-large">
                                                         <children>
                                                             <Circle radius="36" styleClass="developer-avatar-circle"/>
-                                                            <Label text="AT" styleClass="developer-avatar-text"/>
+                                                            <ImageView fitWidth="60"
+                                                                       fitHeight="60"
+                                                                       preserveRatio="true"
+                                                                       smooth="true">
+                                                                <image>
+                                                                    <Image url="@arnold.png"/>
+                                                                </image>
+                                                                <clip>
+                                                                    <Circle centerX="30" centerY="30" radius="30"/>
+                                                                </clip>
+                                                            </ImageView>
                                                         </children>
                                                     </StackPane>
+
                                                     <VBox spacing="4">
                                                         <children>
                                                             <Label text="Arnold Michael P. Tabada" styleClass="developer-name"/>
@@ -236,7 +293,19 @@
                                                 <StackPane styleClass="developer-profile-avatar">
                                                     <children>
                                                         <Circle radius="60" styleClass="developer-avatar-circle"/>
-                                                        <Label fx:id="profileInitialsLabel" text="FC" styleClass="developer-profile-initials"/>
+
+                                                        <ImageView fx:id="profileImageView"
+                                                                   fitWidth="110"
+                                                                   fitHeight="110"
+                                                                   preserveRatio="true"
+                                                                   smooth="true">
+                                                            <image>
+                                                                <Image url="@francis.png"/>
+                                                            </image>
+                                                            <clip>
+                                                                <Circle centerX="55" centerY="55" radius="55"/>
+                                                            </clip>
+                                                        </ImageView>
                                                     </children>
                                                 </StackPane>
 

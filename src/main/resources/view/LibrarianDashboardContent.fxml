@@ -3,72 +3,78 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/20"
-      xmlns:fx="http://javafx.com/fxml/1"
-      spacing="24"
-      styleClass="dashboard-wrapper">
+<ScrollPane fitToWidth="true"
+            styleClass="main-scroll-pane"
+            xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LibrarianDashboardContentController"
+            stylesheets="@style.css">
 
-    <padding>
-        <Insets top="30" right="34" bottom="34" left="34"/>
-    </padding>
+    <content>
+        <VBox spacing="28" styleClass="dashboard-wrapper">
+            <padding>
+                <Insets top="32" right="40" bottom="40" left="40"/>
+            </padding>
 
-    <VBox spacing="6">
-        <Label text="Librarian Dashboard" styleClass="welcome-title"/>
-        <Label text="Manage daily circulation, member check-ins, and library catalog."
-               styleClass="welcome-subtitle"/>
-    </VBox>
-
-    <HBox spacing="20">
-        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-            <Label text="Books Borrowed Today" styleClass="stat-label"/>
-            <Label text="0" styleClass="stat-number"/>
-        </VBox>
-
-        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-            <Label text="Returns Processed" styleClass="stat-label"/>
-            <Label text="0" styleClass="stat-number"/>
-        </VBox>
-
-        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-            <Label text="Overdue Alerts" styleClass="stat-label"/>
-            <Label text="0" styleClass="stat-number"/>
-        </VBox>
-    </HBox>
-
-    <VBox spacing="14" styleClass="section-panel">
-        <Label text="Library Operations" styleClass="section-heading"/>
-
-        <GridPane hgap="20" vgap="20">
-            <VBox spacing="12" styleClass="feature-card" prefWidth="280" prefHeight="180"
-                  GridPane.columnIndex="0" GridPane.rowIndex="0">
-
-                <Label text="Circulation" styleClass="feature-title"/>
-                <Label text="View currently borrowed and overdue books."
-                       styleClass="feature-subtitle"
-                       wrapText="true"/>
-
-                <Button fx:id="openBorrowedButton"
-                        text="Open Module"
-                        styleClass="open-button"/>
+            <VBox spacing="6">
+                <Label text="Librarian Dashboard" styleClass="welcome-title"/>
+                <Label text="Manage daily circulation, member check-ins, and library catalog."
+                       styleClass="welcome-subtitle"/>
             </VBox>
 
-            <VBox spacing="12" styleClass="feature-card" prefWidth="280" prefHeight="180"
-                  GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <HBox spacing="20">
+                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+                    <Label text="0" styleClass="stat-number"/>
+                    <Label text="Books Borrowed Today" styleClass="stat-label"/>
+                </VBox>
 
-                <Label text="Returns" styleClass="feature-title"/>
-                <Label text="Process returned items and update book availability."
-                       styleClass="feature-subtitle"
-                       wrapText="true"/>
+                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+                    <Label text="0" styleClass="stat-number"/>
+                    <Label text="Returns Processed" styleClass="stat-label"/>
+                </VBox>
 
-                <Button fx:id="openReturnButton"
-                        text="Open Module"
-                        styleClass="open-button"/>
+                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+                    <Label text="0" styleClass="stat-number"/>
+                    <Label text="Overdue Alerts" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="16">
+                <Label text="Library Operations" styleClass="section-heading"/>
+
+                <HBox spacing="24">
+                    <VBox spacing="18"
+                          prefWidth="280"
+                          prefHeight="200"
+                          styleClass="feature-card">
+                        <Label text="Circulation" styleClass="feature-title"/>
+                        <Label text="Issue new books and track current loans."
+                               styleClass="feature-subtitle"
+                               wrapText="true"/>
+                        <Button text="Open Module"
+                                onAction="#openBorrowingRecords"
+                                styleClass="open-button"/>
+                    </VBox>
+
+                    <VBox spacing="18"
+                          prefWidth="280"
+                          prefHeight="200"
+                          styleClass="feature-card">
+                        <Label text="Returns" styleClass="feature-title"/>
+                        <Label text="Process returned items and update status."
+                               styleClass="feature-subtitle"
+                               wrapText="true"/>
+                        <Button text="Open Module"
+                                onAction="#openReturnBook"
+                                styleClass="open-button"/>
+                    </VBox>
+                </HBox>
             </VBox>
-        </GridPane>
-    </VBox>
 
-</VBox>
+        </VBox>
+    </content>
+</ScrollPane>
