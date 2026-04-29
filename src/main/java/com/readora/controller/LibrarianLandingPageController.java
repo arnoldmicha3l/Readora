@@ -97,6 +97,8 @@ public class LibrarianLandingPageController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LibrarianDashboardContent.fxml"));
             Parent view = loader.load();
+            LibrarianDashboardContentController controller = loader.getController();
+            controller.setContentArea(contentArea);
 
             Button openBorrowedButton = (Button) view.lookup("#openBorrowedButton");
             Button openReturnButton = (Button) view.lookup("#openReturnButton");
