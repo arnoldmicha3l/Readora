@@ -1,23 +1,24 @@
 package com.readora.user;
 
-import com.readora.user.UserAccount;
-
 public final class SessionManager {
 
     private static UserAccount currentUser;
 
-    private SessionManager() {
-    }
+    private SessionManager() {}
 
-    public static void setCurrentUser(UserAccount user) {
+    public static synchronized void setCurrentUser(UserAccount user) {
         currentUser = user;
     }
 
-    public static UserAccount getCurrentUser() {
+    public static synchronized UserAccount getCurrentUser() {
         return currentUser;
     }
 
-    public static void clearSession() {
+    public static synchronized boolean isLoggedIn() {
+        return currentUser != null;
+    }
+
+    public static synchronized void clearSession() {
         currentUser = null;
     }
 }

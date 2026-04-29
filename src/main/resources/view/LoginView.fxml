@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane xmlns="http://javafx.com/javafx/20"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.readora.controller.LoginViewController"
+<BorderPane styleClass="root-pane"
             stylesheets="@style.css"
-            styleClass="root-pane">
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.LoginViewController">
 
     <top>
         <HBox alignment="CENTER_LEFT" styleClass="top-bar">
             <padding>
-                <Insets top="14" right="24" bottom="14" left="24"/>
+                <Insets bottom="14" left="24" right="24" top="14"/>
             </padding>
 
-            <VBox spacing="2">
-                <Label text="Readora" styleClass="logo-title"/>
-                <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
+            <VBox spacing="0">
+                <Label styleClass="logo-title" text="Readora"/>
+                <Label styleClass="logo-subtitle" text="Smart Library Management System"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -35,77 +28,58 @@
     </top>
 
     <center>
-        <StackPane styleClass="login-shell">
-            <children>
-                <VBox alignment="CENTER" spacing="24" styleClass="login-page">
+        <VBox alignment="CENTER" spacing="20" styleClass="login-page">
 
-                    <VBox alignment="CENTER" spacing="18" styleClass="login-card">
-                        <padding>
-                            <Insets top="36" right="38" bottom="34" left="38"/>
-                        </padding>
+            <VBox alignment="CENTER" spacing="14" styleClass="login-card">
+                <padding>
+                    <Insets bottom="36" left="34" right="34" top="36"/>
+                </padding>
 
-                        <VBox alignment="CENTER" spacing="12">
-                            <StackPane styleClass="login-logo-circle-outer">
-                                <children>
-                                    <StackPane styleClass="login-logo-circle-inner">
-                                        <children>
-                                            <ImageView fx:id="loginLogoView"
-                                                       fitWidth="176"
-                                                       fitHeight="176"
-                                                       preserveRatio="false"
-                                                       smooth="true">
-                                                <clip>
-                                                    <Circle radius="88" centerX="88" centerY="88"/>
-                                                </clip>
-                                            </ImageView>
-                                        </children>
-                                    </StackPane>
-                                </children>
-                            </StackPane>
+                <StackPane styleClass="login-logo-circle-outer">
+                    <ImageView fx:id="logoImage"
+                               fitWidth="170"
+                               fitHeight="170"
+                               preserveRatio="false"
+                               smooth="true">
+                        <clip>
+                            <Circle centerX="85" centerY="85" radius="85"/>
+                        </clip>
+                    </ImageView>
+                </StackPane>
 
-                            <VBox alignment="CENTER" spacing="6">
-                                <Label text="Welcome Back" styleClass="login-title"/>
-                                <Label text="Access books, records, and library services in one place."
-                                       styleClass="login-subtitle"/>
-                            </VBox>
-                        </VBox>
+                <Label styleClass="login-title" text="Welcome Back"/>
 
-                        <VBox spacing="14" maxWidth="340">
-                            <VBox spacing="7">
-                                <Label text="Username" styleClass="form-label"/>
-                                <TextField fx:id="usernameField"
-                                           promptText="Enter your username"
-                                           styleClass="login-input"/>
-                            </VBox>
+                <Label styleClass="login-subtitle"
+                       text="Access books, records, and library services in one place."/>
 
-                            <VBox spacing="7">
-                                <Label text="Password" styleClass="form-label"/>
-                                <PasswordField fx:id="passwordField"
-                                               promptText="Enter your password "
-                                               styleClass="login-input"/>
-                            </VBox>
-                        </VBox>
-
-                        <VBox spacing="12" maxWidth="340">
-                            <Button text="Login"
-                                    onAction="#handleLogin"
-                                    styleClass="primary-login-button"
-                                    maxWidth="1.7976931348623157E308"/>
-
-                            <Button text="Register"
-                                    onAction="#handleRegister"
-                                    styleClass="secondary-login-button"
-                                    maxWidth="1.7976931348623157E308"/>
-                        </VBox>
-
-                        <VBox alignment="CENTER" spacing="4">
-                            <Label text="Library access starts here." styleClass="login-footer-text"/>
-                        </VBox>
-                    </VBox>
-
+                <VBox maxWidth="320" spacing="8">
+                    <Label styleClass="form-label" text="Username"/>
+                    <TextField fx:id="usernameField"
+                               promptText="Enter your username"
+                               styleClass="login-input"/>
                 </VBox>
-            </children>
-        </StackPane>
+
+                <VBox maxWidth="320" spacing="8">
+                    <Label styleClass="form-label" text="Password"/>
+                    <PasswordField fx:id="passwordField"
+                                   promptText="Enter your password"
+                                   styleClass="login-input"/>
+                </VBox>
+
+                <Button maxWidth="320"
+                        onAction="#handleLogin"
+                        styleClass="primary-login-button"
+                        text="Login"/>
+
+                <Button maxWidth="320"
+                        onAction="#handleRegister"
+                        styleClass="secondary-login-button"
+                        text="Register"/>
+
+                <Label styleClass="login-footer-text"
+                       text="Library access starts here."/>
+            </VBox>
+        </VBox>
     </center>
 
 </BorderPane>

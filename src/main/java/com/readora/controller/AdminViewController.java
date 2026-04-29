@@ -1,116 +1,98 @@
 package com.readora.controller;
 
-import com.readora.user.UserAccount;
+import com.readora.service.AlertHelper;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.control.Tooltip;
 
 public class AdminViewController {
 
-    @FXML
-    private Button adminMenuButton;
+    @FXML private Button adminMenuButton;
 
-    private ContextMenu adminContextMenu;
+    private ContextMenu adminMenu;
 
     @FXML
     public void initialize() {
-        adminContextMenu = new ContextMenu();
+        setupMenu();
 
-        MenuItem viewProfileItem = new MenuItem("View Profile");
-        MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem aboutUsItem = new MenuItem("About Us");
-        MenuItem logoutItem = new MenuItem("Logout");
-
-        viewProfileItem.setOnAction(event -> handleViewProfile());
-        settingsItem.setOnAction(event -> handleSettings());
-        aboutUsItem.setOnAction(event -> handleAboutUs());
-        logoutItem.setOnAction(event -> handleLogout());
-
-        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
-    }
-
-    @FXML
-    private void handleAdminMenu() {
-        if (adminContextMenu.isShowing()) {
-            adminContextMenu.hide();
-        } else {
-            double x = adminMenuButton.localToScreen(0, 0).getX();
-            double y = adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getY();
-            adminContextMenu.show(adminMenuButton, x, y);
+        if (adminMenuButton != null) {
+            adminMenuButton.setTooltip(new Tooltip("Open admin menu"));
         }
     }
 
-    @FXML
-    private void handleOpenBooks(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/BookFormView.fxml", "Readora - Book Management");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to open Book Management.");
-        }
-    }
+    private void setupMenu() {
+        adminMenu = new ContextMenu();
 
-    @FXML
-    private void handleOpenStudents(ActionEvent event) {
-        showInfo("Students", "Student management module can be added next. This button is now active.");
-    }
+        MenuItem profile = new MenuItem("Admin Profile");
+        MenuItem reports = new MenuItem("Reports");
+        MenuItem about = new MenuItem("About Us");
+        MenuItem logout = new MenuItem("Logout");
 
-    @FXML
-    private void handleOpenBorrowRecords(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/BorrowRecordsView.fxml", "Readora - Borrow Records");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to open Borrow Records.");
-        }
-    }
-
-    @FXML
-    private void handleOpenReports(ActionEvent event) {
-        showInfo("Reports", "Reports module can be expanded next. This button is now active.");
-    }
-
-    private void handleViewProfile() {
-        UserAccount currentUser = SessionManager.getCurrentUser();
-        String fullName = currentUser != null ? currentUser.getFullName() : "Admin";
-        showInfo("Profile", "Logged in as: " + fullName);
-    }
-
-    private void handleSettings() {
-        showInfo("Settings", "System settings feature will be added soon.");
-    }
-
-    private void handleAboutUs() {
-        showInfo(
-                "About Us",
-                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        profile.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(adminMenuButton, "/view/AdminProfile.fxml", "Readora - Admin Profile")
         );
+
+        reports.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(adminMenuButton, "/view/AdminReportsView.fxml", "Readora - Reports")
+        );
+
+        about.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(adminMenuButton, "/view/AboutUsView.fxml", "Readora - About Us")
+        );
+
+        logout.setOnAction(event -> {
+            boolean confirm = AlertHelper.confirm("Confirm Logout", "Are you sure you want to logout?");
+            if (!confirm) return;
+
+            SessionManager.clearSession();
+            SceneNavigator.switchSceneFromNode(adminMenuButton, "/view/LoginView.fxml", "Readora - Login");
+        });
+
+        adminMenu.getItems().setAll(profile, reports, about, logout);
     }
 
-    private void handleLogout() {
-        SessionManager.clearSession();
-        try {
-            Stage stage = (Stage) adminMenuButton.getScene().getWindow();
-            SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to return to login.");
+    @FXML
+    private void handleMenu(ActionEvent event) {
+        if (adminMenu == null || adminMenuButton == null) return;
+
+        if (adminMenu.isShowing()) {
+            adminMenu.hide();
+        } else {
+            adminMenu.show(
+                    adminMenuButton,
+                    adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getX(),
+                    adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getY()
+            );
         }
     }
 
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    @FXML
+    private void handleDashboard(ActionEvent event) {
+        SceneNavigator.switchScene(event, "/view/AdminView.fxml", "Readora - Admin Dashboard");
+    }
+
+    @FXML
+    private void handleBooks(ActionEvent event) {
+        SceneNavigator.switchScene(event, "/view/BookFormView.fxml", "Readora - Book Management");
+    }
+
+    @FXML
+    private void handleStudents(ActionEvent event) {
+        SceneNavigator.switchScene(event, "/view/AdminStudentManagement.fxml", "Readora - Student Management");
+    }
+
+    @FXML
+    private void handleBorrowRecords(ActionEvent event) {
+        SceneNavigator.switchScene(event, "/view/BorrowRecords.fxml", "Readora - Borrow Records");
+    }
+
+    @FXML
+    private void handleReports(ActionEvent event) {
+        SceneNavigator.switchScene(event, "/view/AdminReportsView.fxml", "Readora - Reports");
     }
 }

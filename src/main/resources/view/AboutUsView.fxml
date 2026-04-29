@@ -45,7 +45,6 @@
                 <Insets top="26" right="26" bottom="26" left="26"/>
             </padding>
 
-            <!-- LEFT SIDE -->
             <VBox spacing="20" prefWidth="390" minWidth="390" maxWidth="390" styleClass="aboutus-side-panel">
                 <children>
                     <VBox spacing="8">
@@ -182,7 +181,6 @@
                 </children>
             </VBox>
 
-            <!-- RIGHT SIDE -->
             <VBox spacing="20" HBox.hgrow="ALWAYS">
                 <children>
                     <VBox spacing="10" styleClass="aboutus-hero-panel">

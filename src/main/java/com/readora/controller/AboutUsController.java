@@ -1,9 +1,10 @@
 package com.readora.controller;
 
-import com.readora.user.UserAccount;
-import com.readora.user.UserRole;
+import com.readora.service.AlertHelper;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
+import com.readora.user.UserAccount;
+import com.readora.user.UserRole;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,17 +13,10 @@ import java.io.IOException;
 
 public class AboutUsController {
 
-    @FXML
-    private Label profileInitialsLabel;
-
-    @FXML
-    private Label profileNameLabel;
-
-    @FXML
-    private Label profileRoleLabel;
-
-    @FXML
-    private Label profileQuoteLabel;
+    @FXML private Label profileInitialsLabel;
+    @FXML private Label profileNameLabel;
+    @FXML private Label profileRoleLabel;
+    @FXML private Label profileQuoteLabel;
 
     @FXML
     public void initialize() {
@@ -68,7 +62,7 @@ public class AboutUsController {
     private void showRolando() {
         setDeveloperProfile(
                 "RS",
-                "Rolando Supremo Jr.",
+                "Rolando P. Supremo",
                 "Developer",
                 "Great things are achieved by people who stay consistent, stay humble, and continue learning with purpose."
         );
@@ -85,10 +79,10 @@ public class AboutUsController {
     }
 
     private void setDeveloperProfile(String initials, String name, String role, String quote) {
-        profileInitialsLabel.setText(initials);
-        profileNameLabel.setText(name);
-        profileRoleLabel.setText(role);
-        profileQuoteLabel.setText(quote);
+        if (profileInitialsLabel != null) profileInitialsLabel.setText(initials);
+        if (profileNameLabel != null) profileNameLabel.setText(name);
+        if (profileRoleLabel != null) profileRoleLabel.setText(role);
+        if (profileQuoteLabel != null) profileQuoteLabel.setText(quote);
     }
 
     @FXML
@@ -105,13 +99,13 @@ public class AboutUsController {
                 SceneNavigator.switchScene(event, getClass(), "/view/AdminView.fxml", "Readora - Admin Dashboard");
             } else if (currentUser.getRole() == UserRole.LIBRARIAN) {
                 SceneNavigator.switchScene(event, getClass(), "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
-            } else if (currentUser.getRole() == UserRole.STUDENT) {
-                SceneNavigator.switchScene(event, getClass(), "/view/StudentView.fxml", "Readora - Student Dashboard");
             } else {
-                SceneNavigator.switchScene(event, getClass(), "/view/LoginView.fxml", "Readora - Login");
+                SceneNavigator.switchScene(event, getClass(), "/view/StudentView.fxml", "Readora - Student Dashboard");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
+            AlertHelper.showError("Navigation Error", "Unable to go back.");
         }
     }
 }

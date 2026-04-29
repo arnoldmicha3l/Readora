@@ -1,53 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #F8FAFC;"
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.readora.controller.LibrarianLandingPage">
-    <content>
-        <VBox spacing="25.0" style="-fx-padding: 40;">
-            <children>
-                <HBox alignment="CENTER_LEFT">
-                    <children>
-                        <VBox spacing="5.0">
-                            <children>
-                                <Label text="Book Management" textFill="#1F2937">
-                                    <font><Font name="System Bold" size="30.0" /></font>
-                                </Label>
-                                <Label text="Browse, search, and manage the library's book collection." textFill="#6B7280" />
-                            </children>
-                        </VBox>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Button text="+ Add New Book"
-                                style="-fx-background-color: #345887; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: bold; -fx-cursor: hand;" />
-                    </children>
-                </HBox>
+<VBox xmlns="http://javafx.com/javafx/20"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.readora.controller.SearchBookController"
+      spacing="22"
+      styleClass="books-page">
 
-                <HBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);">
-                    <children>
-                        <TextField promptText="Search by Title, Author, or ISBN..." HBox.hgrow="ALWAYS"
-                                   style="-fx-background-radius: 8; -fx-padding: 10;" />
-                        <Button text="Search"
-                                style="-fx-background-color: #345887; -fx-text-fill: white; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;" />
-                    </children>
-                </HBox>
+    <VBox spacing="5">
+        <Label text="Search Books" styleClass="welcome-title"/>
+        <Label text="Search by book ID, title, author, category, or status." styleClass="welcome-subtitle"/>
+    </VBox>
 
-                <TableView fx:id="bookTable" prefHeight="450.0" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12; -fx-background-color: white;">
-                    <columns>
-                        <TableColumn prefWidth="120.0" text="ISBN" />
-                        <TableColumn prefWidth="250.0" text="Book Title" />
-                        <TableColumn prefWidth="180.0" text="Author" />
-                        <TableColumn prefWidth="150.0" text="Category" />
-                        <TableColumn prefWidth="120.0" text="Quantity" />
-                        <TableColumn prefWidth="120.0" text="Status" />
-                        <TableColumn prefWidth="150.0" text="Actions" />
-                    </columns>
-                </TableView>
-            </children>
-        </VBox>
-    </content>
-</ScrollPane>
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="section-panel">
+        <TextField fx:id="searchField"
+                   promptText="Search books..."
+                   onKeyReleased="#handleSearch"
+                   HBox.hgrow="ALWAYS"/>
+
+        <ComboBox fx:id="statusFilter"
+                  promptText="Status"
+                  onAction="#handleSearch"
+                  prefWidth="160"/>
+
+        <Button text="Search"
+                onAction="#handleSearch"
+                styleClass="primary-action-button"/>
+
+        <Button text="Clear"
+                onAction="#handleClearSearch"
+                styleClass="secondary-action-button"/>
+    </HBox>
+
+    <VBox spacing="12" styleClass="table-panel" VBox.vgrow="ALWAYS">
+        <Label text="Book Results" styleClass="section-heading"/>
+
+        <TableView fx:id="table" styleClass="book-table" prefHeight="500" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idCol" text="Book ID" prefWidth="130"/>
+                <TableColumn fx:id="titleCol" text="Title" prefWidth="270"/>
+                <TableColumn fx:id="authorCol" text="Author" prefWidth="220"/>
+                <TableColumn fx:id="categoryCol" text="Category" prefWidth="170"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="140"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>

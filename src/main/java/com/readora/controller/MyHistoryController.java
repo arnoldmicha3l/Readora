@@ -1,187 +1,266 @@
 package com.readora.controller;
 
 import com.readora.model.BorrowRecord;
-import com.readora.user.UserAccount;
+import com.readora.service.AlertHelper;
 import com.readora.service.AppState;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.readora.user.UserAccount;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MyHistoryController {
 
-    @FXML private TextField historySearchField;
-    @FXML private ComboBox<String> yearFilter;
-    @FXML private TableView<HistoryEntry> historyTable;
-    @FXML private TableColumn<HistoryEntry, String> titleCol;
-    @FXML private TableColumn<HistoryEntry, String> authorCol;
-    @FXML private TableColumn<HistoryEntry, String> borrowDateCol;
-    @FXML private TableColumn<HistoryEntry, String> returnDateCol;
-    @FXML private TableColumn<HistoryEntry, String> statusCol;
+    @FXML private TextField searchField;
+
+    @FXML private TableView<BorrowRecord> historyTable;
+    @FXML private TableColumn<BorrowRecord, String> recordIdCol;
+    @FXML private TableColumn<BorrowRecord, String> bookCol;
+    @FXML private TableColumn<BorrowRecord, String> statusCol;
+    @FXML private TableColumn<BorrowRecord, String> borrowDateCol;
+    @FXML private TableColumn<BorrowRecord, String> dueDateCol;
+    @FXML private TableColumn<BorrowRecord, String> returnDateCol;
+
     @FXML private Button studentMenuButton;
 
-    private final ObservableList<HistoryEntry> masterHistory = FXCollections.observableArrayList();
-    private FilteredList<HistoryEntry> filteredEntries;
-    private ContextMenu studentContextMenu;
+    private ContextMenu studentMenu;
+    private FilteredList<BorrowRecord> filteredHistory;
 
     @FXML
     public void initialize() {
+        setupColumns();
         setupStudentMenu();
-
-        titleCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().title()));
-        authorCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().author()));
-        borrowDateCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().borrowDate()));
-        returnDateCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().returnDate()));
-        statusCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().status()));
-
-        yearFilter.getItems().setAll("All", "2026", "2025", "2024");
-        yearFilter.setValue("All");
-
-        filteredEntries = new FilteredList<>(masterHistory, entry -> true);
-        historyTable.setItems(filteredEntries);
-
         loadHistory();
-
-        yearFilter.setOnAction(event -> applyFilters());
-        historySearchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
     }
 
-    private void loadHistory() {
-        masterHistory.clear();
-
-        UserAccount currentUser = SessionManager.getCurrentUser();
-        String fullName = currentUser != null ? currentUser.getFullName() : "";
-
-        for (BorrowRecord record : AppState.getBorrowRecords()) {
-            if (record.getStudentName().equalsIgnoreCase(fullName)) {
-                masterHistory.add(new HistoryEntry(
-                        record.getBookTitle(),
-                        findAuthor(record.getBookTitle()),
-                        record.getBorrowDate() != null ? record.getBorrowDate().toString() : "",
-                        record.getReturnDate() != null ? record.getReturnDate().toString() : "",
-                        record.getStatus()
-                ));
-            }
-        }
-
-        applyFilters();
-    }
-
-    private String findAuthor(String bookTitle) {
-        return AppState.getBooks().stream()
-                .filter(book -> book.getTitle().equalsIgnoreCase(bookTitle))
-                .map(book -> book.getAuthor())
-                .findFirst()
-                .orElse("Unknown Author");
+    private void setupColumns() {
+        recordIdCol.setCellValueFactory(new PropertyValueFactory<>("recordId"));
+        bookCol.setCellValueFactory(new PropertyValueFactory<>("bookTitle"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        borrowDateCol.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
+        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        returnDateCol.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
     }
 
     private void setupStudentMenu() {
-        studentContextMenu = new ContextMenu();
+        studentMenu = new ContextMenu();
 
-        MenuItem viewProfileItem = new MenuItem("View Profile");
-        MenuItem settingsItem = new MenuItem("Settings");
-        MenuItem aboutUsItem = new MenuItem("About Us");
+        MenuItem profileItem = new MenuItem("View Profile");
+        MenuItem passwordItem = new MenuItem("Change Password");
+        MenuItem aboutItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
-        viewProfileItem.setOnAction(event -> showInfo("Profile", "Student profile details can be added here."));
-        settingsItem.setOnAction(event -> showInfo("Settings", "Student settings feature will be added soon."));
-        aboutUsItem.setOnAction(event -> handleAboutUs());
-        logoutItem.setOnAction(event -> handleLogout());
-
-        studentContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
-    }
-
-    private void handleAboutUs() {
-        showInfo(
-                "About Us",
-                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
+        profileItem.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(
+                        studentMenuButton,
+                        "/view/StudentProfile.fxml",
+                        "Readora - Student Profile"
+                )
         );
+
+        passwordItem.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(
+                        studentMenuButton,
+                        "/view/ChangePassword.fxml",
+                        "Readora - Change Password"
+                )
+        );
+
+        aboutItem.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(
+                        studentMenuButton,
+                        "/view/AboutUsView.fxml",
+                        "Readora - About Us"
+                )
+        );
+
+        logoutItem.setOnAction(event -> {
+            boolean confirmed = AlertHelper.confirm(
+                    "Confirm Logout",
+                    "Are you sure you want to logout?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            SessionManager.clearSession();
+            SceneNavigator.switchSceneFromNode(
+                    studentMenuButton,
+                    "/view/LoginView.fxml",
+                    "Readora - Login"
+            );
+        });
+
+        studentMenu.getItems().setAll(profileItem, passwordItem, aboutItem, logoutItem);
+
+        if (studentMenuButton != null) {
+            studentMenuButton.setTooltip(new Tooltip("Open student menu"));
+        }
     }
 
-    private void applyFilters() {
-        String searchText = historySearchField.getText() == null
+    private void loadHistory() {
+        AppState.refreshBorrowRecords();
+
+        UserAccount currentUser = SessionManager.getCurrentUser();
+
+        filteredHistory = new FilteredList<>(AppState.getBorrowRecords(), record ->
+                belongsToCurrentStudent(record, currentUser)
+        );
+
+        historyTable.setItems(filteredHistory);
+        historyTable.refresh();
+    }
+
+    private boolean belongsToCurrentStudent(BorrowRecord record, UserAccount currentUser) {
+        if (record == null || currentUser == null) {
+            return false;
+        }
+
+        if (record.getStudentId() == null || currentUser.getStudentId() == null) {
+            return false;
+        }
+
+        return record.getStudentId().equalsIgnoreCase(currentUser.getStudentId());
+    }
+
+    @FXML
+    private void handleSearch() {
+        applySearch();
+    }
+
+    @FXML
+    private void handleClearSearch() {
+        if (searchField != null) {
+            searchField.clear();
+        }
+
+        applySearch();
+    }
+
+    private void applySearch() {
+        if (filteredHistory == null) {
+            return;
+        }
+
+        UserAccount currentUser = SessionManager.getCurrentUser();
+
+        String keyword = searchField == null || searchField.getText() == null
                 ? ""
-                : historySearchField.getText().trim().toLowerCase();
-        String selectedYear = yearFilter.getValue();
+                : searchField.getText().trim().toLowerCase();
 
-        filteredEntries.setPredicate(entry -> {
-            boolean matchesSearch = searchText.isEmpty()
-                    || entry.title().toLowerCase().contains(searchText)
-                    || entry.author().toLowerCase().contains(searchText);
+        filteredHistory.setPredicate(record -> {
+            boolean belongs = belongsToCurrentStudent(record, currentUser);
 
-            boolean matchesYear = selectedYear == null
-                    || "All".equals(selectedYear)
-                    || (!entry.borrowDate().isEmpty() && entry.borrowDate().startsWith(selectedYear));
+            boolean matchesKeyword = keyword.isEmpty()
+                    || contains(record.getRecordId(), keyword)
+                    || contains(record.getBookTitle(), keyword)
+                    || contains(record.getStatus(), keyword)
+                    || contains(record.getBorrowDate() == null ? "" : record.getBorrowDate().toString(), keyword)
+                    || contains(record.getDueDate() == null ? "" : record.getDueDate().toString(), keyword)
+                    || contains(record.getReturnDate() == null ? "not returned" : record.getReturnDate().toString(), keyword);
 
-            return matchesSearch && matchesYear;
+            return belongs && matchesKeyword;
         });
     }
 
+    private boolean contains(String value, String keyword) {
+        return value != null && value.toLowerCase().contains(keyword);
+    }
+
     @FXML
-    public void handleStudentMenu() {
-        if (studentContextMenu.isShowing()) {
-            studentContextMenu.hide();
+    private void handleDashboard(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/StudentView.fxml",
+                "Readora - Student Dashboard"
+        );
+    }
+
+    @FXML
+    private void handleBrowseBooks(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/BrowseBooks.fxml",
+                "Readora - Browse Books"
+        );
+    }
+
+    @FXML
+    private void handleHistoryTab(ActionEvent event) {
+        loadHistory();
+    }
+
+    @FXML
+    private void handleStudentMenu(ActionEvent event) {
+        if (studentMenuButton == null || studentMenu == null) {
+            AlertHelper.showError("Menu Error", "Student menu is not available.");
+            return;
+        }
+
+        if (studentMenu.isShowing()) {
+            studentMenu.hide();
         } else {
-            double x = studentMenuButton.localToScreen(0, 0).getX();
-            double y = studentMenuButton.localToScreen(0, studentMenuButton.getHeight()).getY();
-            studentContextMenu.show(studentMenuButton, x, y);
+            studentMenu.show(
+                    studentMenuButton,
+                    studentMenuButton.localToScreen(0, studentMenuButton.getHeight()).getX(),
+                    studentMenuButton.localToScreen(0, studentMenuButton.getHeight()).getY()
+            );
         }
     }
 
     @FXML
-    public void handleDashboard(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/StudentView.fxml", "Readora - Student Dashboard");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to open student dashboard.");
-        }
+    private void handleProfile(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/StudentProfile.fxml",
+                "Readora - Student Profile"
+        );
     }
 
     @FXML
-    public void handleBrowse(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/BrowseBooks.fxml", "Readora - Browse Books");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to open Browse Books.");
-        }
+    private void handleChangePassword(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/ChangePassword.fxml",
+                "Readora - Change Password"
+        );
     }
 
-    private void handleLogout() {
+    @FXML
+    private void handleAboutUs(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/AboutUsView.fxml",
+                "Readora - About Us"
+        );
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        boolean confirmed = AlertHelper.confirm(
+                "Confirm Logout",
+                "Are you sure you want to logout?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
         SessionManager.clearSession();
-        try {
-            Stage stage = (Stage) studentMenuButton.getScene().getWindow();
-            SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showInfo("Error", "Unable to return to login.");
-        }
-    }
-
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public record HistoryEntry(String title, String author, String borrowDate, String returnDate, String status) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/LoginView.fxml",
+                "Readora - Login"
+        );
     }
 }
