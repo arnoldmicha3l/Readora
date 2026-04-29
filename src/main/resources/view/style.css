@@ -1156,8 +1156,19 @@
     -fx-border-color: #d9e2ec;
     -fx-border-radius: 18px;
     -fx-border-width: 1px;
-    -fx-padding: 20px;
+    -fx-padding: 22px;
     -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 12, 0, 0, 3);
+}
+
+.stat-number {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #173a5e;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7c93;
 }
 
 .danger-wide-button {
@@ -1176,15 +1187,6 @@
 .danger-wide-button:hover {
     -fx-background-color: #fbe3e3;
     -fx-text-fill: #984545;
-}
-.stat-card {
-    -fx-background-color: white;
-    -fx-background-radius: 18px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 18px;
-    -fx-border-width: 1px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 12, 0, 0, 3);
 }
 
 .table-panel {
@@ -1307,4 +1309,21 @@
 
 .table-row-cell:hover {
     -fx-background-color: #f6fbff;
+}
+
+.developer-photo-wrapper {
+    -fx-pref-width: 72px;
+    -fx-pref-height: 72px;
+    -fx-min-width: 72px;
+    -fx-min-height: 72px;
+    -fx-max-width: 72px;
+    -fx-max-height: 72px;
+    -fx-background-color: white;
+    -fx-background-radius: 36px;
+    -fx-border-color: #bfd5ed;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 36px;
+    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.10), 8, 0, 0, 3);
+    -fx-alignment: center;
+    -fx-padding: 0;
 }

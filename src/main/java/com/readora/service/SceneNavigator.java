@@ -136,4 +136,7 @@ public final class SceneNavigator {
         fade.play();
         scale.play();
     }
+
+    public static void goBack(ActionEvent event) {
+    }
 }

@@ -15,19 +15,23 @@ public class LibrarianDashboardContentController {
 
     @FXML
     private void openBorrowingRecords(ActionEvent event) {
-        ViewLoaderService.loadInto(
-                contentArea,
-                getClass(),
-                "BorrowedBookView.fxml"
-        );
+        if (contentArea != null) {
+            ViewLoaderService.loadInto(
+                    contentArea,
+                    getClass(),
+                    "BorrowedBookView.fxml"
+            );
+        }
     }
 
     @FXML
     private void openReturnBook(ActionEvent event) {
-        ViewLoaderService.loadInto(
-                contentArea,
-                getClass(),
-                "ReturnBookView.fxml"
-        );
+        if (contentArea != null) {
+            ViewLoaderService.loadInto(
+                    contentArea,
+                    getClass(),
+                    "ReturnBookView.fxml"
+            );
+        }
     }
 }
