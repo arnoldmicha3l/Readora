@@ -7,10 +7,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -21,148 +19,144 @@
            stylesheets="@style.css"
            styleClass="root-pane">
 
-    <children>
-        <BorderPane styleClass="root-pane">
+    <BorderPane styleClass="root-pane">
+        <top>
+            <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+                <padding>
+                    <Insets top="14" right="24" bottom="14" left="24"/>
+                </padding>
 
-            <top>
-                <HBox alignment="CENTER_LEFT" styleClass="top-bar">
-                    <padding>
-                        <Insets top="14" right="24" bottom="14" left="24"/>
-                    </padding>
+                <VBox spacing="0">
+                    <Label text="Readora" styleClass="logo-title"/>
+                    <Label text="Admin Portal" styleClass="logo-subtitle"/>
+                </VBox>
 
-                    <VBox spacing="0">
-                        <Label text="Readora" styleClass="logo-title"/>
-                        <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
-                    </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
 
-                    <Region HBox.hgrow="ALWAYS"/>
-
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button text="Dashboard" styleClass="menu-button" onAction="#handleGoDashboard"/>
-                        <Button text="Books" styleClass="menu-button-active" onAction="#handleBooksTab"/>
-                        <Button text="Members" styleClass="menu-button" onAction="#handleMembersTab"/>
-                        <Button text="Borrow Records" styleClass="menu-button" onAction="#handleBorrowRecordsTab"/>
-                        <Button text="Reports" styleClass="menu-button" onAction="#handleReportsTab"/>
-                    </HBox>
-
-                    <Region HBox.hgrow="ALWAYS"/>
-
-                    <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <VBox alignment="CENTER_RIGHT" spacing="2">
-                            <Label text="Admin" styleClass="user-label"/>
-                            <Label text="System Administrator" styleClass="user-role"/>
-                        </VBox>
-
-                        <Button fx:id="adminMenuButton"
-                                text="☰"
-                                onAction="#handleAdminMenu"
-                                styleClass="profile-button"/>
-                    </HBox>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Dashboard" onAction="#handleGoDashboard" styleClass="menu-button"/>
+                    <Button text="Books" onAction="#handleBooksTab" styleClass="menu-button-active"/>
+                    <Button text="Students" onAction="#handleMembersTab" styleClass="menu-button"/>
+                    <Button text="Borrow Records" onAction="#handleBorrowRecordsTab" styleClass="menu-button"/>
+                    <Button text="Reports" onAction="#handleReportsTab" styleClass="menu-button"/>
                 </HBox>
-            </top>
 
-            <center>
-                <AnchorPane styleClass="dashboard-wrapper">
-                    <children>
-                        <VBox spacing="20"
-                              AnchorPane.topAnchor="26.0"
-                              AnchorPane.leftAnchor="28.0"
-                              AnchorPane.rightAnchor="28.0"
-                              AnchorPane.bottomAnchor="26.0">
+                <Region HBox.hgrow="ALWAYS"/>
 
-                            <VBox spacing="6">
-                                <Label text="Book Management" styleClass="welcome-title"/>
-                                <Label text="Manage your library collection with search, filters, and quick actions."
-                                       styleClass="welcome-subtitle"/>
-                            </VBox>
+                    <Button fx:id="adminMenuButton"
+                        text="☰"
+                        styleClass="profile-button"
+                        onAction="#handleAdminMenu"/>
+            </HBox>
+        </top>
 
-                            <VBox spacing="16" styleClass="section-panel" VBox.vgrow="ALWAYS">
+        <center>
+            <VBox spacing="22" styleClass="dashboard-wrapper">
+                <padding>
+                    <Insets top="30" right="34" bottom="34" left="34"/>
+                </padding>
 
-                                <HBox alignment="CENTER_LEFT" spacing="12">
-                                    <Label text="Book Records" styleClass="section-heading"/>
-                                    <Region HBox.hgrow="ALWAYS"/>
-                                    <Button text="Add Book"
-                                            onAction="#handleOpenAddPopup"
-                                            styleClass="primary-action-button"/>
-                                </HBox>
-
-                                <HBox spacing="12">
-                                    <TextField fx:id="searchField"
-                                               promptText="Search by Book ID, Title, or Author"
-                                               onKeyReleased="#handleSearch"
-                                               HBox.hgrow="ALWAYS"/>
-
-                                    <ComboBox fx:id="filterCategoryComboBox"
-                                              onAction="#handleFilter"
-                                              promptText="Filter Category"
-                                              prefWidth="180"/>
-
-                                    <ComboBox fx:id="filterStatusComboBox"
-                                              onAction="#handleFilter"
-                                              promptText="Filter Status"
-                                              prefWidth="160"/>
-                                </HBox>
-
-                                <TableView fx:id="bookTable" styleClass="book-table" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn fx:id="bookIdColumn" text="Book ID" prefWidth="120"/>
-                                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="250"/>
-                                        <TableColumn fx:id="authorColumn" text="Author" prefWidth="210"/>
-                                        <TableColumn fx:id="categoryColumn" text="Category" prefWidth="160"/>
-                                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="130"/>
-                                        <TableColumn fx:id="actionColumn" text="Actions" prefWidth="180"/>
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                        </VBox>
-                    </children>
-                </AnchorPane>
-            </center>
-        </BorderPane>
-
-        <HBox fx:id="popupOverlay"
-              alignment="CENTER"
-              visible="false"
-              managed="false"
-              styleClass="popup-overlay">
-            <VBox spacing="16" styleClass="popup-card">
-                <Label fx:id="popupTitleLabel" text="Add New Book" styleClass="section-heading"/>
-
-                <VBox spacing="8">
-                    <Label text="Book ID" styleClass="form-label"/>
-                    <TextField fx:id="bookIdField" promptText="Enter book ID"/>
+                <VBox spacing="5">
+                    <Label text="Book Management" styleClass="welcome-title"/>
+                    <Label text="Add, edit, delete, search, and filter library books." styleClass="welcome-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8">
-                    <Label text="Title" styleClass="form-label"/>
-                    <TextField fx:id="titleField" promptText="Enter title"/>
-                </VBox>
+                <HBox spacing="12" styleClass="section-panel">
+                    <TextField fx:id="searchField"
+                               promptText="Search by ID, title, author, category, or status..."
+                               onKeyReleased="#handleSearch"
+                               HBox.hgrow="ALWAYS"/>
 
-                <VBox spacing="8">
-                    <Label text="Author" styleClass="form-label"/>
-                    <TextField fx:id="authorField" promptText="Enter author"/>
-                </VBox>
+                    <ComboBox fx:id="filterCategoryComboBox"
+                              promptText="Category"
+                              onAction="#handleFilter"
+                              prefWidth="170"/>
 
-                <VBox spacing="8">
-                    <Label text="Category" styleClass="form-label"/>
-                    <ComboBox fx:id="categoryComboBox" promptText="Select category" maxWidth="1.7976931348623157E308"/>
-                </VBox>
+                    <ComboBox fx:id="filterStatusComboBox"
+                              promptText="Status"
+                              onAction="#handleFilter"
+                              prefWidth="150"/>
 
-                <VBox spacing="8">
-                    <Label text="Status" styleClass="form-label"/>
-                    <ComboBox fx:id="statusComboBox" promptText="Select status" maxWidth="1.7976931348623157E308"/>
-                </VBox>
-
-                <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button text="Cancel"
-                            onAction="#handleCancelPopup"
+                    <Button text="Clear"
+                            onAction="#handleClearFilters"
                             styleClass="secondary-action-button"/>
-                    <Button text="Save"
-                            onAction="#handleSaveBook"
-                            styleClass="primary-action-button"/>
+
+                    <Button text="+ Add Book"
+                            onAction="#handleOpenAddPopup"
+                            styleClass="primary-action-button"
+                            prefWidth="120"/>
                 </HBox>
+
+                <VBox spacing="12" styleClass="table-panel" VBox.vgrow="ALWAYS">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="Book Records" styleClass="section-heading"/>
+                        <Label fx:id="resultLabel" text="" styleClass="welcome-subtitle"/>
+                    </HBox>
+
+                    <TableView fx:id="bookTable"
+                               styleClass="book-table"
+                               prefHeight="520"
+                               VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="bookIdColumn" text="Book ID" prefWidth="120"/>
+                            <TableColumn fx:id="titleColumn" text="Title" prefWidth="280"/>
+                            <TableColumn fx:id="authorColumn" text="Author" prefWidth="220"/>
+                            <TableColumn fx:id="categoryColumn" text="Category" prefWidth="160"/>
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="130"/>
+                            <TableColumn fx:id="actionColumn" text="Actions" prefWidth="170"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </VBox>
-        </HBox>
-    </children>
+        </center>
+    </BorderPane>
+
+    <HBox fx:id="popupOverlay"
+          alignment="CENTER"
+          visible="false"
+          managed="false"
+          styleClass="popup-overlay">
+
+        <VBox spacing="16" styleClass="popup-card">
+            <Label fx:id="popupTitleLabel"
+                   text="Add New Book"
+                   styleClass="section-heading"/>
+
+            <VBox spacing="6">
+                <Label text="Book ID" styleClass="form-label"/>
+                <TextField fx:id="bookIdField" promptText="e.g. B006"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Title" styleClass="form-label"/>
+                <TextField fx:id="titleField" promptText="Book title"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Author" styleClass="form-label"/>
+                <TextField fx:id="authorField" promptText="Author name"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Category" styleClass="form-label"/>
+                <ComboBox fx:id="categoryComboBox" promptText="Select category" prefWidth="380"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Status" styleClass="form-label"/>
+                <ComboBox fx:id="statusComboBox" promptText="Select status" prefWidth="380"/>
+            </VBox>
+
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="Cancel"
+                        onAction="#handleCancelPopup"
+                        styleClass="secondary-action-button"/>
+
+                <Button text="Save"
+                        onAction="#handleSaveBook"
+                        styleClass="primary-action-button"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
 </StackPane>

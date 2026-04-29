@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.readora.controller.AdminStudentManagementController"
+            stylesheets="@style.css"
+            styleClass="root-pane">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+            <padding>
+                <Insets top="14" right="24" bottom="14" left="24"/>
+            </padding>
+
+            <VBox spacing="0">
+                <Label text="Readora" styleClass="logo-title"/>
+                <Label text="Admin Portal" styleClass="logo-subtitle"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Dashboard" onAction="#handleDashboard" styleClass="menu-button"/>
+                <Button text="Books" onAction="#handleBooks" styleClass="menu-button"/>
+                <Button text="Students" onAction="#handleStudents" styleClass="menu-button-active"/>
+                <Button text="Borrow Records" onAction="#handleBorrowRecords" styleClass="menu-button"/>
+                <Button text="Reports" onAction="#handleReports" styleClass="menu-button"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="22" styleClass="dashboard-wrapper">
+            <padding>
+                <Insets top="30" right="34" bottom="34" left="34"/>
+            </padding>
+
+            <VBox spacing="5">
+                <Label text="Student Management" styleClass="welcome-title"/>
+                <Label text="Add, edit, delete, search, and manage student member records." styleClass="welcome-subtitle"/>
+            </VBox>
+
+            <VBox spacing="16" styleClass="form-panel">
+                <Label text="Student Form" styleClass="section-heading"/>
+
+                <GridPane hgap="16" vgap="14">
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Student ID" styleClass="form-label"/>
+                        <TextField fx:id="studentIdField" promptText="e.g. STU-1001"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Full Name" styleClass="form-label"/>
+                        <TextField fx:id="fullNameField" promptText="Student full name"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="Email" styleClass="form-label"/>
+                        <TextField fx:id="emailField" promptText="student@email.com"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                        <Label text="Status" styleClass="form-label"/>
+                        <ComboBox fx:id="statusComboBox" promptText="Select status" prefWidth="180"/>
+                    </VBox>
+                </GridPane>
+
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <Button text="Add"
+                            onAction="#handleAdd"
+                            styleClass="primary-action-button"/>
+
+                    <Button text="Update"
+                            onAction="#handleUpdate"
+                            styleClass="secondary-action-button"/>
+
+                    <Button text="Delete"
+                            onAction="#handleDelete"
+                            styleClass="danger-wide-button"
+                            prefWidth="100"/>
+
+                    <Button text="Clear"
+                            onAction="#handleClear"
+                            styleClass="secondary-action-button"/>
+                </HBox>
+            </VBox>
+
+            <HBox spacing="12" styleClass="section-panel">
+                <TextField fx:id="searchField"
+                           promptText="Search by ID, name, email, or status..."
+                           onKeyReleased="#handleSearch"
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button text="Search"
+                        onAction="#handleSearch"
+                        styleClass="primary-action-button"/>
+
+                <Button text="Clear"
+                        onAction="#handleClearSearch"
+                        styleClass="secondary-action-button"/>
+            </HBox>
+
+            <VBox spacing="12" styleClass="table-panel" VBox.vgrow="ALWAYS">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Student Records" styleClass="section-heading"/>
+                    <Label fx:id="resultLabel" text="" styleClass="welcome-subtitle"/>
+                </HBox>
+
+                <TableView fx:id="studentTable"
+                           styleClass="book-table"
+                           prefHeight="450"
+                           VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="Student ID" prefWidth="140"/>
+                        <TableColumn fx:id="nameColumn" text="Full Name" prefWidth="280"/>
+                        <TableColumn fx:id="emailColumn" text="Email" prefWidth="260"/>
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
+                        <TableColumn fx:id="actionColumn" text="Actions" prefWidth="170"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

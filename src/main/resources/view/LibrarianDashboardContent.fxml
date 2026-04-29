@@ -3,110 +3,72 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/20"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.readora.controller.LibrarianDashboardContentController"
-            fitToWidth="true"
-            hbarPolicy="NEVER"
-            vbarPolicy="AS_NEEDED"
-            styleClass="main-scroll">
+<VBox xmlns="http://javafx.com/javafx/20"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="24"
+      styleClass="dashboard-wrapper">
 
-    <content>
-        <AnchorPane styleClass="dashboard-wrapper">
-            <children>
-                <VBox spacing="24"
-                      AnchorPane.topAnchor="26.0"
-                      AnchorPane.leftAnchor="28.0"
-                      AnchorPane.rightAnchor="28.0"
-                      AnchorPane.bottomAnchor="26.0">
+    <padding>
+        <Insets top="30" right="34" bottom="34" left="34"/>
+    </padding>
 
-                    <VBox spacing="6">
-                        <Label text="Librarian Dashboard" styleClass="welcome-title"/>
-                        <Label text="Manage circulation, returns, and member support from one workspace."
-                               styleClass="welcome-subtitle"/>
-                    </VBox>
+    <VBox spacing="6">
+        <Label text="Librarian Dashboard" styleClass="welcome-title"/>
+        <Label text="Manage daily circulation, member check-ins, and library catalog."
+               styleClass="welcome-subtitle"/>
+    </VBox>
 
-                    <HBox spacing="18">
-                        <VBox spacing="8" styleClass="summary-card" prefWidth="220">
-                            <Label text="0" styleClass="summary-number"/>
-                            <Label text="Books Borrowed Today" styleClass="summary-label"/>
-                        </VBox>
+    <HBox spacing="20">
+        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+            <Label text="Books Borrowed Today" styleClass="stat-label"/>
+            <Label text="0" styleClass="stat-number"/>
+        </VBox>
 
-                        <VBox spacing="8" styleClass="summary-card" prefWidth="220">
-                            <Label text="0" styleClass="summary-number"/>
-                            <Label text="Returns Processed" styleClass="summary-label"/>
-                        </VBox>
+        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+            <Label text="Returns Processed" styleClass="stat-label"/>
+            <Label text="0" styleClass="stat-number"/>
+        </VBox>
 
-                        <VBox spacing="8" styleClass="summary-card" prefWidth="220">
-                            <Label text="0" styleClass="summary-number"/>
-                            <Label text="Overdue Alerts" styleClass="summary-label"/>
-                        </VBox>
-                    </HBox>
+        <VBox spacing="8" styleClass="stat-card" prefWidth="260">
+            <Label text="Overdue Alerts" styleClass="stat-label"/>
+            <Label text="0" styleClass="stat-number"/>
+        </VBox>
+    </HBox>
 
-                    <VBox spacing="18" styleClass="section-panel">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label text="Library Operations" styleClass="section-heading"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="Core Modules" styleClass="section-tag"/>
-                        </HBox>
+    <VBox spacing="14" styleClass="section-panel">
+        <Label text="Library Operations" styleClass="section-heading"/>
 
-                        <FlowPane hgap="20" vgap="20" prefWrapLength="980" styleClass="card-container">
-                            <VBox alignment="TOP_LEFT" spacing="12" prefWidth="250" prefHeight="190" styleClass="feature-card">
-                                <Label text="Circulation" styleClass="feature-title"/>
-                                <Label text="Open active borrowing records and monitor due dates for issued books."
-                                       styleClass="feature-subtitle"/>
-                                <Region VBox.vgrow="ALWAYS"/>
-                                <Button text="Open Module"
-                                        onAction="#openBorrowingRecords"
-                                        styleClass="open-button"/>
-                            </VBox>
+        <GridPane hgap="20" vgap="20">
+            <VBox spacing="12" styleClass="feature-card" prefWidth="280" prefHeight="180"
+                  GridPane.columnIndex="0" GridPane.rowIndex="0">
 
-                            <VBox alignment="TOP_LEFT" spacing="12" prefWidth="250" prefHeight="190" styleClass="feature-card">
-                                <Label text="Returns" styleClass="feature-title"/>
-                                <Label text="Process returned items, update book status, and clear circulation tasks."
-                                       styleClass="feature-subtitle"/>
-                                <Region VBox.vgrow="ALWAYS"/>
-                                <Button text="Open Module"
-                                        onAction="#openReturnBook"
-                                        styleClass="open-button"/>
-                            </VBox>
+                <Label text="Circulation" styleClass="feature-title"/>
+                <Label text="View currently borrowed and overdue books."
+                       styleClass="feature-subtitle"
+                       wrapText="true"/>
 
-                            <VBox alignment="TOP_LEFT" spacing="12" prefWidth="250" prefHeight="190" styleClass="feature-card">
-                                <Label text="Member Support" styleClass="feature-title"/>
-                                <Label text="Keep student and member requests moving without leaving the dashboard."
-                                       styleClass="feature-subtitle"/>
-                                <Region VBox.vgrow="ALWAYS"/>
-                                <Button text="Ready" disable="true" styleClass="secondary-action-button"/>
-                            </VBox>
-                        </FlowPane>
-                    </VBox>
+                <Button fx:id="openBorrowedButton"
+                        text="Open Module"
+                        styleClass="open-button"/>
+            </VBox>
 
-                    <HBox spacing="18">
-                        <VBox spacing="12" styleClass="mini-panel" HBox.hgrow="ALWAYS">
-                            <Label text="Today&apos;s Activity" styleClass="mini-panel-title"/>
-                            <Label text="No librarian actions recorded yet." styleClass="mini-panel-text"/>
-                            <Label text="Borrowing, returns, and member requests will appear here as activity starts."
-                                   styleClass="mini-panel-subtext"/>
-                        </VBox>
+            <VBox spacing="12" styleClass="feature-card" prefWidth="280" prefHeight="180"
+                  GridPane.columnIndex="1" GridPane.rowIndex="0">
 
-                        <VBox spacing="12" styleClass="mini-panel" HBox.hgrow="ALWAYS">
-                            <Label text="Desk Notes" styleClass="mini-panel-title"/>
-                            <Label text="No circulation notes available." styleClass="mini-panel-text"/>
-                            <Label text="Use this area for reminders about holds, returns, or member follow-ups."
-                                   styleClass="mini-panel-subtext"/>
-                        </VBox>
-                    </HBox>
+                <Label text="Returns" styleClass="feature-title"/>
+                <Label text="Process returned items and update book availability."
+                       styleClass="feature-subtitle"
+                       wrapText="true"/>
 
-                </VBox>
-            </children>
-        </AnchorPane>
-    </content>
+                <Button fx:id="openReturnButton"
+                        text="Open Module"
+                        styleClass="open-button"/>
+            </VBox>
+        </GridPane>
+    </VBox>
 
-</ScrollPane>
+</VBox>

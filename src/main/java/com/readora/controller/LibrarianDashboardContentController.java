@@ -1,28 +1,33 @@
 package com.readora.controller;
 
+import com.readora.service.ViewLoaderService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 
 public class LibrarianDashboardContentController {
 
-    private LibrarianLandingPage mainController;
+    private StackPane contentArea;
 
-    // This allows the Landing Page to pass itself to this controller
-    public void setMainController(LibrarianLandingPage mainController) {
-        this.mainController = mainController;
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
     }
 
     @FXML
     private void openBorrowingRecords(ActionEvent event) {
-        if (mainController != null) {
-            mainController.showBorrowingRecords();
-        }
+        ViewLoaderService.loadInto(
+                contentArea,
+                getClass(),
+                "BorrowedBookView.fxml"
+        );
     }
 
     @FXML
     private void openReturnBook(ActionEvent event) {
-        if (mainController != null) {
-            mainController.showReturnBook();
-        }
+        ViewLoaderService.loadInto(
+                contentArea,
+                getClass(),
+                "ReturnBookView.fxml"
+        );
     }
 }

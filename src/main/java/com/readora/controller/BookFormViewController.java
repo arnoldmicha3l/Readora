@@ -1,47 +1,36 @@
 package com.readora.controller;
 
 import com.readora.model.Book;
+import com.readora.service.AlertHelper;
 import com.readora.service.AppState;
+import com.readora.service.BookService;
 import com.readora.service.SceneNavigator;
+import com.readora.service.TransitionHelper;
 import com.readora.user.SessionManager;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-
-import java.io.IOException;
 
 public class BookFormViewController {
 
     @FXML private Button adminMenuButton;
+
     @FXML private TextField bookIdField;
     @FXML private TextField titleField;
     @FXML private TextField authorField;
+
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private ComboBox<String> statusComboBox;
+
     @FXML private TextField searchField;
     @FXML private ComboBox<String> filterCategoryComboBox;
     @FXML private ComboBox<String> filterStatusComboBox;
+
     @FXML private TableView<Book> bookTable;
     @FXML private TableColumn<Book, String> bookIdColumn;
     @FXML private TableColumn<Book, String> titleColumn;
@@ -49,8 +38,10 @@ public class BookFormViewController {
     @FXML private TableColumn<Book, String> categoryColumn;
     @FXML private TableColumn<Book, String> statusColumn;
     @FXML private TableColumn<Book, String> actionColumn;
+
     @FXML private HBox popupOverlay;
     @FXML private Label popupTitleLabel;
+    @FXML private Label resultLabel;
 
     private FilteredList<Book> filteredBookList;
     private ContextMenu adminContextMenu;
@@ -61,32 +52,89 @@ public class BookFormViewController {
         setupAdminMenu();
         setupComboBoxes();
         setupTable();
-        setupData();
+        setupTooltips();
+        loadBooks();
         hidePopup();
+        setupAnimations();
     }
 
     private void setupAdminMenu() {
         adminContextMenu = new ContextMenu();
 
         MenuItem viewProfileItem = new MenuItem("View Profile");
-        MenuItem settingsItem = new MenuItem("Settings");
         MenuItem aboutUsItem = new MenuItem("About Us");
         MenuItem logoutItem = new MenuItem("Logout");
 
-        viewProfileItem.setOnAction(event -> showAlert(Alert.AlertType.INFORMATION, "Profile", "Admin profile details can be added here."));
-        settingsItem.setOnAction(event -> showAlert(Alert.AlertType.INFORMATION, "Settings", "System settings feature will be added soon."));
-        aboutUsItem.setOnAction(event -> handleAboutUs());
-        logoutItem.setOnAction(event -> handleLogout(event));
+        viewProfileItem.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(
+                        adminMenuButton,
+                        "/view/AdminProfile.fxml",
+                        "Readora - Admin Profile"
+                )
+        );
 
-        adminContextMenu.getItems().addAll(viewProfileItem, settingsItem, aboutUsItem, logoutItem);
+        aboutUsItem.setOnAction(event ->
+                SceneNavigator.switchSceneFromNode(
+                        adminMenuButton,
+                        "/view/AboutUsView.fxml",
+                        "Readora - About Us"
+                )
+        );
+
+        logoutItem.setOnAction(event -> {
+            boolean confirmed = AlertHelper.confirm(
+                    "Confirm Logout",
+                    "Are you sure you want to logout?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            SessionManager.clearSession();
+
+            SceneNavigator.switchSceneFromNode(
+                    adminMenuButton,
+                    "/view/LoginView.fxml",
+                    "Readora - Login"
+            );
+        });
+
+        adminContextMenu.getItems().setAll(viewProfileItem, aboutUsItem, logoutItem);
     }
 
     private void setupComboBoxes() {
-        categoryComboBox.getItems().setAll("Fiction", "Non-Fiction", "Science", "History", "Technology", "Education");
-        statusComboBox.getItems().setAll("Available", "Borrowed", "Reserved");
+        categoryComboBox.getItems().setAll(
+                "Fiction",
+                "Non-Fiction",
+                "Science",
+                "History",
+                "Technology",
+                "Education"
+        );
 
-        filterCategoryComboBox.getItems().setAll("All", "Fiction", "Non-Fiction", "Science", "History", "Technology", "Education");
-        filterStatusComboBox.getItems().setAll("All", "Available", "Borrowed", "Reserved");
+        statusComboBox.getItems().setAll(
+                "Available",
+                "Borrowed",
+                "Reserved"
+        );
+
+        filterCategoryComboBox.getItems().setAll(
+                "All",
+                "Fiction",
+                "Non-Fiction",
+                "Science",
+                "History",
+                "Technology",
+                "Education"
+        );
+
+        filterStatusComboBox.getItems().setAll(
+                "All",
+                "Available",
+                "Borrowed",
+                "Reserved"
+        );
 
         filterCategoryComboBox.setValue("All");
         filterStatusComboBox.setValue("All");
@@ -99,8 +147,7 @@ public class BookFormViewController {
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        filteredBookList = new FilteredList<>(AppState.getBooks(), book -> true);
-        bookTable.setItems(filteredBookList);
+        bookTable.setPlaceholder(new Label("No books found."));
 
         actionColumn.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -110,8 +157,12 @@ public class BookFormViewController {
 
             {
                 actionBox.setAlignment(Pos.CENTER);
+
                 editButton.getStyleClass().add("table-edit-button");
                 deleteButton.getStyleClass().add("table-delete-button");
+
+                editButton.setTooltip(new Tooltip("Edit this book"));
+                deleteButton.setTooltip(new Tooltip("Delete this book"));
 
                 editButton.setOnAction(event -> {
                     Book selectedBook = getTableView().getItems().get(getIndex());
@@ -120,122 +171,217 @@ public class BookFormViewController {
 
                 deleteButton.setOnAction(event -> {
                     Book selectedBook = getTableView().getItems().get(getIndex());
-                    AppState.getBooks().remove(selectedBook);
-                    applyFilters();
+                    deleteBook(selectedBook);
                 });
             }
 
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : actionBox);
-                setContentDisplay(empty ? ContentDisplay.TEXT_ONLY : ContentDisplay.GRAPHIC_ONLY);
+
+                if (empty) {
+                    setGraphic(null);
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                } else {
+                    setGraphic(actionBox);
+                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                }
+            }
+        });
+
+        bookTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
+
+                if (selectedBook != null) {
+                    openEditPopup(selectedBook);
+                }
             }
         });
     }
 
-    private void setupData() {
+    private void setupTooltips() {
+        if (adminMenuButton != null) {
+            adminMenuButton.setTooltip(new Tooltip("Open admin menu"));
+        }
+
+        if (searchField != null) {
+            searchField.setTooltip(new Tooltip("Search by book ID, title, author, category, or status"));
+        }
+
+        if (filterCategoryComboBox != null) {
+            filterCategoryComboBox.setTooltip(new Tooltip("Filter books by category"));
+        }
+
+        if (filterStatusComboBox != null) {
+            filterStatusComboBox.setTooltip(new Tooltip("Filter books by status"));
+        }
+    }
+
+    private void setupAnimations() {
+        TransitionHelper.softLoad(bookTable);
+        TransitionHelper.pop(adminMenuButton);
+    }
+
+    private void loadBooks() {
+        AppState.refreshBooks();
+
+        filteredBookList = new FilteredList<>(AppState.getBooks(), book -> true);
+        bookTable.setItems(filteredBookList);
+
         applyFilters();
+        bookTable.refresh();
+        updateResultLabel();
     }
 
     @FXML
     private void handleAdminMenu() {
+        if (adminMenuButton == null || adminContextMenu == null) {
+            AlertHelper.showError("Menu Error", "Admin menu is not available.");
+            return;
+        }
+
+        TransitionHelper.pulse(adminMenuButton);
+
         if (adminContextMenu.isShowing()) {
             adminContextMenu.hide();
         } else {
-            double x = adminMenuButton.localToScreen(0, 0).getX();
-            double y = adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getY();
-            adminContextMenu.show(adminMenuButton, x, y);
+            adminContextMenu.show(
+                    adminMenuButton,
+                    adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getX(),
+                    adminMenuButton.localToScreen(0, adminMenuButton.getHeight()).getY()
+            );
         }
-    }
-
-    @FXML
-    private void handleGoDashboard(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/AdminView.fxml", "Readora - Admin Dashboard");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open the dashboard.");
-        }
-    }
-
-    @FXML
-    private void handleBooksTab(ActionEvent event) {
-        showAlert(Alert.AlertType.INFORMATION, "Books", "You are already in the Books module.");
-    }
-
-    @FXML
-    private void handleMembersTab() {
-        showAlert(Alert.AlertType.INFORMATION, "Students", "Student module button is active. You can add the full student page next.");
-    }
-
-    @FXML
-    private void handleBorrowRecordsTab(ActionEvent event) {
-        try {
-            SceneNavigator.switchScene(event, getClass(), "/view/BorrowRecordsView.fxml", "Readora - Borrow Records");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open Borrow Records.");
-        }
-    }
-
-    @FXML
-    private void handleReportsTab() {
-        showAlert(Alert.AlertType.INFORMATION, "Reports", "Reports button is active. You can build the full reports page next.");
     }
 
     @FXML
     private void handleOpenAddPopup() {
         editingBook = null;
+
         popupTitleLabel.setText("Add New Book");
         clearPopupFields();
-        popupOverlay.setVisible(true);
-        popupOverlay.setManaged(true);
+
+        bookIdField.setEditable(true);
+        showPopup();
+        TransitionHelper.pop(popupOverlay);
     }
 
     private void openEditPopup(Book book) {
+        if (book == null) {
+            AlertHelper.showWarning("No Book Selected", "Please select a book first.");
+            return;
+        }
+
         editingBook = book;
+
         popupTitleLabel.setText("Edit Book");
+
         bookIdField.setText(book.getBookId());
         titleField.setText(book.getTitle());
         authorField.setText(book.getAuthor());
         categoryComboBox.setValue(book.getCategory());
         statusComboBox.setValue(book.getStatus());
-        popupOverlay.setVisible(true);
-        popupOverlay.setManaged(true);
+
+        bookIdField.setEditable(false);
+        showPopup();
+        TransitionHelper.pop(popupOverlay);
     }
 
     @FXML
     private void handleSaveBook() {
-        if (isInputInvalid()) {
-            showAlert(Alert.AlertType.WARNING, "Input Error", "Please complete all book fields.");
+        if (!isBookInputValid()) {
             return;
         }
 
+        String bookId = bookIdField.getText().trim();
+        String title = titleField.getText().trim();
+        String author = authorField.getText().trim();
+        String category = categoryComboBox.getValue();
+        String status = statusComboBox.getValue();
+
+        boolean success;
+
         if (editingBook == null) {
-            AppState.getBooks().add(new Book(
-                    bookIdField.getText().trim(),
-                    titleField.getText().trim(),
-                    authorField.getText().trim(),
-                    categoryComboBox.getValue(),
-                    statusComboBox.getValue()
-            ));
+            Book newBook = new Book(bookId, title, author, category, status);
+            success = BookService.addBook(newBook);
+
+            if (!success) {
+                AlertHelper.showError(
+                        "Save Failed",
+                        "Book ID already exists or data is invalid."
+                );
+                return;
+            }
         } else {
-            editingBook.setBookId(bookIdField.getText().trim());
-            editingBook.setTitle(titleField.getText().trim());
-            editingBook.setAuthor(authorField.getText().trim());
-            editingBook.setCategory(categoryComboBox.getValue());
-            editingBook.setStatus(statusComboBox.getValue());
-            bookTable.refresh();
+            editingBook.setTitle(title);
+            editingBook.setAuthor(author);
+            editingBook.setCategory(category);
+            editingBook.setStatus(status);
+
+            success = BookService.updateBook(editingBook);
+
+            if (!success) {
+                AlertHelper.showError(
+                        "Update Failed",
+                        "Unable to update selected book."
+                );
+                return;
+            }
         }
 
-        applyFilters();
+        AlertHelper.showInfo("Success", "Book saved successfully.");
         hidePopup();
+        loadBooks();
+        TransitionHelper.pulse(bookTable);
+    }
+
+    private boolean isBookInputValid() {
+        if (bookIdField.getText() == null || bookIdField.getText().trim().isEmpty()
+                || titleField.getText() == null || titleField.getText().trim().isEmpty()
+                || authorField.getText() == null || authorField.getText().trim().isEmpty()
+                || categoryComboBox.getValue() == null
+                || statusComboBox.getValue() == null) {
+
+            AlertHelper.showWarning(
+                    "Validation Error",
+                    "Please complete all book fields."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void deleteBook(Book book) {
+        if (book == null) {
+            AlertHelper.showWarning("No Book Selected", "Please select a book first.");
+            return;
+        }
+
+        boolean confirmed = AlertHelper.confirm(
+                "Confirm Delete",
+                "Are you sure you want to delete this book?\n\n" + book.getTitle()
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        boolean success = BookService.deleteBook(book.getBookId());
+
+        if (success) {
+            AlertHelper.showInfo("Deleted", "Book deleted successfully.");
+            loadBooks();
+            TransitionHelper.pulse(bookTable);
+        } else {
+            AlertHelper.showError("Delete Failed", "Unable to delete selected book.");
+        }
     }
 
     @FXML
     private void handleCancelPopup() {
-        hidePopup();
+        TransitionHelper.fadeOutThenRun(popupOverlay, this::hidePopup);
     }
 
     @FXML
@@ -248,77 +394,167 @@ public class BookFormViewController {
         applyFilters();
     }
 
+    @FXML
+    private void handleClearFilters() {
+        if (searchField != null) {
+            searchField.clear();
+        }
+
+        if (filterCategoryComboBox != null) {
+            filterCategoryComboBox.setValue("All");
+        }
+
+        if (filterStatusComboBox != null) {
+            filterStatusComboBox.setValue("All");
+        }
+
+        applyFilters();
+        TransitionHelper.pulse(bookTable);
+    }
+
     private void applyFilters() {
-        String searchText = searchField.getText() == null ? "" : searchField.getText().toLowerCase().trim();
-        String selectedCategory = filterCategoryComboBox.getValue();
-        String selectedStatus = filterStatusComboBox.getValue();
+        if (filteredBookList == null) {
+            return;
+        }
+
+        String searchText = searchField == null || searchField.getText() == null
+                ? ""
+                : searchField.getText().toLowerCase().trim();
+
+        String selectedCategory = filterCategoryComboBox == null || filterCategoryComboBox.getValue() == null
+                ? "All"
+                : filterCategoryComboBox.getValue();
+
+        String selectedStatus = filterStatusComboBox == null || filterStatusComboBox.getValue() == null
+                ? "All"
+                : filterStatusComboBox.getValue();
 
         filteredBookList.setPredicate(book -> {
             boolean matchesSearch = searchText.isEmpty()
-                    || book.getBookId().toLowerCase().contains(searchText)
-                    || book.getTitle().toLowerCase().contains(searchText)
-                    || book.getAuthor().toLowerCase().contains(searchText);
+                    || contains(book.getBookId(), searchText)
+                    || contains(book.getTitle(), searchText)
+                    || contains(book.getAuthor(), searchText)
+                    || contains(book.getCategory(), searchText)
+                    || contains(book.getStatus(), searchText);
 
-            boolean matchesCategory = selectedCategory == null
-                    || selectedCategory.equals("All")
-                    || book.getCategory().equals(selectedCategory);
+            boolean matchesCategory = selectedCategory.equalsIgnoreCase("All")
+                    || safeEquals(book.getCategory(), selectedCategory);
 
-            boolean matchesStatus = selectedStatus == null
-                    || selectedStatus.equals("All")
-                    || book.getStatus().equals(selectedStatus);
+            boolean matchesStatus = selectedStatus.equalsIgnoreCase("All")
+                    || safeEquals(book.getStatus(), selectedStatus);
 
             return matchesSearch && matchesCategory && matchesStatus;
         });
+
+        updateResultLabel();
     }
 
-    private boolean isInputInvalid() {
-        return bookIdField.getText().trim().isEmpty()
-                || titleField.getText().trim().isEmpty()
-                || authorField.getText().trim().isEmpty()
-                || categoryComboBox.getValue() == null
-                || statusComboBox.getValue() == null;
+    private void updateResultLabel() {
+        if (resultLabel == null || filteredBookList == null) {
+            return;
+        }
+
+        int count = filteredBookList.size();
+
+        if (count == 0) {
+            resultLabel.setText("No books found.");
+        } else if (count == 1) {
+            resultLabel.setText("1 book found.");
+        } else {
+            resultLabel.setText(count + " books found.");
+        }
+    }
+
+    private boolean contains(String value, String keyword) {
+        return value != null && value.toLowerCase().contains(keyword);
+    }
+
+    private boolean safeEquals(String value, String compareTo) {
+        return value != null && compareTo != null && value.equalsIgnoreCase(compareTo);
+    }
+
+    private void showPopup() {
+        if (popupOverlay != null) {
+            popupOverlay.setOpacity(1.0);
+            popupOverlay.setVisible(true);
+            popupOverlay.setManaged(true);
+        }
     }
 
     private void hidePopup() {
         clearPopupFields();
-        popupOverlay.setVisible(false);
-        popupOverlay.setManaged(false);
-    }
 
-    private void clearPopupFields() {
-        bookIdField.clear();
-        titleField.clear();
-        authorField.clear();
-        categoryComboBox.setValue(null);
-        statusComboBox.setValue(null);
-        editingBook = null;
-    }
-
-    private void handleAboutUs() {
-        showAlert(
-                Alert.AlertType.INFORMATION,
-                "About Us",
-                "Readora is a Smart Library Management System designed to help manage books, borrowing records, and student library services in a simple and organized way."
-        );
-    }
-
-    private void handleLogout(ActionEvent event) {
-        SessionManager.clearSession();
-
-        try {
-            Stage stage = (Stage) adminMenuButton.getScene().getWindow();
-            SceneNavigator.switchScene(stage, getClass(), "/view/LoginView.fxml", "Readora - Login");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to return to login.");
+        if (popupOverlay != null) {
+            popupOverlay.setOpacity(1.0);
+            popupOverlay.setVisible(false);
+            popupOverlay.setManaged(false);
         }
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void clearPopupFields() {
+        if (bookIdField != null) {
+            bookIdField.clear();
+            bookIdField.setEditable(true);
+        }
+
+        if (titleField != null) {
+            titleField.clear();
+        }
+
+        if (authorField != null) {
+            authorField.clear();
+        }
+
+        if (categoryComboBox != null) {
+            categoryComboBox.setValue(null);
+        }
+
+        if (statusComboBox != null) {
+            statusComboBox.setValue(null);
+        }
+
+        editingBook = null;
+    }
+
+    @FXML
+    private void handleGoDashboard(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/AdminView.fxml",
+                "Readora - Admin Dashboard"
+        );
+    }
+
+    @FXML
+    private void handleBooksTab(ActionEvent event) {
+        loadBooks();
+        TransitionHelper.pulse(bookTable);
+    }
+
+    @FXML
+    private void handleMembersTab(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/AdminStudentManagement.fxml",
+                "Readora - Student Management"
+        );
+    }
+
+    @FXML
+    private void handleBorrowRecordsTab(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/BorrowRecords.fxml",
+                "Readora - Borrow Records"
+        );
+    }
+
+    @FXML
+    private void handleReportsTab(ActionEvent event) {
+        SceneNavigator.switchScene(
+                event,
+                "/view/AdminReportsView.fxml",
+                "Readora - Reports"
+        );
     }
 }

@@ -1,130 +1,213 @@
 package com.readora.controller;
 
+import com.readora.service.AccountSyncService;
+import com.readora.service.AlertHelper;
+import com.readora.service.NavigationHelper;
 import com.readora.service.SceneNavigator;
+import com.readora.user.AccountService;
+import com.readora.user.SessionManager;
+import com.readora.user.UserAccount;
+import com.readora.user.ValidationService;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
 
 public class StudentProfileController implements Initializable {
 
-    // Name Fields
     @FXML private TextField firstNameField;
     @FXML private TextField middleNameField;
     @FXML private TextField lastNameField;
-
-    // Attribute Fields
     @FXML private TextField idField;
     @FXML private TextField ageField;
     @FXML private ComboBox<String> genderComboBox;
     @FXML private TextField emailField;
     @FXML private TextField usernameField;
+    @FXML private TextField phoneField;
 
-    /**
-     * Initializes the controller class. This is called automatically
-     * after the fxml file has been loaded.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Populate the Gender ComboBox
-        ObservableList<String> genders = FXCollections.observableArrayList(
-                "Male", "Female"
-        );
-        genderComboBox.setItems(genders);
-
-        // Optional: Load existing user data here
+        genderComboBox.setItems(FXCollections.observableArrayList("Male", "Female"));
         loadUserData();
     }
 
     private void loadUserData() {
-        // This is where you would normally fetch data from a database
-        // Example placeholder:
-        idField.setText("2024-0001");
-        idField.setEditable(false); // ID usually shouldn't be changed by the user
-    }
+        UserAccount currentUser = SessionManager.getCurrentUser();
 
-    @FXML
-    private void handleSave(ActionEvent event) {
-        // Collect data from fields
-        String firstName = firstNameField.getText();
-        String lastName = lastNameField.getText();
-        String email = emailField.getText();
-        String gender = genderComboBox.getValue();
-
-        // Validation Logic (Simple Example)
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
-            System.out.println("Error: Please fill in all required fields.");
+        if (currentUser == null) {
             return;
         }
 
-        // Logic to save to database would go here
-        System.out.println("Saving profile for: " + firstName + " " + lastName);
-        System.out.println("Selected Gender: " + gender);
+        String[] nameParts = splitName(currentUser.getFullName());
 
-        // Provide feedback to the user (e.g., Alert or Status Label)
+        firstNameField.setText(nameParts[0]);
+        middleNameField.setText(nameParts[1]);
+        lastNameField.setText(nameParts[2]);
+
+        idField.setText(currentUser.getStudentId() != null ? currentUser.getStudentId() : "N/A");
+        idField.setEditable(false);
+
+        ageField.setText(currentUser.getAge() != null ? String.valueOf(currentUser.getAge()) : "");
+        genderComboBox.setValue(currentUser.getGender() != null && !currentUser.getGender().isEmpty() ? currentUser.getGender() : null);
+        emailField.setText(currentUser.getEmail() != null ? currentUser.getEmail() : "");
+        usernameField.setText(currentUser.getUsername());
+        phoneField.setText(currentUser.getPhone() != null ? currentUser.getPhone() : "");
     }
 
     @FXML
-    private void handleCancel(ActionEvent event) {
-        // Logic to clear fields or return to the Dashboard
-        System.out.println("Changes discarded.");
-        // Example: Navigate back
-        // NavigationUtil.navigateTo(event, "/com/readora/view/Dashboard.fxml");
+    protected void handleSave(ActionEvent event) {
+        UserAccount currentUser = SessionManager.getCurrentUser();
+
+        if (currentUser == null) {
+            AlertHelper.showError("Error", "No active session found.");
+            return;
+        }
+
+        String firstName = firstNameField.getText().trim();
+        String middleName = middleNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
+        String username = usernameField.getText().trim();
+        String email = emailField.getText().trim();
+        String phone = phoneField.getText().trim();
+        String gender = genderComboBox.getValue();
+        String ageText = ageField.getText().trim();
+
+        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty()) {
+            AlertHelper.showWarning("Validation Error", "First name, last name, and username are required.");
+            return;
+        }
+
+        if (!ValidationService.isValidEmail(email)) {
+            AlertHelper.showWarning("Validation Error", "Please enter a valid email address.");
+            return;
+        }
+
+        if (!ValidationService.isValidPhone(phone)) {
+            AlertHelper.showWarning("Validation Error", "Please enter a valid phone number.");
+            return;
+        }
+
+        if (!ValidationService.isValidAge(ageText)) {
+            AlertHelper.showWarning("Validation Error", "Age must be a valid number from 1 to 120.");
+            return;
+        }
+
+        if (!AccountService.updateUsername(currentUser, username)) {
+            AlertHelper.showWarning("Validation Error", "Username already exists. Please choose another one.");
+            return;
+        }
+
+        currentUser.setFullName(buildFullName(firstName, middleName, lastName));
+        currentUser.setEmail(email);
+        currentUser.setPhone(phone);
+        currentUser.setGender(gender != null ? gender : "");
+
+        if (!ageText.isEmpty()) {
+            currentUser.setAge(Integer.parseInt(ageText));
+        } else {
+            currentUser.setAge(null);
+        }
+
+        AccountService.updateAccount(currentUser);
+        AccountSyncService.syncStudentFromSession(currentUser);
+
+        AlertHelper.showInfo("Success", "Profile updated successfully.");
     }
 
-    // Navigation handlers (Matching the Top Bar buttons)
     @FXML
-    private void handleDashboard(ActionEvent event) {
-        System.out.println("Navigating to Dashboard...");
+    protected void handleCancel(ActionEvent event) {
+        loadUserData();
     }
 
     @FXML
-    private void handleBrowseBooks(ActionEvent event) {
-        System.out.println("Navigating to Browse Books...");
-    }
-
-    @FXML
-    private void handleHistoryTab(ActionEvent event) {
-        System.out.println("Navigating to History...");
-    }
-
-
-
-    @FXML private TextField phoneField;
-
-    @FXML
-    private void handleChangeUsername(ActionEvent event) {
-        // Logic to make field editable or open a small popup
-        usernameField.setEditable(true);
-        usernameField.setStyle("-fx-background-color: white; -fx-border-color: #3b82f6;");
-        usernameField.requestFocus();
-        System.out.println("Username editing enabled.");
-    }
-
-    @FXML
-    private void handleChangePassword(ActionEvent event) {
+    protected void handleDashboard(ActionEvent event) {
         try {
-            // This replaces the placeholder alert with actual navigation
-            SceneNavigator.switchScene(
-                    event,
-                    getClass(),
-                    "/view/ChangePassword.fxml",
-                    "Readora - Change Password"
-            );
+            NavigationHelper.goToDashboard(event, getClass());
         } catch (IOException e) {
             e.printStackTrace();
-            showInfo("Error", "Unable to open the Change Password screen.");
+            AlertHelper.showError("Navigation Error", "Unable to open dashboard.");
         }
     }
 
-    private void showInfo(String error, String s) {
+    @FXML
+    protected void handleBrowseBooks(ActionEvent event) {
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/BrowseBooks.fxml", "Readora - Browse Books");
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertHelper.showError("Navigation Error", "Unable to open Browse Books.");
+        }
+    }
+
+    @FXML
+    protected void handleHistoryTab(ActionEvent event) {
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/MyHistory.fxml", "Readora - My History");
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertHelper.showError("Navigation Error", "Unable to open My History.");
+        }
+    }
+
+    @FXML
+    protected void handleChangePassword(ActionEvent event) {
+        try {
+            SceneNavigator.switchScene(event, getClass(), "/view/ChangePassword.fxml", "Readora - Change Password");
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertHelper.showError("Navigation Error", "Unable to open Change Password screen.");
+        }
+    }
+
+    private String[] splitName(String fullName) {
+        String[] result = new String[]{"", "", ""};
+
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return result;
+        }
+
+        String[] parts = fullName.trim().split("\\s+");
+
+        if (parts.length == 1) {
+            result[0] = parts[0];
+        } else if (parts.length == 2) {
+            result[0] = parts[0];
+            result[2] = parts[1];
+        } else {
+            result[0] = parts[0];
+            result[2] = parts[parts.length - 1];
+
+            StringBuilder middle = new StringBuilder();
+
+            for (int i = 1; i < parts.length - 1; i++) {
+                if (i > 1) {
+                    middle.append(" ");
+                }
+
+                middle.append(parts[i]);
+            }
+
+            result[1] = middle.toString();
+        }
+
+        return result;
+    }
+
+    private String buildFullName(String first, String middle, String last) {
+        StringBuilder name = new StringBuilder(first);
+
+        if (!middle.isEmpty()) {
+            name.append(" ").append(middle);
+        }
+
+        name.append(" ").append(last);
+
+        return name.toString().trim();
     }
 }
