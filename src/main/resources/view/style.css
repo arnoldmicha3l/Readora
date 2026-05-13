@@ -1327,3 +1327,26 @@
     -fx-alignment: center;
     -fx-padding: 0;
 }
+
+
+.book-table .table-row-cell:selected {
+    -fx-background-color: #dcecff;
+    -fx-background-insets: 0;
+}
+
+
+.book-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #173a5e;
+}
+
+
+
+.book-table .table-row-cell:selected .table-cell:indexed-column(1) {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0056b3;
+}
+
+
+.book-table:focused .table-row-cell:selected {
+    -fx-background-color: #dcecff;
+}
