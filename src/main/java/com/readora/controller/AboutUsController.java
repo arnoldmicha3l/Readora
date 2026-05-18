@@ -31,27 +31,20 @@ public class AboutUsController {
 
     @FXML
     private void handleBack(ActionEvent event) {
-        if (SessionManager.getCurrentUser() == null) {
+        if (SessionManager.getCurrentUser() == null || SessionManager.getCurrentUser().getRole() == null) {
             SceneNavigator.switchScene(event, "/view/LoginView.fxml", "Readora - Login");
             return;
         }
 
         switch (SessionManager.getCurrentUser().getRole()) {
-            case ADMIN:
-                SceneNavigator.switchScene(event, "/view/AdminView.fxml", "Readora - Admin Dashboard");
-                break;
+            case ADMIN ->
+                    SceneNavigator.switchScene(event, "/view/AdminView.fxml", "Readora - Admin Dashboard");
 
-            case LIBRARIAN:
-                SceneNavigator.switchScene(event, "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
-                break;
+            case LIBRARIAN ->
+                    SceneNavigator.switchScene(event, "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
 
-            case STUDENT:
-                SceneNavigator.switchScene(event, "/view/StudentView.fxml", "Readora - Student Dashboard");
-                break;
-
-            default:
-                SceneNavigator.switchScene(event, "/view/LoginView.fxml", "Readora - Login");
-                break;
+            case STUDENT ->
+                    SceneNavigator.switchScene(event, "/view/StudentView.fxml", "Readora - Student Dashboard");
         }
     }
 
@@ -127,8 +120,7 @@ public class AboutUsController {
             URL imageUrl = getClass().getResource("/view/" + imageFileName);
 
             if (imageUrl != null) {
-                Image image = new Image(imageUrl.toExternalForm());
-                profileImageView.setImage(image);
+                profileImageView.setImage(new Image(imageUrl.toExternalForm()));
             }
         }
     }

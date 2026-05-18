@@ -1,24 +1,25 @@
 package com.readora.controller;
 
 import com.readora.service.AlertHelper;
+import com.readora.service.BackgroundTaskService;
 import com.readora.service.SceneNavigator;
 import com.readora.user.AccountService;
 import com.readora.user.SessionManager;
 import com.readora.user.UserAccount;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 
 public class LoginViewController {
 
     @FXML
     private TextField usernameField;
+
     @FXML
     private PasswordField passwordField;
 
@@ -28,6 +29,7 @@ public class LoginViewController {
     @FXML
     public void initialize() {
         setupLogo();
+
         if (usernameField != null) {
             usernameField.setTooltip(new Tooltip("Enter your username"));
         }
@@ -36,7 +38,6 @@ public class LoginViewController {
             passwordField.setTooltip(new Tooltip("Enter your password"));
         }
     }
-
 
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -48,26 +49,54 @@ public class LoginViewController {
             return;
         }
 
-        UserAccount user = AccountService.loginAccount(username, password);
+        setLoginDisabled(true);
 
-        if (user == null) {
-            AlertHelper.showError("Login Failed", "Invalid username or password.");
-            return;
-        }
+        BackgroundTaskService.runTask(
+                () -> AccountService.loginAccount(username, password),
 
-        SessionManager.setCurrentUser(user);
+                user -> {
+                    setLoginDisabled(false);
 
-        switch (user.getRole()) {
-            case ADMIN -> SceneNavigator.switchScene(event, "/view/AdminView.fxml", "Readora - Admin Dashboard");
-            case LIBRARIAN ->
-                    SceneNavigator.switchScene(event, "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
-            case STUDENT -> SceneNavigator.switchScene(event, "/view/StudentView.fxml", "Readora - Student Dashboard");
-        }
+                    if (user == null) {
+                        AlertHelper.showError("Login Failed", "Invalid username or password.");
+                        return;
+                    }
+
+                    SessionManager.setCurrentUser(user);
+
+                    switch (user.getRole()) {
+                        case ADMIN ->
+                                SceneNavigator.switchScene(event, "/view/AdminView.fxml", "Readora - Admin Dashboard");
+
+                        case LIBRARIAN ->
+                                SceneNavigator.switchScene(event, "/view/LibrarianLandingPage.fxml", "Readora - Librarian Dashboard");
+
+                        case STUDENT ->
+                                SceneNavigator.switchScene(event, "/view/StudentView.fxml", "Readora - Student Dashboard");
+                    }
+                },
+
+                error -> {
+                    setLoginDisabled(false);
+                    error.printStackTrace();
+                    AlertHelper.showError("Login Error", "Unable to process login request.");
+                }
+        );
     }
 
     @FXML
     private void handleRegister(ActionEvent event) {
         SceneNavigator.switchScene(event, "/view/RegisterView.fxml", "Readora - Register");
+    }
+
+    private void setLoginDisabled(boolean disabled) {
+        if (usernameField != null) {
+            usernameField.setDisable(disabled);
+        }
+
+        if (passwordField != null) {
+            passwordField.setDisable(disabled);
+        }
     }
 
     private void setupLogo() {
