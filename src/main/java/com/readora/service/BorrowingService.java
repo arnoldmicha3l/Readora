@@ -4,8 +4,8 @@ import com.readora.database.BookDAO;
 import com.readora.database.BorrowRecordDAO;
 import com.readora.model.Book;
 import com.readora.model.BorrowRecord;
-import com.readora.user.UserAccount;
 import com.readora.model.BorrowStatus;
+import com.readora.user.UserAccount;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,6 +48,41 @@ public final class BorrowingService {
         return recordSaved && bookUpdated;
     }
 
+    public static boolean reserveBook(UserAccount student, Book book) {
+        if (student == null || book == null) {
+            return false;
+        }
+
+        if (!"Borrowed".equalsIgnoreCase(book.getStatus())) {
+            return false;
+        }
+
+        if (hasExistingReservation(book.getBookId())) {
+            return false;
+        }
+
+        BorrowRecord reservation = new BorrowRecord(
+                generateRecordId(),
+                student.getStudentId(),
+                student.getFullName(),
+                book.getBookId(),
+                book.getTitle(),
+                LocalDate.now(),
+                null,
+                null,
+                BorrowStatus.RESERVED
+        );
+
+        book.setStatus("Reserved");
+
+        boolean recordSaved = borrowRecordDAO.insert(reservation);
+        boolean bookUpdated = bookDAO.update(book);
+
+        AppState.refreshAll();
+
+        return recordSaved && bookUpdated;
+    }
+
     public static boolean returnBook(BorrowRecord record) {
         if (record == null || "RETURNED".equalsIgnoreCase(record.getStatus())) {
             return false;
@@ -59,7 +94,9 @@ public final class BorrowingService {
         Book book = bookDAO.findById(record.getBookId());
 
         if (book != null) {
-            book.setStatus("Available");
+            boolean hasReservation = hasExistingReservation(book.getBookId());
+
+            book.setStatus(hasReservation ? "Reserved" : "Available");
             bookDAO.update(book);
         }
 
@@ -80,6 +117,29 @@ public final class BorrowingService {
         }
 
         AppState.refreshBorrowRecords();
+    }
+
+    public static BorrowRecord findReservationForBook(String bookId) {
+        if (bookId == null || bookId.isBlank()) {
+            return null;
+        }
+
+        for (BorrowRecord record : borrowRecordDAO.findAll()) {
+            if (record == null || record.getBookId() == null || record.getStatus() == null) {
+                continue;
+            }
+
+            if (record.getBookId().equalsIgnoreCase(bookId)
+                    && "RESERVED".equalsIgnoreCase(record.getStatus())) {
+                return record;
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean hasExistingReservation(String bookId) {
+        return findReservationForBook(bookId) != null;
     }
 
     private static String generateRecordId() {

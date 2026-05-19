@@ -16,12 +16,33 @@
 
     <VBox spacing="5">
         <Label text="Borrowed Books" styleClass="welcome-title"/>
-        <Label text="View all active borrowed and overdue book records." styleClass="welcome-subtitle"/>
+        <Label text="See who currently has each book and who is next in line through reservations."
+               styleClass="welcome-subtitle"/>
     </VBox>
+
+    <HBox spacing="18">
+        <VBox spacing="8" styleClass="analytics-card-yellow" HBox.hgrow="ALWAYS">
+            <Label text="Currently Borrowed" styleClass="analytics-title"/>
+            <Label text="Active" styleClass="analytics-number"/>
+            <Label text="Books currently with students" styleClass="analytics-subtitle"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="analytics-card-blue" HBox.hgrow="ALWAYS">
+            <Label text="Reservation Queue" styleClass="analytics-title"/>
+            <Label text="Next User" styleClass="analytics-number"/>
+            <Label text="Shows who reserved the book next" styleClass="analytics-subtitle"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="analytics-card-red" HBox.hgrow="ALWAYS">
+            <Label text="Overdue Watch" styleClass="analytics-title"/>
+            <Label text="Alert" styleClass="analytics-number"/>
+            <Label text="Overdue books need follow-up" styleClass="analytics-subtitle"/>
+        </VBox>
+    </HBox>
 
     <HBox spacing="12" styleClass="section-panel">
         <TextField fx:id="searchField"
-                   promptText="Search active borrowed records..."
+                   promptText="Search by book, current borrower, next reserved student, status, or record ID..."
                    onKeyReleased="#handleSearch"
                    HBox.hgrow="ALWAYS"/>
 
@@ -46,9 +67,10 @@
                    prefHeight="520"
                    VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="recordCol" text="Record ID" prefWidth="130"/>
-                <TableColumn fx:id="studentCol" text="Student Name" prefWidth="260"/>
+                <TableColumn fx:id="recordCol" text="Record ID" prefWidth="120"/>
                 <TableColumn fx:id="bookCol" text="Book Title" prefWidth="300"/>
+                <TableColumn fx:id="currentBorrowerCol" text="Currently Borrowed By" prefWidth="250"/>
+                <TableColumn fx:id="nextInLineCol" text="Next Reserved Student" prefWidth="250"/>
                 <TableColumn fx:id="statusCol" text="Status" prefWidth="150"/>
             </columns>
         </TableView>

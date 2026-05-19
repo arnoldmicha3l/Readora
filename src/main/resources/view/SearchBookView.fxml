@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,7 +7,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/20"
@@ -47,11 +45,12 @@
 
         <TableView fx:id="table" styleClass="book-table" prefHeight="500" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idCol" text="Book ID" prefWidth="130"/>
-                <TableColumn fx:id="titleCol" text="Title" prefWidth="270"/>
-                <TableColumn fx:id="authorCol" text="Author" prefWidth="220"/>
-                <TableColumn fx:id="categoryCol" text="Category" prefWidth="170"/>
-                <TableColumn fx:id="statusCol" text="Status" prefWidth="140"/>
+                <TableColumn fx:id="coverCol" text="Cover" prefWidth="90"/>
+                <TableColumn fx:id="idCol" text="Book ID" prefWidth="120"/>
+                <TableColumn fx:id="titleCol" text="Title" prefWidth="260"/>
+                <TableColumn fx:id="authorCol" text="Author" prefWidth="210"/>
+                <TableColumn fx:id="categoryCol" text="Category" prefWidth="160"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="130"/>
             </columns>
         </TableView>
     </VBox>

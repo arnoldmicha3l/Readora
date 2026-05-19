@@ -3,6 +3,7 @@ package com.readora.controller;
 import com.readora.model.BorrowRecord;
 import com.readora.service.AppState;
 import com.readora.service.TransitionHelper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,8 +15,9 @@ public class BorrowedBookController {
 
     @FXML private TableView<BorrowRecord> table;
     @FXML private TableColumn<BorrowRecord, String> recordCol;
-    @FXML private TableColumn<BorrowRecord, String> studentCol;
     @FXML private TableColumn<BorrowRecord, String> bookCol;
+    @FXML private TableColumn<BorrowRecord, String> currentBorrowerCol;
+    @FXML private TableColumn<BorrowRecord, String> nextInLineCol;
     @FXML private TableColumn<BorrowRecord, String> statusCol;
 
     @FXML private Label resultLabel;
@@ -36,16 +38,74 @@ public class BorrowedBookController {
             recordCol.setCellValueFactory(new PropertyValueFactory<>("recordId"));
         }
 
-        studentCol.setCellValueFactory(new PropertyValueFactory<>("studentName"));
         bookCol.setCellValueFactory(new PropertyValueFactory<>("bookTitle"));
+
+        currentBorrowerCol.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getStudentName())
+        );
+
+        nextInLineCol.setCellValueFactory(data ->
+                new SimpleStringProperty(getNextInLine(data.getValue()))
+        );
+
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        statusCol.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+
+                if (empty || status == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                setText(status.toUpperCase());
+
+                if ("BORROWED".equalsIgnoreCase(status)) {
+                    setStyle("-fx-text-fill: #b27920; -fx-font-weight: bold;");
+                } else if ("OVERDUE".equalsIgnoreCase(status)) {
+                    setStyle("-fx-text-fill: #984545; -fx-font-weight: bold;");
+                } else {
+                    setStyle("-fx-text-fill: #173a5e; -fx-font-weight: bold;");
+                }
+            }
+        });
 
         table.setPlaceholder(new Label("No active borrowed or overdue records found."));
     }
 
+    private String getNextInLine(BorrowRecord currentRecord) {
+        if (currentRecord == null || currentRecord.getBookId() == null) {
+            return "No reservation";
+        }
+
+        return AppState.getBorrowRecords().stream()
+                .filter(record ->
+                        record != null
+                                && record != currentRecord
+                                && record.getBookId() != null
+                                && record.getStatus() != null
+                                && record.getBookId().equalsIgnoreCase(currentRecord.getBookId())
+                                && "RESERVED".equalsIgnoreCase(record.getStatus())
+                )
+                .sorted((first, second) -> {
+                    if (first.getBorrowDate() == null && second.getBorrowDate() == null) return 0;
+                    if (first.getBorrowDate() == null) return 1;
+                    if (second.getBorrowDate() == null) return -1;
+                    return first.getBorrowDate().compareTo(second.getBorrowDate());
+                })
+                .map(record -> record.getStudentName() == null || record.getStudentName().isBlank()
+                        ? "Reserved student"
+                        : record.getStudentName())
+                .findFirst()
+                .orElse("No reservation");
+    }
+
     private void setupTooltips() {
         if (searchField != null) {
-            searchField.setTooltip(new Tooltip("Search by record ID, student name, book title, or status"));
+            searchField.setTooltip(new Tooltip("Search by record ID, book title, current borrower, next reserved student, or status"));
         }
 
         if (clearButton != null) {
@@ -55,7 +115,10 @@ public class BorrowedBookController {
 
     private void setupAnimations() {
         TransitionHelper.softLoad(table);
-        TransitionHelper.pop(clearButton);
+
+        if (clearButton != null) {
+            TransitionHelper.pop(clearButton);
+        }
     }
 
     private void loadRecords() {
@@ -94,7 +157,8 @@ public class BorrowedBookController {
                     || contains(record.getRecordId(), keyword)
                     || contains(record.getStudentName(), keyword)
                     || contains(record.getBookTitle(), keyword)
-                    || contains(record.getStatus(), keyword);
+                    || contains(record.getStatus(), keyword)
+                    || contains(getNextInLine(record), keyword);
 
             return active && matchesKeyword;
         });
@@ -120,11 +184,11 @@ public class BorrowedBookController {
         int count = filteredRecords.size();
 
         if (count == 0) {
-            resultLabel.setText("No active borrowed or overdue records found.");
+            resultLabel.setText("No active borrowed or overdue books found.");
         } else if (count == 1) {
-            resultLabel.setText("1 active record found.");
+            resultLabel.setText("1 active borrowed book found.");
         } else {
-            resultLabel.setText(count + " active records found.");
+            resultLabel.setText(count + " active borrowed books found.");
         }
     }
 

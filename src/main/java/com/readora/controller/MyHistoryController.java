@@ -6,17 +6,11 @@ import com.readora.service.AppState;
 import com.readora.service.SceneNavigator;
 import com.readora.user.SessionManager;
 import com.readora.user.UserAccount;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 
 public class MyHistoryController {
 
@@ -29,6 +23,12 @@ public class MyHistoryController {
     @FXML private TableColumn<BorrowRecord, String> borrowDateCol;
     @FXML private TableColumn<BorrowRecord, String> dueDateCol;
     @FXML private TableColumn<BorrowRecord, String> returnDateCol;
+
+    @FXML private Label totalHistoryLabel;
+    @FXML private Label borrowedHistoryLabel;
+    @FXML private Label returnedHistoryLabel;
+    @FXML private Label overdueHistoryLabel;
+    @FXML private Label historyResultLabel;
 
     @FXML private Button studentMenuButton;
 
@@ -43,12 +43,48 @@ public class MyHistoryController {
     }
 
     private void setupColumns() {
-        recordIdCol.setCellValueFactory(new PropertyValueFactory<>("recordId"));
-        bookCol.setCellValueFactory(new PropertyValueFactory<>("bookTitle"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        borrowDateCol.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
-        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        returnDateCol.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        recordIdCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRecordId()));
+        bookCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBookTitle()));
+        statusCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+
+        borrowDateCol.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getBorrowDate() == null ? "" : data.getValue().getBorrowDate().toString()
+        ));
+
+        dueDateCol.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getDueDate() == null ? "" : data.getValue().getDueDate().toString()
+        ));
+
+        returnDateCol.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getReturnDate() == null ? "Not Returned" : data.getValue().getReturnDate().toString()
+        ));
+
+        statusCol.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+
+                if (empty || status == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                setText(status.toUpperCase());
+
+                if (status.equalsIgnoreCase("RETURNED")) {
+                    setStyle("-fx-text-fill: #2f7d4f; -fx-font-weight: bold;");
+                } else if (status.equalsIgnoreCase("OVERDUE")) {
+                    setStyle("-fx-text-fill: #984545; -fx-font-weight: bold;");
+                } else if (status.equalsIgnoreCase("BORROWED")) {
+                    setStyle("-fx-text-fill: #b27920; -fx-font-weight: bold;");
+                } else {
+                    setStyle("-fx-text-fill: #173a5e; -fx-font-weight: bold;");
+                }
+            }
+        });
+
+        historyTable.setPlaceholder(new Label("No borrowing history found."));
     }
 
     private void setupStudentMenu() {
@@ -60,45 +96,23 @@ public class MyHistoryController {
         MenuItem logoutItem = new MenuItem("Logout");
 
         profileItem.setOnAction(event ->
-                SceneNavigator.switchSceneFromNode(
-                        studentMenuButton,
-                        "/view/StudentProfile.fxml",
-                        "Readora - Student Profile"
-                )
+                SceneNavigator.switchSceneFromNode(studentMenuButton, "/view/StudentProfile.fxml", "Readora - Student Profile")
         );
 
         passwordItem.setOnAction(event ->
-                SceneNavigator.switchSceneFromNode(
-                        studentMenuButton,
-                        "/view/ChangePassword.fxml",
-                        "Readora - Change Password"
-                )
+                SceneNavigator.switchSceneFromNode(studentMenuButton, "/view/ChangePassword.fxml", "Readora - Change Password")
         );
 
         aboutItem.setOnAction(event ->
-                SceneNavigator.switchSceneFromNode(
-                        studentMenuButton,
-                        "/view/AboutUsView.fxml",
-                        "Readora - About Us"
-                )
+                SceneNavigator.switchSceneFromNode(studentMenuButton, "/view/AboutUsView.fxml", "Readora - About Us")
         );
 
         logoutItem.setOnAction(event -> {
-            boolean confirmed = AlertHelper.confirm(
-                    "Confirm Logout",
-                    "Are you sure you want to logout?"
-            );
-
-            if (!confirmed) {
-                return;
-            }
+            boolean confirmed = AlertHelper.confirm("Confirm Logout", "Are you sure you want to logout?");
+            if (!confirmed) return;
 
             SessionManager.clearSession();
-            SceneNavigator.switchSceneFromNode(
-                    studentMenuButton,
-                    "/view/LoginView.fxml",
-                    "Readora - Login"
-            );
+            SceneNavigator.switchSceneFromNode(studentMenuButton, "/view/LoginView.fxml", "Readora - Login");
         });
 
         studentMenu.getItems().setAll(profileItem, passwordItem, aboutItem, logoutItem);
@@ -119,16 +133,14 @@ public class MyHistoryController {
 
         historyTable.setItems(filteredHistory);
         historyTable.refresh();
+
+        updateSummaryCards();
+        updateResultLabel();
     }
 
     private boolean belongsToCurrentStudent(BorrowRecord record, UserAccount currentUser) {
-        if (record == null || currentUser == null) {
-            return false;
-        }
-
-        if (record.getStudentId() == null || currentUser.getStudentId() == null) {
-            return false;
-        }
+        if (record == null || currentUser == null) return false;
+        if (record.getStudentId() == null || currentUser.getStudentId() == null) return false;
 
         return record.getStudentId().equalsIgnoreCase(currentUser.getStudentId());
     }
@@ -148,9 +160,7 @@ public class MyHistoryController {
     }
 
     private void applySearch() {
-        if (filteredHistory == null) {
-            return;
-        }
+        if (filteredHistory == null) return;
 
         UserAccount currentUser = SessionManager.getCurrentUser();
 
@@ -171,6 +181,46 @@ public class MyHistoryController {
 
             return belongs && matchesKeyword;
         });
+
+        updateSummaryCards();
+        updateResultLabel();
+    }
+
+    private void updateSummaryCards() {
+        if (filteredHistory == null) return;
+
+        long total = filteredHistory.size();
+
+        long borrowed = filteredHistory.stream()
+                .filter(record -> "BORROWED".equalsIgnoreCase(record.getStatus()))
+                .count();
+
+        long returned = filteredHistory.stream()
+                .filter(record -> "RETURNED".equalsIgnoreCase(record.getStatus()))
+                .count();
+
+        long overdue = filteredHistory.stream()
+                .filter(record -> "OVERDUE".equalsIgnoreCase(record.getStatus()))
+                .count();
+
+        if (totalHistoryLabel != null) totalHistoryLabel.setText(String.valueOf(total));
+        if (borrowedHistoryLabel != null) borrowedHistoryLabel.setText(String.valueOf(borrowed));
+        if (returnedHistoryLabel != null) returnedHistoryLabel.setText(String.valueOf(returned));
+        if (overdueHistoryLabel != null) overdueHistoryLabel.setText(String.valueOf(overdue));
+    }
+
+    private void updateResultLabel() {
+        if (historyResultLabel == null || filteredHistory == null) return;
+
+        int count = filteredHistory.size();
+
+        if (count == 0) {
+            historyResultLabel.setText("No records found.");
+        } else if (count == 1) {
+            historyResultLabel.setText("1 record found.");
+        } else {
+            historyResultLabel.setText(count + " records found.");
+        }
     }
 
     private boolean contains(String value, String keyword) {
@@ -179,20 +229,12 @@ public class MyHistoryController {
 
     @FXML
     private void handleDashboard(ActionEvent event) {
-        SceneNavigator.switchScene(
-                event,
-                "/view/StudentView.fxml",
-                "Readora - Student Dashboard"
-        );
+        SceneNavigator.switchScene(event, "/view/StudentView.fxml", "Readora - Student Dashboard");
     }
 
     @FXML
     private void handleBrowseBooks(ActionEvent event) {
-        SceneNavigator.switchScene(
-                event,
-                "/view/BrowseBooks.fxml",
-                "Readora - Browse Books"
-        );
+        SceneNavigator.switchScene(event, "/view/BrowseBooks.fxml", "Readora - Browse Books");
     }
 
     @FXML
@@ -220,47 +262,25 @@ public class MyHistoryController {
 
     @FXML
     private void handleProfile(ActionEvent event) {
-        SceneNavigator.switchScene(
-                event,
-                "/view/StudentProfile.fxml",
-                "Readora - Student Profile"
-        );
+        SceneNavigator.switchScene(event, "/view/StudentProfile.fxml", "Readora - Student Profile");
     }
 
     @FXML
     private void handleChangePassword(ActionEvent event) {
-        SceneNavigator.switchScene(
-                event,
-                "/view/ChangePassword.fxml",
-                "Readora - Change Password"
-        );
+        SceneNavigator.switchScene(event, "/view/ChangePassword.fxml", "Readora - Change Password");
     }
 
     @FXML
     private void handleAboutUs(ActionEvent event) {
-        SceneNavigator.switchScene(
-                event,
-                "/view/AboutUsView.fxml",
-                "Readora - About Us"
-        );
+        SceneNavigator.switchScene(event, "/view/AboutUsView.fxml", "Readora - About Us");
     }
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        boolean confirmed = AlertHelper.confirm(
-                "Confirm Logout",
-                "Are you sure you want to logout?"
-        );
-
-        if (!confirmed) {
-            return;
-        }
+        boolean confirmed = AlertHelper.confirm("Confirm Logout", "Are you sure you want to logout?");
+        if (!confirmed) return;
 
         SessionManager.clearSession();
-        SceneNavigator.switchScene(
-                event,
-                "/view/LoginView.fxml",
-                "Readora - Login"
-        );
+        SceneNavigator.switchScene(event, "/view/LoginView.fxml", "Readora - Login");
     }
 }

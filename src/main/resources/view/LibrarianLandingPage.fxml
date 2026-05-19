@@ -22,7 +22,7 @@
                 <Insets top="14" right="24" bottom="14" left="24"/>
             </padding>
 
-            <VBox spacing="0">
+            <VBox spacing="0" prefWidth="220">
                 <Label text="Readora" styleClass="logo-title"/>
                 <Label text="Librarian Portal" styleClass="logo-subtitle"/>
             </VBox>
@@ -30,19 +30,35 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Dashboard" onAction="#openDashboard" styleClass="menu-button-active"/>
-                <Button text="Search Books" onAction="#openSearchBook" styleClass="menu-button"/>
-                <Button text="Manage Members" onAction="#openManageStudent" styleClass="menu-button"/>
-                <Button text="Borrowed Books" onAction="#openBorrowingRecords" styleClass="menu-button"/>
-                <Button text="Return Books" onAction="#openReturnBook" styleClass="menu-button"/>
+                <Button text="Dashboard"
+                        onAction="#openDashboard"
+                        styleClass="menu-button"/>
+
+                <Button text="Search Books"
+                        onAction="#openSearchBook"
+                        styleClass="menu-button"/>
+
+                <Button text="Manage Members"
+                        onAction="#openManageStudent"
+                        styleClass="menu-button"/>
+
+                <Button text="Borrowed Books"
+                        onAction="#openBorrowingRecords"
+                        styleClass="menu-button"/>
+
+                <Button text="Return Books"
+                        onAction="#openReturnBook"
+                        styleClass="menu-button"/>
             </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button fx:id="librarianMenuButton"
-                    text="☰"
-                    onAction="#handleLibrarianMenu"
-                    styleClass="profile-button"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="220">
+                <Button fx:id="librarianMenuButton"
+                        text="☰"
+                        onAction="#handleLibrarianMenu"
+                        styleClass="profile-button"/>
+            </HBox>
         </HBox>
     </top>
 

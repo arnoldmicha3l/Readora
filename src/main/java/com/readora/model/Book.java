@@ -7,6 +7,7 @@ public class Book implements Identifiable<String> {
     private String author;
     private String category;
     private String status;
+    private String coverPath;
 
     public Book() {}
 
@@ -16,6 +17,15 @@ public class Book implements Identifiable<String> {
         this.author = author;
         this.category = category;
         this.status = status;
+    }
+
+    public Book(String bookId, String title, String author, String category, String status, String coverPath) {
+        this.bookId = bookId;
+        this.title = title;
+        this.author = author;
+        this.category = category;
+        this.status = status;
+        this.coverPath = coverPath;
     }
 
     @Override
@@ -37,4 +47,7 @@ public class Book implements Identifiable<String> {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getCoverPath() { return coverPath; }
+    public void setCoverPath(String coverPath) { this.coverPath = coverPath; }
 }

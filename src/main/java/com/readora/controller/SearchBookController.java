@@ -6,6 +6,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.File;
 
 public class SearchBookController {
 
@@ -13,6 +17,7 @@ public class SearchBookController {
     @FXML private ComboBox<String> statusFilter;
 
     @FXML private TableView<Book> table;
+    @FXML private TableColumn<Book, String> coverCol;
     @FXML private TableColumn<Book, String> idCol;
     @FXML private TableColumn<Book, String> titleCol;
     @FXML private TableColumn<Book, String> authorCol;
@@ -29,11 +34,49 @@ public class SearchBookController {
     }
 
     private void setupTable() {
+        coverCol.setCellValueFactory(new PropertyValueFactory<>("coverPath"));
+        setupCoverColumn();
+
         idCol.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        table.setPlaceholder(new Label("No books found."));
+    }
+
+    private void setupCoverColumn() {
+        coverCol.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitWidth(55);
+                imageView.setFitHeight(75);
+                imageView.setPreserveRatio(true);
+            }
+
+            @Override
+            protected void updateItem(String coverPath, boolean empty) {
+                super.updateItem(coverPath, empty);
+
+                if (empty || coverPath == null || coverPath.isBlank()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                File file = new File(coverPath);
+
+                if (!file.exists()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                imageView.setImage(new Image(file.toURI().toString(), true));
+                setGraphic(imageView);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        });
     }
 
     private void setupFilters() {
@@ -63,11 +106,17 @@ public class SearchBookController {
     }
 
     private void applyFilters() {
+        if (filteredBooks == null) {
+            return;
+        }
+
         String keyword = searchField == null || searchField.getText() == null
                 ? ""
                 : searchField.getText().toLowerCase().trim();
 
-        String selectedStatus = statusFilter == null ? "All" : statusFilter.getValue();
+        String selectedStatus = statusFilter == null || statusFilter.getValue() == null
+                ? "All"
+                : statusFilter.getValue();
 
         filteredBooks.setPredicate(book -> {
             boolean matchesKeyword = keyword.isEmpty()
@@ -77,9 +126,8 @@ public class SearchBookController {
                     || contains(book.getCategory(), keyword)
                     || contains(book.getStatus(), keyword);
 
-            boolean matchesStatus = selectedStatus == null
-                    || selectedStatus.equalsIgnoreCase("All")
-                    || book.getStatus().equalsIgnoreCase(selectedStatus);
+            boolean matchesStatus = selectedStatus.equalsIgnoreCase("All")
+                    || contains(book.getStatus(), selectedStatus.toLowerCase());
 
             return matchesKeyword && matchesStatus;
         });

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
@@ -21,9 +25,9 @@
                 <Insets top="14" right="24" bottom="14" left="24"/>
             </padding>
 
-            <VBox spacing="0">
+            <VBox spacing="0" prefWidth="220">
                 <Label text="Readora" styleClass="logo-title"/>
-                <Label text="Admin Reports" styleClass="logo-subtitle"/>
+                <Label text="Admin Portal" styleClass="logo-subtitle"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -35,64 +39,109 @@
                 <Button text="Borrow Records" onAction="#handleBorrowRecords" styleClass="menu-button"/>
                 <Button text="Reports" onAction="#handleReports" styleClass="menu-button-active"/>
             </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+            <Region prefWidth="220"/>
         </HBox>
     </top>
 
     <center>
-        <VBox spacing="24" styleClass="dashboard-wrapper">
+        <VBox spacing="22" styleClass="dashboard-wrapper">
             <padding>
                 <Insets top="30" right="34" bottom="34" left="34"/>
             </padding>
 
-            <VBox spacing="5">
-                <Label text="Reports Dashboard" styleClass="welcome-title"/>
-                <Label text="Monitor books, students, borrowed records, returns, and overdue activity." styleClass="welcome-subtitle"/>
-            </VBox>
+            <HBox alignment="CENTER_LEFT">
+                <VBox spacing="5">
+                    <Label text="Reports Dashboard" styleClass="welcome-title"/>
+                    <Label text="A visual overview of library activity, borrowing performance, and overdue records."
+                           styleClass="welcome-subtitle"/>
+                </VBox>
 
-            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Region HBox.hgrow="ALWAYS"/>
+
                 <Button text="Refresh Reports"
                         onAction="#handleRefreshReports"
                         styleClass="primary-action-button"
                         prefWidth="150"/>
-
-                <Label fx:id="reportStatusLabel"
-                       text="Reports loaded."
-                       styleClass="welcome-subtitle"/>
             </HBox>
 
-            <GridPane hgap="20" vgap="20">
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Total Books" styleClass="stat-label"/>
-                    <Label fx:id="totalBooksLabel" text="0" styleClass="stat-number"/>
+            <GridPane hgap="18" vgap="18">
+                <VBox spacing="8" styleClass="analytics-card-blue" prefWidth="260" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Total Books" styleClass="analytics-title"/>
+                    <Label fx:id="totalBooksLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Books in collection" styleClass="analytics-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="Total Students" styleClass="stat-label"/>
-                    <Label fx:id="totalStudentsLabel" text="0" styleClass="stat-number"/>
+                <VBox spacing="8" styleClass="analytics-card-green" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Total Students" styleClass="analytics-title"/>
+                    <Label fx:id="totalStudentsLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Registered users" styleClass="analytics-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                    <Label text="Borrowed Books" styleClass="stat-label"/>
-                    <Label fx:id="borrowedBooksLabel" text="0" styleClass="stat-number"/>
+                <VBox spacing="8" styleClass="analytics-card-yellow" prefWidth="260" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <Label text="Borrowed Books" styleClass="analytics-title"/>
+                    <Label fx:id="borrowedBooksLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Currently borrowed" styleClass="analytics-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                    <Label text="Returned Records" styleClass="stat-label"/>
-                    <Label fx:id="returnedBooksLabel" text="0" styleClass="stat-number"/>
+                <VBox spacing="8" styleClass="analytics-card-blue" prefWidth="260" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                    <Label text="Returned Records" styleClass="analytics-title"/>
+                    <Label fx:id="returnedBooksLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Completed returns" styleClass="analytics-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <Label text="Overdue Records" styleClass="stat-label"/>
-                    <Label fx:id="overdueLabel" text="0" styleClass="stat-number"/>
+                <VBox spacing="8" styleClass="analytics-card-red" prefWidth="260" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                    <Label text="Overdue Records" styleClass="analytics-title"/>
+                    <Label fx:id="overdueLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Needs attention" styleClass="analytics-subtitle"/>
                 </VBox>
             </GridPane>
 
-            <VBox spacing="12" styleClass="section-panel">
-                <Label text="Report Notes" styleClass="section-heading"/>
-                <Label text="The report values are refreshed from the SQLite database. Overdue records are updated before totals are displayed."
-                       wrapText="true"
-                       styleClass="welcome-subtitle"/>
-            </VBox>
+            <HBox spacing="20" VBox.vgrow="ALWAYS">
+                <VBox spacing="12" styleClass="chart-panel" HBox.hgrow="ALWAYS">
+                    <Label text="Borrowing Status Overview" styleClass="section-heading"/>
+
+                    <PieChart fx:id="statusPieChart"
+                              labelsVisible="true"
+                              legendVisible="true"
+                              prefHeight="330"/>
+                </VBox>
+
+                <VBox spacing="12" styleClass="chart-panel" HBox.hgrow="ALWAYS">
+                    <Label text="Library Metrics Comparison" styleClass="section-heading"/>
+
+                    <BarChart fx:id="metricsBarChart"
+                              legendVisible="false"
+                              animated="true"
+                              prefHeight="330">
+                        <xAxis>
+                            <CategoryAxis label="Metrics"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Count"/>
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20">
+                <VBox spacing="12" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                    <Label text="System Insight" styleClass="section-heading"/>
+                    <Label fx:id="insightLabel"
+                           text="Reports are ready."
+                           wrapText="true"
+                           styleClass="welcome-subtitle"/>
+                </VBox>
+
+                <VBox spacing="12" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                    <Label text="Report Status" styleClass="section-heading"/>
+                    <Label fx:id="reportStatusLabel"
+                           text="Reports loaded."
+                           wrapText="true"
+                           styleClass="welcome-subtitle"/>
+                </VBox>
+            </HBox>
         </VBox>
     </center>
 

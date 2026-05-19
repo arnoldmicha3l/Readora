@@ -23,7 +23,7 @@
                 <Insets top="14" right="24" bottom="14" left="24"/>
             </padding>
 
-            <VBox>
+            <VBox spacing="0" prefWidth="220">
                 <Label text="Readora" styleClass="logo-title"/>
                 <Label text="Student Portal" styleClass="logo-subtitle"/>
             </VBox>
@@ -31,25 +31,24 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button text="My Dashboard"
-                        styleClass="menu-button"
-                        onAction="#handleDashboard"/>
-
-                <Button text="Browse Books"
-                        styleClass="menu-button"
-                        onAction="#handleBrowseBooks"/>
-
-                <Button text="My History"
-                        styleClass="menu-button-active"
-                        onAction="#handleHistoryTab"/>
+                <Button text="My Dashboard" styleClass="menu-button" onAction="#handleDashboard"/>
+                <Button text="Browse Books" styleClass="menu-button" onAction="#handleBrowseBooks"/>
+                <Button text="My History" styleClass="menu-button-active" onAction="#handleHistoryTab"/>
             </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button fx:id="studentMenuButton"
-                    text="☰"
-                    styleClass="profile-button"
-                    onAction="#handleStudentMenu"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="220">
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label text="Student User" styleClass="user-label"/>
+                    <Label text="Student Portal" styleClass="user-role"/>
+                </VBox>
+
+                <Button fx:id="studentMenuButton"
+                        text="☰"
+                        styleClass="profile-button"
+                        onAction="#handleStudentMenu"/>
+            </HBox>
         </HBox>
     </top>
 
@@ -61,12 +60,38 @@
 
             <VBox spacing="5">
                 <Label text="My Borrowing History" styleClass="welcome-title"/>
-                <Label text="Track your borrowed, returned, and overdue books." styleClass="welcome-subtitle"/>
+                <Label text="A simple overview of your borrowed, returned, and overdue books." styleClass="welcome-subtitle"/>
             </VBox>
+
+            <HBox spacing="18">
+                <VBox spacing="8" styleClass="analytics-card-blue" HBox.hgrow="ALWAYS">
+                    <Label text="Total Records" styleClass="analytics-title"/>
+                    <Label fx:id="totalHistoryLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="All borrowing activity" styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="analytics-card-yellow" HBox.hgrow="ALWAYS">
+                    <Label text="Borrowed" styleClass="analytics-title"/>
+                    <Label fx:id="borrowedHistoryLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Books not yet returned" styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="analytics-card-green" HBox.hgrow="ALWAYS">
+                    <Label text="Returned" styleClass="analytics-title"/>
+                    <Label fx:id="returnedHistoryLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Completed returns" styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="analytics-card-red" HBox.hgrow="ALWAYS">
+                    <Label text="Overdue" styleClass="analytics-title"/>
+                    <Label fx:id="overdueHistoryLabel" text="0" styleClass="analytics-number"/>
+                    <Label text="Needs attention" styleClass="analytics-subtitle"/>
+                </VBox>
+            </HBox>
 
             <HBox spacing="12" styleClass="section-panel">
                 <TextField fx:id="searchField"
-                           promptText="Search by record, book, status, or date..."
+                           promptText="Search by book title, status, record ID, or date..."
                            onKeyReleased="#handleSearch"
                            HBox.hgrow="ALWAYS"/>
 
@@ -80,19 +105,22 @@
             </HBox>
 
             <VBox spacing="12" styleClass="table-panel" VBox.vgrow="ALWAYS">
-                <Label text="History Records" styleClass="section-heading"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="History Records" styleClass="section-heading"/>
+                    <Label fx:id="historyResultLabel" text="" styleClass="welcome-subtitle"/>
+                </HBox>
 
                 <TableView fx:id="historyTable"
                            styleClass="book-table"
-                           prefHeight="520"
+                           prefHeight="500"
                            VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="recordIdCol" text="Record ID" prefWidth="120"/>
-                        <TableColumn fx:id="bookCol" text="Book Title" prefWidth="300"/>
-                        <TableColumn fx:id="statusCol" text="Status" prefWidth="130"/>
-                        <TableColumn fx:id="borrowDateCol" text="Borrow Date" prefWidth="150"/>
-                        <TableColumn fx:id="dueDateCol" text="Due Date" prefWidth="150"/>
-                        <TableColumn fx:id="returnDateCol" text="Return Date" prefWidth="150"/>
+                        <TableColumn fx:id="bookCol" text="Book Title" prefWidth="340"/>
+                        <TableColumn fx:id="statusCol" text="Status" prefWidth="150"/>
+                        <TableColumn fx:id="borrowDateCol" text="Borrow Date" prefWidth="160"/>
+                        <TableColumn fx:id="dueDateCol" text="Due Date" prefWidth="160"/>
+                        <TableColumn fx:id="returnDateCol" text="Return Date" prefWidth="160"/>
                     </columns>
                 </TableView>
             </VBox>
