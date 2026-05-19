@@ -14,6 +14,28 @@ public class LibrarianDashboardContentController {
     }
 
     @FXML
+    private void openSearchBook(ActionEvent event) {
+        if (contentArea != null) {
+            ViewLoaderService.loadInto(
+                    contentArea,
+                    getClass(),
+                    "SearchBookView.fxml"
+            );
+        }
+    }
+
+    @FXML
+    private void openManageStudent(ActionEvent event) {
+        if (contentArea != null) {
+            ViewLoaderService.loadInto(
+                    contentArea,
+                    getClass(),
+                    "ManageMemberView.fxml"
+            );
+        }
+    }
+
+    @FXML
     private void openBorrowingRecords(ActionEvent event) {
         if (contentArea != null) {
             ViewLoaderService.loadInto(

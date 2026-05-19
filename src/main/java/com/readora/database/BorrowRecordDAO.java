@@ -25,10 +25,10 @@ public class BorrowRecordDAO {
             stmt.setString(3, record.getStudentName());
             stmt.setString(4, record.getBookId());
             stmt.setString(5, record.getBookTitle());
-            stmt.setString(6, record.getBorrowDate().toString());
-            stmt.setString(7, record.getDueDate().toString());
+            stmt.setString(6, record.getBorrowDate() != null ? record.getBorrowDate().toString() : null);
+            stmt.setString(7, record.getDueDate() != null ? record.getDueDate().toString() : null);
             stmt.setString(8, record.getReturnDate() != null ? record.getReturnDate().toString() : null);
-            stmt.setString(9, record.getStatus().toUpperCase());
+            stmt.setString(9, record.getStatus() != null ? record.getStatus().toUpperCase() : "BORROWED");
 
             return stmt.executeUpdate() > 0;
 
@@ -53,10 +53,10 @@ public class BorrowRecordDAO {
             stmt.setString(2, record.getStudentName());
             stmt.setString(3, record.getBookId());
             stmt.setString(4, record.getBookTitle());
-            stmt.setString(5, record.getBorrowDate().toString());
-            stmt.setString(6, record.getDueDate().toString());
+            stmt.setString(5, record.getBorrowDate() != null ? record.getBorrowDate().toString() : null);
+            stmt.setString(6, record.getDueDate() != null ? record.getDueDate().toString() : null);
             stmt.setString(7, record.getReturnDate() != null ? record.getReturnDate().toString() : null);
-            stmt.setString(8, record.getStatus().toUpperCase());
+            stmt.setString(8, record.getStatus() != null ? record.getStatus().toUpperCase() : "BORROWED");
             stmt.setString(9, record.getRecordId());
 
             return stmt.executeUpdate() > 0;
@@ -108,7 +108,7 @@ public class BorrowRecordDAO {
         String sql = "SELECT * FROM borrow_records ORDER BY borrow_date DESC";
 
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+             PreparedStatement stmt = connectionlessPrepare(conn, sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -145,7 +145,36 @@ public class BorrowRecordDAO {
         return list;
     }
 
+    public List<BorrowRecord> findReservedRecords() {
+        List<BorrowRecord> list = new ArrayList<>();
+        String sql = """
+                SELECT * FROM borrow_records
+                WHERE UPPER(status) = 'RESERVED'
+                ORDER BY borrow_date ASC
+                """;
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    private PreparedStatement connectionlessPrepare(Connection conn, String sql) throws SQLException {
+        return conn.prepareStatement(sql);
+    }
+
     private BorrowRecord map(ResultSet rs) throws SQLException {
+        String borrowDateText = rs.getString("borrow_date");
+        String dueDateText = rs.getString("due_date");
         String returnDateText = rs.getString("return_date");
 
         return new BorrowRecord(
@@ -154,8 +183,8 @@ public class BorrowRecordDAO {
                 rs.getString("student_name"),
                 rs.getString("book_id"),
                 rs.getString("book_title"),
-                LocalDate.parse(rs.getString("borrow_date")),
-                LocalDate.parse(rs.getString("due_date")),
+                borrowDateText != null && !borrowDateText.isEmpty() ? LocalDate.parse(borrowDateText) : null,
+                dueDateText != null && !dueDateText.isEmpty() ? LocalDate.parse(dueDateText) : null,
                 returnDateText != null && !returnDateText.isEmpty() ? LocalDate.parse(returnDateText) : null,
                 parseStatus(rs.getString("status"))
         );
@@ -169,6 +198,7 @@ public class BorrowRecordDAO {
         return switch (status.trim().toUpperCase()) {
             case "RETURNED" -> BorrowStatus.RETURNED;
             case "OVERDUE" -> BorrowStatus.OVERDUE;
+            case "RESERVED" -> BorrowStatus.RESERVED;
             default -> BorrowStatus.BORROWED;
         };
     }

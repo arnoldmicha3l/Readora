@@ -33,31 +33,23 @@
                                 <Insets top="14" right="24" bottom="14" left="24"/>
                             </padding>
 
-                            <VBox>
+                            <VBox spacing="0" prefWidth="220">
                                 <Label text="Readora" styleClass="logo-title"/>
-                                <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
+                                <Label text="Student Portal" styleClass="logo-subtitle"/>
                             </VBox>
 
                             <Region HBox.hgrow="ALWAYS"/>
 
                             <HBox spacing="10" alignment="CENTER">
-                                <Button text="My Dashboard"
-                                        styleClass="menu-button-active"
-                                        onAction="#handleDashboard"/>
-
-                                <Button text="Browse Books"
-                                        styleClass="menu-button"
-                                        onAction="#handleBrowseBooks"/>
-
-                                <Button text="My History"
-                                        styleClass="menu-button"
-                                        onAction="#handleHistoryTab"/>
+                                <Button text="My Dashboard" styleClass="menu-button-active" onAction="#handleDashboard"/>
+                                <Button text="Browse Books" styleClass="menu-button" onAction="#handleBrowseBooks"/>
+                                <Button text="My History" styleClass="menu-button" onAction="#handleHistoryTab"/>
                             </HBox>
 
                             <Region HBox.hgrow="ALWAYS"/>
 
-                            <HBox spacing="10" alignment="CENTER_RIGHT">
-                                <VBox alignment="CENTER_RIGHT">
+                            <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="220">
+                                <VBox alignment="CENTER_RIGHT" spacing="2">
                                     <Label text="Student User" styleClass="user-label"/>
                                     <Label text="Student Portal" styleClass="user-role"/>
                                 </VBox>
@@ -76,52 +68,109 @@
                                 <Insets top="32" right="34" bottom="32" left="34"/>
                             </padding>
 
-                            <VBox spacing="6">
-                                <Label fx:id="welcomeNameLabel"
-                                       text="Hello, Student User"
-                                       styleClass="welcome-title"/>
+                            <HBox spacing="24" alignment="CENTER_LEFT" styleClass="student-hero-panel">
+                                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                    <Label fx:id="welcomeNameLabel"
+                                           text="Hello, Student User"
+                                           styleClass="welcome-title"/>
 
-                                <Label fx:id="studentIdLabel"
-                                       text="Student ID: STU-1000"
-                                       styleClass="welcome-subtitle"/>
-                            </VBox>
+                                    <Label fx:id="studentIdLabel"
+                                           text="Student ID: STU-1000"
+                                           styleClass="welcome-subtitle"/>
 
-                            <HBox spacing="20">
-                                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-                                    <Label text="Borrowed Books" styleClass="stat-label"/>
-                                    <Label fx:id="totalBorrowedLabel"
-                                           text="0"
-                                           styleClass="stat-number"/>
+                                    <Label text="Browse available books, borrow your next read, and track your library activity in one place."
+                                           wrapText="true"
+                                           styleClass="welcome-subtitle"/>
+
+                                    <HBox spacing="12">
+                                        <Button text="Browse Books"
+                                                styleClass="primary-action-button"
+                                                onAction="#handleBrowseBooks"
+                                                prefWidth="140"/>
+
+                                        <Button text="My History"
+                                                styleClass="secondary-action-button"
+                                                onAction="#handleHistoryTab"
+                                                prefWidth="140"/>
+                                    </HBox>
                                 </VBox>
 
-                                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-                                    <Label text="Returned Books" styleClass="stat-label"/>
-                                    <Label fx:id="totalReturnedLabel"
-                                           text="0"
-                                           styleClass="stat-number"/>
+                                <VBox spacing="6" alignment="CENTER" styleClass="student-mini-card">
+                                    <Label text="READORA" styleClass="admin-mini-title"/>
+                                    <Label text="Student Reading Hub" styleClass="admin-mini-subtitle"/>
                                 </VBox>
                             </HBox>
 
-                            <VBox spacing="14" styleClass="section-panel">
-                                <padding>
-                                    <Insets top="22" right="24" bottom="22" left="24"/>
-                                </padding>
+                            <HBox spacing="20">
+                                <VBox spacing="8" styleClass="analytics-card-blue" HBox.hgrow="ALWAYS">
+                                    <Label text="Borrowed Books" styleClass="analytics-title"/>
+                                    <Label fx:id="totalBorrowedLabel" text="0" styleClass="analytics-number"/>
+                                    <Label text="Books currently linked to your account" styleClass="analytics-subtitle"/>
+                                </VBox>
 
-                                <Label text="Student Dashboard" styleClass="section-heading"/>
+                                <VBox spacing="8" styleClass="analytics-card-green" HBox.hgrow="ALWAYS">
+                                    <Label text="Returned Books" styleClass="analytics-title"/>
+                                    <Label fx:id="totalReturnedLabel" text="0" styleClass="analytics-number"/>
+                                    <Label text="Books you have successfully returned" styleClass="analytics-subtitle"/>
+                                </VBox>
 
-                                <Label text="Access your library tools, browse available books, and review your borrowing history in one place."
-                                       styleClass="welcome-subtitle"/>
+                                <VBox spacing="8" styleClass="analytics-card-yellow" HBox.hgrow="ALWAYS">
+                                    <Label text="Library Access" styleClass="analytics-title"/>
+                                    <Label text="Active" styleClass="analytics-number"/>
+                                    <Label text="Your student account is ready to use" styleClass="analytics-subtitle"/>
+                                </VBox>
+                            </HBox>
 
-                                <HBox spacing="12">
-                                    <Button text="Browse Books"
-                                            styleClass="primary-action-button"
+                            <HBox spacing="20">
+                                <VBox spacing="14" styleClass="student-dashboard-card" HBox.hgrow="ALWAYS">
+                                    <Label text="📚 Browse Collection" styleClass="feature-title"/>
+                                    <Label text="Explore book covers, view details, check availability, and borrow directly from the library."
+                                           wrapText="true"
+                                           styleClass="feature-subtitle"/>
+                                    <Region VBox.vgrow="ALWAYS"/>
+                                    <Button text="Open Books"
+                                            styleClass="secondary-action-button"
                                             onAction="#handleBrowseBooks"/>
+                                </VBox>
 
-                                    <Button text="View My History"
+                                <VBox spacing="14" styleClass="student-dashboard-card" HBox.hgrow="ALWAYS">
+                                    <Label text="🕘 My Borrowing History" styleClass="feature-title"/>
+                                    <Label text="Review your borrowed books, returned records, and reading activity."
+                                           wrapText="true"
+                                           styleClass="feature-subtitle"/>
+                                    <Region VBox.vgrow="ALWAYS"/>
+                                    <Button text="View History"
                                             styleClass="secondary-action-button"
                                             onAction="#handleHistoryTab"/>
-                                </HBox>
-                            </VBox>
+                                </VBox>
+
+                                <VBox spacing="14" styleClass="student-dashboard-card" HBox.hgrow="ALWAYS">
+                                    <Label text="✅ Easy Borrowing" styleClass="feature-title"/>
+                                    <Label text="Select an available book, confirm borrowing, and let Readora track the record for you."
+                                           wrapText="true"
+                                           styleClass="feature-subtitle"/>
+                                    <Region VBox.vgrow="ALWAYS"/>
+                                    <Button text="Start Browsing"
+                                            styleClass="secondary-action-button"
+                                            onAction="#handleBrowseBooks"/>
+                                </VBox>
+                            </HBox>
+
+                            <HBox spacing="20" VBox.vgrow="ALWAYS">
+                                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                                    <Label text="Student Flow" styleClass="section-heading"/>
+                                    <Label text="1. Browse the collection → 2. Open book details → 3. Borrow an available book → 4. Track your history"
+                                           wrapText="true"
+                                           styleClass="welcome-subtitle"/>
+                                </VBox>
+
+                                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                                    <Label text="Quick Tip" styleClass="section-heading"/>
+                                    <Label text="Use the Browse Books page to view book covers and check whether a title is available, reserved, or already borrowed."
+                                           wrapText="true"
+                                           styleClass="welcome-subtitle"/>
+                                </VBox>
+                            </HBox>
 
                         </VBox>
                     </center>

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
@@ -18,6 +19,8 @@
             stylesheets="@style.css"
             styleClass="root-pane">
 
+    <!-- ================= TOP BAR ================= -->
+
     <top>
         <HBox alignment="CENTER_LEFT" styleClass="top-bar">
             <padding>
@@ -26,29 +29,120 @@
 
             <VBox spacing="0">
                 <Label text="Readora" styleClass="logo-title"/>
-                <Label text="Borrow Records" styleClass="logo-subtitle"/>
+                <Label text="Admin Portal" styleClass="logo-subtitle"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button text="Back to Dashboard"
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Dashboard"
+                        styleClass="menu-button"
+                        onAction="#handleDashboard"/>
+
+                <Button text="Books"
+                        styleClass="menu-button"
+                        onAction="#handleBooks"/>
+
+                <Button text="Students"
+                        styleClass="menu-button"
+                        onAction="#handleStudents"/>
+
+                <Button text="Borrow Records"
+                        styleClass="menu-button-active"/>
+
+                <Button text="Reports"
+                        styleClass="menu-button"
+                        onAction="#handleReports"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Back"
                     onAction="#handleClose"
-                    styleClass="menu-button"/>
+                    styleClass="profile-button"/>
         </HBox>
     </top>
 
+    <!-- ================= CONTENT ================= -->
+
     <center>
+
         <VBox spacing="22" styleClass="dashboard-wrapper">
+
             <padding>
                 <Insets top="30" right="34" bottom="34" left="34"/>
             </padding>
 
+            <!-- HEADER -->
+
             <VBox spacing="5">
-                <Label text="Borrow Records" styleClass="welcome-title"/>
-                <Label text="Track borrowed, returned, and overdue books." styleClass="welcome-subtitle"/>
+                <Label text="Borrow Records"
+                       styleClass="welcome-title"/>
+
+                <Label text="Monitor borrowed, returned, and overdue books in real time."
+                       styleClass="welcome-subtitle"/>
             </VBox>
 
-            <HBox spacing="12" styleClass="section-panel">
+            <!-- STATUS CARDS -->
+
+            <HBox spacing="18">
+
+                <VBox spacing="8"
+                      alignment="CENTER_LEFT"
+                      styleClass="analytics-card-green"
+                      HBox.hgrow="ALWAYS">
+
+                    <Label text="Borrowed"
+                           styleClass="analytics-title"/>
+
+                    <Label fx:id="borrowedCountLabel"
+                           text="0"
+                           styleClass="analytics-number"/>
+
+                    <Label text="Currently borrowed books"
+                           styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8"
+                      alignment="CENTER_LEFT"
+                      styleClass="analytics-card-blue"
+                      HBox.hgrow="ALWAYS">
+
+                    <Label text="Returned"
+                           styleClass="analytics-title"/>
+
+                    <Label fx:id="returnedCountLabel"
+                           text="0"
+                           styleClass="analytics-number"/>
+
+                    <Label text="Successfully returned books"
+                           styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8"
+                      alignment="CENTER_LEFT"
+                      styleClass="analytics-card-red"
+                      HBox.hgrow="ALWAYS">
+
+                    <Label text="Overdue"
+                           styleClass="analytics-title"/>
+
+                    <Label fx:id="overdueCountLabel"
+                           text="0"
+                           styleClass="analytics-number"/>
+
+                    <Label text="Books overdue for return"
+                           styleClass="analytics-subtitle"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- FILTERS -->
+
+            <HBox spacing="12"
+                  alignment="CENTER_LEFT"
+                  styleClass="section-panel">
+
                 <TextField fx:id="searchField"
                            promptText="Search by record, book, student, status, or date..."
                            onKeyReleased="#handleSearch"
@@ -57,7 +151,7 @@
                 <ComboBox fx:id="statusFilter"
                           promptText="Status"
                           onAction="#handleSearch"
-                          prefWidth="160"/>
+                          prefWidth="170"/>
 
                 <Button text="Search"
                         onAction="#handleSearch"
@@ -72,38 +166,80 @@
                         text="Mark Returned"
                         onAction="#handleUpdateStatus"
                         styleClass="primary-action-button"
-                        prefWidth="140"/>
+                        prefWidth="160"/>
             </HBox>
 
-            <HBox spacing="12" styleClass="section-panel">
+            <!-- INFO BAR -->
+
+            <HBox spacing="12"
+                  alignment="CENTER_LEFT"
+                  styleClass="section-panel">
+
                 <Label fx:id="selectedRecordLabel"
                        text="No record selected."
                        styleClass="welcome-subtitle"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
 
                 <Label fx:id="resultLabel"
                        text=""
                        styleClass="welcome-subtitle"/>
             </HBox>
 
-            <VBox spacing="12" styleClass="table-panel" VBox.vgrow="ALWAYS">
-                <Label text="All Borrow Records" styleClass="section-heading"/>
+            <!-- TABLE -->
+
+            <VBox spacing="12"
+                  styleClass="table-panel"
+                  VBox.vgrow="ALWAYS">
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="All Borrow Records"
+                           styleClass="section-heading"/>
+                </HBox>
 
                 <TableView fx:id="borrowTable"
                            styleClass="book-table"
-                           prefHeight="520"
+                           prefHeight="540"
                            VBox.vgrow="ALWAYS">
+
                     <columns>
-                        <TableColumn fx:id="colId" text="Record ID" prefWidth="110"/>
-                        <TableColumn fx:id="colBook" text="Book" prefWidth="260"/>
-                        <TableColumn fx:id="colMember" text="Student" prefWidth="220"/>
-                        <TableColumn fx:id="colBorrow" text="Borrow Date" prefWidth="140"/>
-                        <TableColumn fx:id="colDue" text="Due Date" prefWidth="140"/>
-                        <TableColumn fx:id="colReturn" text="Return Date" prefWidth="140"/>
-                        <TableColumn fx:id="colStatus" text="Status" prefWidth="120"/>
+
+                        <TableColumn fx:id="colId"
+                                     text="Record ID"
+                                     prefWidth="110"/>
+
+                        <TableColumn fx:id="colBook"
+                                     text="Book"
+                                     prefWidth="260"/>
+
+                        <TableColumn fx:id="colMember"
+                                     text="Student"
+                                     prefWidth="220"/>
+
+                        <TableColumn fx:id="colBorrow"
+                                     text="Borrow Date"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="colDue"
+                                     text="Due Date"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="colReturn"
+                                     text="Return Date"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="colStatus"
+                                     text="Status"
+                                     prefWidth="150"/>
+
                     </columns>
+
                 </TableView>
+
             </VBox>
+
         </VBox>
+
     </center>
 
 </BorderPane>

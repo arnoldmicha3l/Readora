@@ -14,7 +14,16 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class BookFormViewController {
 
@@ -32,6 +41,7 @@ public class BookFormViewController {
     @FXML private ComboBox<String> filterStatusComboBox;
 
     @FXML private TableView<Book> bookTable;
+    @FXML private TableColumn<Book, String> coverColumn;
     @FXML private TableColumn<Book, String> bookIdColumn;
     @FXML private TableColumn<Book, String> titleColumn;
     @FXML private TableColumn<Book, String> authorColumn;
@@ -42,10 +52,14 @@ public class BookFormViewController {
     @FXML private HBox popupOverlay;
     @FXML private Label popupTitleLabel;
     @FXML private Label resultLabel;
+    @FXML private ImageView coverPreview;
 
     private FilteredList<Book> filteredBookList;
     private ContextMenu adminContextMenu;
     private Book editingBook;
+
+    private File selectedCoverFile;
+    private String currentCoverPath;
 
     @FXML
     public void initialize() {
@@ -141,6 +155,9 @@ public class BookFormViewController {
     }
 
     private void setupTable() {
+        coverColumn.setCellValueFactory(new PropertyValueFactory<>("coverPath"));
+        setupCoverColumn();
+
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -200,6 +217,96 @@ public class BookFormViewController {
         });
     }
 
+    private void setupCoverColumn() {
+        coverColumn.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitWidth(55);
+                imageView.setFitHeight(75);
+                imageView.setPreserveRatio(true);
+            }
+
+            @Override
+            protected void updateItem(String coverPath, boolean empty) {
+                super.updateItem(coverPath, empty);
+
+                if (empty || coverPath == null || coverPath.isBlank()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                File file = new File(coverPath);
+
+                if (!file.exists()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                imageView.setImage(new Image(file.toURI().toString(), true));
+                setGraphic(imageView);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        });
+    }
+
+    @FXML
+    private void handleChooseCover() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Book Cover");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(
+                        "Image Files",
+                        "*.png",
+                        "*.jpg",
+                        "*.jpeg"
+                )
+        );
+
+        File file = fileChooser.showOpenDialog(
+                coverPreview.getScene().getWindow()
+        );
+
+        if (file != null) {
+            selectedCoverFile = file;
+            coverPreview.setImage(new Image(file.toURI().toString()));
+        }
+    }
+
+    private String saveCoverImage() {
+        try {
+            if (selectedCoverFile == null) {
+                return currentCoverPath;
+            }
+
+            Path coversDirectory = Paths.get("book-covers");
+            Files.createDirectories(coversDirectory);
+
+            String originalName = selectedCoverFile.getName();
+            String cleanFileName = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
+            String newFileName = System.currentTimeMillis() + "_" + cleanFileName;
+
+            Path targetPath = coversDirectory.resolve(newFileName);
+
+            Files.copy(
+                    selectedCoverFile.toPath(),
+                    targetPath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            return targetPath.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertHelper.showError(
+                    "Cover Upload Failed",
+                    "The book was not able to save the selected cover image."
+            );
+            return currentCoverPath;
+        }
+    }
+
     private void setupTooltips() {
         if (adminMenuButton != null) {
             adminMenuButton.setTooltip(new Tooltip("Open admin menu"));
@@ -257,11 +364,17 @@ public class BookFormViewController {
     @FXML
     private void handleOpenAddPopup() {
         editingBook = null;
+        selectedCoverFile = null;
+        currentCoverPath = null;
 
         popupTitleLabel.setText("Add New Book");
         clearPopupFields();
 
-        bookIdField.setEditable(true);
+        AppState.refreshBooks();
+
+        bookIdField.setText(generateNextBookId());
+        bookIdField.setEditable(false);
+
         showPopup();
         TransitionHelper.pop(popupOverlay);
     }
@@ -273,6 +386,8 @@ public class BookFormViewController {
         }
 
         editingBook = book;
+        selectedCoverFile = null;
+        currentCoverPath = book.getCoverPath();
 
         popupTitleLabel.setText("Edit Book");
 
@@ -281,6 +396,18 @@ public class BookFormViewController {
         authorField.setText(book.getAuthor());
         categoryComboBox.setValue(book.getCategory());
         statusComboBox.setValue(book.getStatus());
+
+        if (currentCoverPath != null && !currentCoverPath.isBlank()) {
+            File coverFile = new File(currentCoverPath);
+
+            if (coverFile.exists()) {
+                coverPreview.setImage(new Image(coverFile.toURI().toString()));
+            } else {
+                coverPreview.setImage(null);
+            }
+        } else {
+            coverPreview.setImage(null);
+        }
 
         bookIdField.setEditable(false);
         showPopup();
@@ -298,11 +425,12 @@ public class BookFormViewController {
         String author = authorField.getText().trim();
         String category = categoryComboBox.getValue();
         String status = statusComboBox.getValue();
+        String coverPath = saveCoverImage();
 
         boolean success;
 
         if (editingBook == null) {
-            Book newBook = new Book(bookId, title, author, category, status);
+            Book newBook = new Book(bookId, title, author, category, status, coverPath);
             success = BookService.addBook(newBook);
 
             if (!success) {
@@ -317,6 +445,7 @@ public class BookFormViewController {
             editingBook.setAuthor(author);
             editingBook.setCategory(category);
             editingBook.setStatus(status);
+            editingBook.setCoverPath(coverPath);
 
             success = BookService.updateBook(editingBook);
 
@@ -494,7 +623,6 @@ public class BookFormViewController {
     private void clearPopupFields() {
         if (bookIdField != null) {
             bookIdField.clear();
-            bookIdField.setEditable(true);
         }
 
         if (titleField != null) {
@@ -513,6 +641,12 @@ public class BookFormViewController {
             statusComboBox.setValue(null);
         }
 
+        if (coverPreview != null) {
+            coverPreview.setImage(null);
+        }
+
+        selectedCoverFile = null;
+        currentCoverPath = null;
         editingBook = null;
     }
 
@@ -556,5 +690,20 @@ public class BookFormViewController {
                 "/view/AdminReportsView.fxml",
                 "Readora - Reports"
         );
+    }
+
+    private String generateNextBookId() {
+        int maxNumber = 0;
+
+        for (Book book : AppState.getBooks()) {
+            String id = book.getBookId();
+
+            if (id != null && id.matches("B\\d+")) {
+                int number = Integer.parseInt(id.substring(1));
+                maxNumber = Math.max(maxNumber, number);
+            }
+        }
+
+        return String.format("B%03d", maxNumber + 1);
     }
 }
