@@ -14,31 +14,39 @@ public class ReadoraApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
         DatabaseInitializer.initializeDatabase();
         AppState.initializeData();
         BorrowingService.updateOverdueRecords();
 
-        FXMLLoader loader = new FXMLLoader(ReadoraApplication.class.getResource("/view/LoginView.fxml"));
-
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        double width = screenBounds.getWidth();
-        double height = screenBounds.getHeight();
+        FXMLLoader loader = new FXMLLoader(
+                ReadoraApplication.class.getResource("/view/LoginView.fxml")
+        );
 
-        Scene scene = new Scene(loader.load(), width, height);
+        Scene scene = new Scene(
+                loader.load(),
+                screenBounds.getWidth(),
+                screenBounds.getHeight()
+        );
 
         stage.setTitle("Readora - Login");
         stage.setScene(scene);
 
-        stage.setMinWidth(1100);
-        stage.setMinHeight(650);
+        // Lock app size to current monitor size
+        stage.setWidth(screenBounds.getWidth());
+        stage.setHeight(screenBounds.getHeight());
 
-        stage.setX(screenBounds.getMinX());
-        stage.setY(screenBounds.getMinY());
-        stage.setWidth(width);
-        stage.setHeight(height);
+        stage.setMinWidth(screenBounds.getWidth());
+        stage.setMinHeight(screenBounds.getHeight());
 
-        stage.setMaximized(true);
+        stage.setMaxWidth(screenBounds.getWidth());
+        stage.setMaxHeight(screenBounds.getHeight());
+
+        // Prevent resizing
+        stage.setResizable(false);
+
         stage.centerOnScreen();
         stage.show();
     }
