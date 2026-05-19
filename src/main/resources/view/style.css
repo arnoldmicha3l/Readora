@@ -1351,289 +1351,34 @@
     -fx-background-color: #dcecff;
 }
 
-/* ============================= */
-/* Student Browse Books Card UI */
-/* ============================= */
-
-.books-scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+.root-pane {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #f4f8fc;
 }
 
-.books-scroll-pane > .viewport {
+.main-scroll-pane {
+    -fx-fit-to-width: true;
     -fx-background-color: transparent;
 }
 
-.books-grid {
+.main-scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
 
-.book-card {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #f8fbff);
-    -fx-background-radius: 18px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 18px;
-    -fx-border-width: 1px;
-    -fx-padding: 16px;
-    -fx-pref-width: 175px;
-    -fx-min-height: 330px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 12, 0, 0, 3);
-    -fx-cursor: hand;
+.dashboard-wrapper,
+.aboutus-page,
+.login-page {
+    -fx-background-color: #f4f8fc;
 }
 
-.book-card:hover {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #9fc2e6;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.18), 18, 0, 0, 6);
+.label {
+    -fx-wrap-text: true;
 }
 
-.book-card-cover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 8, 0, 0, 3);
-}
-
-.book-card-title {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #173a5e;
-    -fx-alignment: center;
-}
-
-.book-card-author {
-    -fx-font-size: 12px;
-    -fx-text-fill: #6f86a0;
-    -fx-alignment: center;
-}
-
-.book-status-available {
-    -fx-background-color: #e8f7ef;
-    -fx-text-fill: #2f7d4f;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20px;
-    -fx-padding: 5 12 5 12;
-}
-
-.book-status-unavailable {
-    -fx-background-color: #fdeeee;
-    -fx-text-fill: #984545;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20px;
-    -fx-padding: 5 12 5 12;
-}
-
-.book-details-card {
-    -fx-background-color: white;
-    -fx-background-radius: 24px;
-    -fx-border-color: #dfe7f0;
-    -fx-border-radius: 24px;
-    -fx-border-width: 1px;
-    -fx-padding: 28px;
-    -fx-pref-width: 650px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.18), 24, 0, 0, 8);
-}
-
-.details-cover-image {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 14, 0, 0, 5);
-}
-
-.book-detail-text {
-    -fx-font-size: 14px;
-    -fx-text-fill: #425e79;
-    -fx-font-weight: 600;
-}
-
-.book-detail-status {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #173a5e;
-}
-
-.book-table {
+.table-view {
     -fx-fixed-cell-size: 42px;
 }
 
-.book-table .virtual-flow {
-    -fx-background-color: white;
-}
-
-.book-table .table-row-cell:empty {
-    -fx-background-color: white;
-}
-
-.book-table .table-row-cell:empty .table-cell {
-    -fx-border-color: transparent;
-}
-
-.table-panel {
-    -fx-min-height: 0;
-}
-
-.chart-panel {
-    -fx-background-color: rgba(255,255,255,0.92);
-    -fx-background-radius: 22px;
-    -fx-border-color: #dfe7f0;
-    -fx-border-radius: 22px;
-    -fx-border-width: 1px;
-    -fx-padding: 22px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 14, 0, 0, 4);
-}
-
-.analytics-card-blue,
-.analytics-card-green,
-.analytics-card-yellow,
-.analytics-card-red {
-    -fx-background-radius: 20px;
-    -fx-border-radius: 20px;
-    -fx-border-width: 1px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 12, 0, 0, 3);
-}
-
-.analytics-card-blue {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #edf5ff);
-    -fx-border-color: #cfe0f0;
-}
-
-.analytics-card-green {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #edf9f2);
-    -fx-border-color: #cdebd8;
-}
-
-.analytics-card-yellow {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #fff8e8);
-    -fx-border-color: #f2dfb8;
-}
-
-.analytics-card-red {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #fff0f0);
-    -fx-border-color: #ebc1c1;
-}
-
-.analytics-title {
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #5d748c;
-}
-
-.analytics-number {
-    -fx-font-size: 34px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #173a5e;
-}
-
-.analytics-subtitle {
-    -fx-font-size: 12px;
-    -fx-text-fill: #6f86a0;
-}
-
-.admin-hero-panel {
-    -fx-background-color: linear-gradient(to right, #ffffff, #edf5ff);
-    -fx-background-radius: 24px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 24px;
-    -fx-border-width: 1px;
-    -fx-padding: 26px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.10), 16, 0, 0, 5);
-}
-
-.admin-mini-card {
-    -fx-background-color: linear-gradient(to bottom, #35597d, #2b4d6f);
-    -fx-background-radius: 22px;
-    -fx-padding: 26px;
-    -fx-pref-width: 260px;
-    -fx-min-height: 150px;
-}
-
-.admin-mini-title {
-    -fx-font-size: 26px;
-    -fx-font-weight: 800;
-    -fx-text-fill: white;
-}
-
-.admin-mini-subtitle {
-    -fx-font-size: 13px;
-    -fx-text-fill: #dcecff;
-}
-
-.admin-dashboard-card {
-    -fx-background-color: white;
-    -fx-background-radius: 22px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 22px;
-    -fx-border-width: 1px;
-    -fx-padding: 22px;
-    -fx-min-height: 230px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 14, 0, 0, 4);
-}
-
-.admin-dashboard-card:hover {
-    -fx-border-color: #9fc2e6;
-    -fx-background-color: #fbfdff;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.16), 18, 0, 0, 6);
-}
-
-.student-hero-panel {
-    -fx-background-color: linear-gradient(to right, #ffffff, #edf9ff);
-    -fx-background-radius: 24px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 24px;
-    -fx-border-width: 1px;
-    -fx-padding: 26px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.10), 16, 0, 0, 5);
-}
-
-.student-mini-card {
-    -fx-background-color: linear-gradient(to bottom, #3f668e, #2b4d6f);
-    -fx-background-radius: 22px;
-    -fx-padding: 26px;
-    -fx-pref-width: 260px;
-    -fx-min-height: 150px;
-}
-
-.student-dashboard-card {
-    -fx-background-color: white;
-    -fx-background-radius: 22px;
-    -fx-border-color: #d9e2ec;
-    -fx-border-radius: 22px;
-    -fx-border-width: 1px;
-    -fx-padding: 22px;
-    -fx-min-height: 220px;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.08), 14, 0, 0, 4);
-}
-
-.student-dashboard-card:hover {
-    -fx-border-color: #9fc2e6;
-    -fx-background-color: #fbfdff;
-    -fx-effect: dropshadow(gaussian, rgba(23,58,94,0.16), 18, 0, 0, 6);
-}
-
-.book-details-card {
-    -fx-pref-width: 620px;
-    -fx-max-width: 620px;
-    -fx-min-height: 340px;
-    -fx-padding: 24px;
-}
-
-.details-cover-image {
-    -fx-fit-width: 140px;
-    -fx-fit-height: 210px;
-}
-
-.book-status-borrowed {
-    -fx-background-color: #fff8e8;
-    -fx-text-fill: #b27920;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20px;
-    -fx-padding: 5 12 5 12;
-}
-
-.book-status-reserved {
-    -fx-background-color: #eef0ff;
-    -fx-text-fill: #5b5fc7;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20px;
-    -fx-padding: 5 12 5 12;
+.button {
+    -fx-cursor: hand;
 }

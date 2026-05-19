@@ -18,23 +18,27 @@ public class ReadoraApplication extends Application {
         AppState.initializeData();
         BorrowingService.updateOverdueRecords();
 
+        FXMLLoader loader = new FXMLLoader(ReadoraApplication.class.getResource("/view/LoginView.fxml"));
+
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        FXMLLoader loader = new FXMLLoader(ReadoraApplication.class.getResource("/view/LoginView.fxml"));
-        Scene scene = new Scene(loader.load(), screenBounds.getWidth(), screenBounds.getHeight());
+        double width = screenBounds.getWidth();
+        double height = screenBounds.getHeight();
+
+        Scene scene = new Scene(loader.load(), width, height);
 
         stage.setTitle("Readora - Login");
         stage.setScene(scene);
 
-        stage.setWidth(screenBounds.getWidth());
-        stage.setHeight(screenBounds.getHeight());
+        stage.setMinWidth(1100);
+        stage.setMinHeight(650);
 
-        stage.setMinWidth(screenBounds.getWidth());
-        stage.setMinHeight(screenBounds.getHeight());
-        stage.setMaxWidth(screenBounds.getWidth());
-        stage.setMaxHeight(screenBounds.getHeight());
+        stage.setX(screenBounds.getMinX());
+        stage.setY(screenBounds.getMinY());
+        stage.setWidth(width);
+        stage.setHeight(height);
 
-        stage.setResizable(false);
+        stage.setMaximized(true);
         stage.centerOnScreen();
         stage.show();
     }
