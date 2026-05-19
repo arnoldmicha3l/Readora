@@ -1350,3 +1350,35 @@
 .book-table:focused .table-row-cell:selected {
     -fx-background-color: #dcecff;
 }
+
+.root-pane {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #f4f8fc;
+}
+
+.main-scroll-pane {
+    -fx-fit-to-width: true;
+    -fx-background-color: transparent;
+}
+
+.main-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.dashboard-wrapper,
+.aboutus-page,
+.login-page {
+    -fx-background-color: #f4f8fc;
+}
+
+.label {
+    -fx-wrap-text: true;
+}
+
+.table-view {
+    -fx-fixed-cell-size: 42px;
+}
+
+.button {
+    -fx-cursor: hand;
+}
