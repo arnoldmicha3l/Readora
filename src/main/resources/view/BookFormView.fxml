@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -43,7 +44,7 @@
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                    <Button fx:id="adminMenuButton"
+                <Button fx:id="adminMenuButton"
                         text="☰"
                         styleClass="profile-button"
                         onAction="#handleAdminMenu"/>
@@ -98,11 +99,12 @@
                                prefHeight="520"
                                VBox.vgrow="ALWAYS">
                         <columns>
+                            <TableColumn fx:id="coverColumn" text="Cover" prefWidth="90"/>
                             <TableColumn fx:id="bookIdColumn" text="Book ID" prefWidth="120"/>
-                            <TableColumn fx:id="titleColumn" text="Title" prefWidth="280"/>
-                            <TableColumn fx:id="authorColumn" text="Author" prefWidth="220"/>
-                            <TableColumn fx:id="categoryColumn" text="Category" prefWidth="160"/>
-                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="130"/>
+                            <TableColumn fx:id="titleColumn" text="Title" prefWidth="260"/>
+                            <TableColumn fx:id="authorColumn" text="Author" prefWidth="210"/>
+                            <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
                             <TableColumn fx:id="actionColumn" text="Actions" prefWidth="170"/>
                         </columns>
                     </TableView>
@@ -117,7 +119,7 @@
           managed="false"
           styleClass="popup-overlay">
 
-        <VBox spacing="16" styleClass="popup-card">
+        <VBox spacing="14" styleClass="popup-card">
             <Label fx:id="popupTitleLabel"
                    text="Add New Book"
                    styleClass="section-heading"/>
@@ -145,6 +147,21 @@
             <VBox spacing="6">
                 <Label text="Status" styleClass="form-label"/>
                 <ComboBox fx:id="statusComboBox" promptText="Select status" prefWidth="380"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Book Cover" styleClass="form-label"/>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <ImageView fx:id="coverPreview"
+                               fitWidth="90"
+                               fitHeight="120"
+                               preserveRatio="true"
+                               styleClass="book-cover-preview"/>
+
+                    <Button text="Choose Cover"
+                            onAction="#handleChooseCover"
+                            styleClass="secondary-action-button"/>
+                </HBox>
             </VBox>
 
             <HBox spacing="12" alignment="CENTER_RIGHT">

@@ -33,39 +33,25 @@
                 <Insets top="14" right="24" bottom="14" left="24"/>
               </padding>
 
-              <VBox>
+              <VBox spacing="0" prefWidth="220">
                 <Label text="Readora" styleClass="logo-title"/>
-                <Label text="Smart Library Management System" styleClass="logo-subtitle"/>
+                <Label text="Admin Portal" styleClass="logo-subtitle"/>
               </VBox>
 
               <Region HBox.hgrow="ALWAYS"/>
 
               <HBox spacing="10" alignment="CENTER">
-                <Button text="Dashboard"
-                        styleClass="menu-button-active"
-                        onAction="#handleDashboard"/>
-
-                <Button text="Books"
-                        styleClass="menu-button"
-                        onAction="#handleBooks"/>
-
-                <Button text="Students"
-                        styleClass="menu-button"
-                        onAction="#handleStudents"/>
-
-                <Button text="Borrow Records"
-                        styleClass="menu-button"
-                        onAction="#handleBorrowRecords"/>
-
-                <Button text="Reports"
-                        styleClass="menu-button"
-                        onAction="#handleReports"/>
+                <Button text="Dashboard" styleClass="menu-button-active" onAction="#handleDashboard"/>
+                <Button text="Books" styleClass="menu-button" onAction="#handleBooks"/>
+                <Button text="Students" styleClass="menu-button" onAction="#handleStudents"/>
+                <Button text="Borrow Records" styleClass="menu-button" onAction="#handleBorrowRecords"/>
+                <Button text="Reports" styleClass="menu-button" onAction="#handleReports"/>
               </HBox>
 
               <Region HBox.hgrow="ALWAYS"/>
 
-              <HBox spacing="10" alignment="CENTER_RIGHT">
-                <VBox alignment="CENTER_RIGHT">
+              <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="220">
+                <VBox alignment="CENTER_RIGHT" spacing="2">
                   <Label text="Admin" styleClass="user-label"/>
                   <Label text="System Administrator" styleClass="user-role"/>
                 </VBox>
@@ -84,58 +70,93 @@
                 <Insets top="32" right="34" bottom="32" left="34"/>
               </padding>
 
-              <VBox spacing="6">
-                <Label text="Admin Dashboard" styleClass="welcome-title"/>
-                <Label text="Manage books, students, borrowing records, reports, and system data."
-                       styleClass="welcome-subtitle"/>
-              </VBox>
+              <HBox spacing="24" alignment="CENTER_LEFT" styleClass="admin-hero-panel">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                  <Label text="Admin Dashboard" styleClass="welcome-title"/>
+                  <Label text="Manage your books, students, borrow records, and reports from one central workspace."
+                         wrapText="true"
+                         styleClass="welcome-subtitle"/>
 
-              <HBox spacing="20">
-                <VBox spacing="8" styleClass="stat-card" prefWidth="240">
-                  <Label text="Book Management" styleClass="stat-label"/>
-                  <Label text="Books" styleClass="stat-number"/>
-                  <Button text="Open Books"
-                          styleClass="secondary-action-button"
-                          onAction="#handleBooks"/>
+                  <HBox spacing="12">
+                    <Button text="Manage Books"
+                            styleClass="primary-action-button"
+                            onAction="#handleBooks"
+                            prefWidth="140"/>
+
+                    <Button text="View Reports"
+                            styleClass="secondary-action-button"
+                            onAction="#handleReports"
+                            prefWidth="140"/>
+                  </HBox>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="240">
-                  <Label text="Student Records" styleClass="stat-label"/>
-                  <Label text="Students" styleClass="stat-number"/>
-                  <Button text="Open Students"
-                          styleClass="secondary-action-button"
-                          onAction="#handleStudents"/>
-                </VBox>
-
-                <VBox spacing="8" styleClass="stat-card" prefWidth="240">
-                  <Label text="Borrowing Logs" styleClass="stat-label"/>
-                  <Label text="Records" styleClass="stat-number"/>
-                  <Button text="Open Records"
-                          styleClass="secondary-action-button"
-                          onAction="#handleBorrowRecords"/>
+                <VBox spacing="6" alignment="CENTER" styleClass="admin-mini-card">
+                  <Label text="READORA" styleClass="admin-mini-title"/>
+                  <Label text="Library Control Center" styleClass="admin-mini-subtitle"/>
                 </VBox>
               </HBox>
 
-              <VBox spacing="14" styleClass="section-panel">
-                <padding>
-                  <Insets top="22" right="24" bottom="22" left="24"/>
-                </padding>
+              <HBox spacing="20">
+                <VBox spacing="12" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                  <Label text="📚 Book Management" styleClass="feature-title"/>
+                  <Label text="Add, edit, delete, search, and organise the full library collection."
+                         wrapText="true"
+                         styleClass="feature-subtitle"/>
+                  <Region VBox.vgrow="ALWAYS"/>
+                  <Button text="Open Books" styleClass="secondary-action-button" onAction="#handleBooks"/>
+                </VBox>
 
-                <Label text="System Overview" styleClass="section-heading"/>
+                <VBox spacing="12" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                  <Label text="👥 Student Records" styleClass="feature-title"/>
+                  <Label text="Manage student profiles and maintain accurate member records."
+                         wrapText="true"
+                         styleClass="feature-subtitle"/>
+                  <Region VBox.vgrow="ALWAYS"/>
+                  <Button text="Open Students" styleClass="secondary-action-button" onAction="#handleStudents"/>
+                </VBox>
 
-                <Label text="Use the navigation above to manage the full Readora library workflow. All pages are connected to the system navigation and database services."
-                       styleClass="welcome-subtitle"/>
+                <VBox spacing="12" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                  <Label text="🔁 Borrow Records" styleClass="feature-title"/>
+                  <Label text="Track borrowed, returned, and overdue books with clear status monitoring."
+                         wrapText="true"
+                         styleClass="feature-subtitle"/>
+                  <Region VBox.vgrow="ALWAYS"/>
+                  <Button text="Open Records" styleClass="secondary-action-button" onAction="#handleBorrowRecords"/>
+                </VBox>
 
-                <HBox spacing="12">
-                  <Button text="View Reports"
-                          styleClass="primary-action-button"
-                          onAction="#handleReports"/>
+                <VBox spacing="12" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                  <Label text="📊 Reports" styleClass="feature-title"/>
+                  <Label text="View library analytics, summaries, and operational insights."
+                         wrapText="true"
+                         styleClass="feature-subtitle"/>
+                  <Region VBox.vgrow="ALWAYS"/>
+                  <Button text="Open Reports" styleClass="secondary-action-button" onAction="#handleReports"/>
+                </VBox>
+              </HBox>
 
-                  <Button text="Borrow Records"
-                          styleClass="secondary-action-button"
-                          onAction="#handleBorrowRecords"/>
-                </HBox>
-              </VBox>
+              <HBox spacing="20" VBox.vgrow="ALWAYS">
+                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                  <Label text="Quick Actions" styleClass="section-heading"/>
+
+                  <HBox spacing="12">
+                    <Button text="+ Add Books" styleClass="primary-action-button" onAction="#handleBooks" prefWidth="130"/>
+                    <Button text="Manage Students" styleClass="secondary-action-button" onAction="#handleStudents" prefWidth="150"/>
+                    <Button text="Check Returns" styleClass="secondary-action-button" onAction="#handleBorrowRecords" prefWidth="140"/>
+                  </HBox>
+
+                  <Label text="Use these shortcuts during your demo to quickly show the complete Readora workflow."
+                         wrapText="true"
+                         styleClass="welcome-subtitle"/>
+                </VBox>
+
+                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                  <Label text="System Flow" styleClass="section-heading"/>
+                  <Label text="1. Add books and covers → 2. Students browse and borrow → 3. Admin tracks records → 4. Reports show analytics"
+                         wrapText="true"
+                         styleClass="welcome-subtitle"/>
+                </VBox>
+              </HBox>
+
             </VBox>
           </center>
 

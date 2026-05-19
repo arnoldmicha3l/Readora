@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <ScrollPane fitToWidth="true"
@@ -15,65 +16,124 @@
             stylesheets="@style.css">
 
     <content>
-        <VBox spacing="28" styleClass="dashboard-wrapper">
+        <VBox spacing="24" styleClass="dashboard-wrapper">
             <padding>
                 <Insets top="32" right="40" bottom="40" left="40"/>
             </padding>
 
-            <VBox spacing="6">
-                <Label text="Librarian Dashboard" styleClass="welcome-title"/>
-                <Label text="Manage daily circulation, member check-ins, and library catalog."
-                       styleClass="welcome-subtitle"/>
-            </VBox>
+            <HBox spacing="24" alignment="CENTER_LEFT" styleClass="admin-hero-panel">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Librarian Dashboard" styleClass="welcome-title"/>
+                    <Label text="Manage daily circulation, book searches, member records, borrowing logs, and returns from one workspace."
+                           wrapText="true"
+                           styleClass="welcome-subtitle"/>
 
-            <HBox spacing="20">
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-                    <Label text="0" styleClass="stat-number"/>
-                    <Label text="Books Borrowed Today" styleClass="stat-label"/>
+                    <HBox spacing="12">
+                        <Button fx:id="openBorrowedButton"
+                                text="Borrowed Books"
+                                onAction="#openBorrowingRecords"
+                                styleClass="primary-action-button"
+                                prefWidth="150"/>
+
+                        <Button fx:id="openReturnButton"
+                                text="Return Books"
+                                onAction="#openReturnBook"
+                                styleClass="secondary-action-button"
+                                prefWidth="140"/>
+                    </HBox>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-                    <Label text="0" styleClass="stat-number"/>
-                    <Label text="Returns Processed" styleClass="stat-label"/>
+                <VBox spacing="6" alignment="CENTER" styleClass="admin-mini-card">
+                    <Label text="READORA" styleClass="admin-mini-title"/>
+                    <Label text="Librarian Control Desk" styleClass="admin-mini-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="18">
+                <VBox spacing="8" styleClass="analytics-card-blue" HBox.hgrow="ALWAYS">
+                    <Label text="Books Borrowed Today" styleClass="analytics-title"/>
+                    <Label text="0" styleClass="analytics-number"/>
+                    <Label text="New circulation activity" styleClass="analytics-subtitle"/>
                 </VBox>
 
-                <VBox spacing="8" styleClass="stat-card" prefWidth="260">
-                    <Label text="0" styleClass="stat-number"/>
-                    <Label text="Overdue Alerts" styleClass="stat-label"/>
+                <VBox spacing="8" styleClass="analytics-card-green" HBox.hgrow="ALWAYS">
+                    <Label text="Returns Processed" styleClass="analytics-title"/>
+                    <Label text="0" styleClass="analytics-number"/>
+                    <Label text="Completed return updates" styleClass="analytics-subtitle"/>
+                </VBox>
+
+                <VBox spacing="8" styleClass="analytics-card-red" HBox.hgrow="ALWAYS">
+                    <Label text="Overdue Alerts" styleClass="analytics-title"/>
+                    <Label text="0" styleClass="analytics-number"/>
+                    <Label text="Records needing attention" styleClass="analytics-subtitle"/>
                 </VBox>
             </HBox>
 
             <VBox spacing="16">
                 <Label text="Library Operations" styleClass="section-heading"/>
 
-                <HBox spacing="24">
-                    <VBox spacing="18"
-                          prefWidth="280"
-                          prefHeight="200"
-                          styleClass="feature-card">
-                        <Label text="Circulation" styleClass="feature-title"/>
-                        <Label text="Issue new books and track current loans."
+                <HBox spacing="20">
+                    <VBox spacing="14" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                        <Label text="🔍 Search Books" styleClass="feature-title"/>
+                        <Label text="Find books quickly by title, author, category, status, or book ID."
                                styleClass="feature-subtitle"
                                wrapText="true"/>
-                        <Button text="Open Module"
-                                onAction="#openBorrowingRecords"
-                                styleClass="open-button"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button text="Open Search"
+                                onAction="#openSearchBook"
+                                styleClass="secondary-action-button"/>
                     </VBox>
 
-                    <VBox spacing="18"
-                          prefWidth="280"
-                          prefHeight="200"
-                          styleClass="feature-card">
-                        <Label text="Returns" styleClass="feature-title"/>
-                        <Label text="Process returned items and update status."
+                    <VBox spacing="14" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                        <Label text="👥 Manage Members" styleClass="feature-title"/>
+                        <Label text="View and manage student/member records for library access."
                                styleClass="feature-subtitle"
                                wrapText="true"/>
-                        <Button text="Open Module"
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button text="Open Members"
+                                onAction="#openManageStudent"
+                                styleClass="secondary-action-button"/>
+                    </VBox>
+
+                    <VBox spacing="14" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                        <Label text="🔁 Borrowed Books" styleClass="feature-title"/>
+                        <Label text="Monitor current loans, borrowed titles, and circulation activity."
+                               styleClass="feature-subtitle"
+                               wrapText="true"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button text="Open Records"
+                                onAction="#openBorrowingRecords"
+                                styleClass="secondary-action-button"/>
+                    </VBox>
+
+                    <VBox spacing="14" styleClass="admin-dashboard-card" HBox.hgrow="ALWAYS">
+                        <Label text="✅ Return Books" styleClass="feature-title"/>
+                        <Label text="Process book returns and keep student borrowing status updated."
+                               styleClass="feature-subtitle"
+                               wrapText="true"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button text="Open Returns"
                                 onAction="#openReturnBook"
-                                styleClass="open-button"/>
+                                styleClass="secondary-action-button"/>
                     </VBox>
                 </HBox>
             </VBox>
+
+            <HBox spacing="20">
+                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                    <Label text="Librarian Workflow" styleClass="section-heading"/>
+                    <Label text="1. Search for books → 2. Check member records → 3. Monitor borrowed books → 4. Process returns"
+                           wrapText="true"
+                           styleClass="welcome-subtitle"/>
+                </VBox>
+
+                <VBox spacing="14" styleClass="section-panel" HBox.hgrow="ALWAYS">
+                    <Label text="Daily Focus" styleClass="section-heading"/>
+                    <Label text="Keep borrowing records updated, process returns on time, and watch overdue alerts for follow-up."
+                           wrapText="true"
+                           styleClass="welcome-subtitle"/>
+                </VBox>
+            </HBox>
 
         </VBox>
     </content>

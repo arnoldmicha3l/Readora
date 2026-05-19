@@ -121,7 +121,7 @@
 
                 <TableView fx:id="studentTable"
                            styleClass="book-table"
-                           prefHeight="450"
+                           prefHeight="540"
                            VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="idColumn" text="Student ID" prefWidth="140"/>

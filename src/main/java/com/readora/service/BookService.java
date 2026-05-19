@@ -30,7 +30,12 @@ public final class BookService {
     }
 
     public static boolean updateBook(Book book) {
-        if (book == null || ValidationService.isBlank(book.getBookId())) {
+        if (book == null
+                || ValidationService.isBlank(book.getBookId())
+                || ValidationService.isBlank(book.getTitle())
+                || ValidationService.isBlank(book.getAuthor())
+                || ValidationService.isBlank(book.getCategory())
+                || ValidationService.isBlank(book.getStatus())) {
             return false;
         }
 
